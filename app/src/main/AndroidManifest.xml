@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ux7.fullhyve">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/logo"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".ui.activities.HomeView"
+            android:label="@string/title_activity_home_view"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.activities.ContactView" />
+        <activity
+            android:name=".ui.activities.TeamView"
+            android:label="@string/title_activity_team_view" />
+        <activity android:name=".ui.activities.ProjectView" />
+        <activity android:name=".ui.activities.NewTeam" />
+        <activity android:name=".ui.activities.NewProject" />
+        <activity android:name=".ui.activities.AnnouncementView" />
+        <activity android:name=".ui.activities.UserView" />
+        <activity android:name=".ui.activities.AddMember" />
+        <activity android:name=".ui.activities.TaskSetView" />
+        <activity android:name=".ui.activities.TaskView" />
+        <activity android:name=".ui.activities.NewTaskSetView" />
+        <activity android:name=".ui.activities.NewTaskView" />
+        <activity android:name=".ui.activities.LoginView"></activity>
+    </application>
+
+</manifest>

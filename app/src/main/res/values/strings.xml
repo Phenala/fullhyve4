@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">FullHyve</string>
+    <string name="title_activity_home_view">FullHyve</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="profile_picture_description">Profile picture</string>
+    <string name="contact_name">Contact name</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_team_view">TeamView</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

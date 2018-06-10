@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ux7.fullhyve.ui.activities.TaskView">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/task_status_picture"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:tint="@color/colorAccent"
+                    app:srcCompat="@drawable/ic_progress_icon" />
+
+                <TextView
+                    android:id="@+id/task_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:paddingHorizontal="10dp"
+                    android:text="Waiting"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="15dp" />
+
+            </LinearLayout>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="20dp"
+                android:padding="10dp"
+                android:background="@color/colorPrimary"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/task_assigned_on_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="2"
+                        android:text="Assigned On"
+                        android:textColor="@color/colorAccent" />
+
+                    <TextView
+                        android:id="@+id/task_assigned_on"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:text="01/04/2018"
+                        android:textSize="15dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/task_due_date_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="2"
+                        android:text="Due Date"
+                        android:textColor="@color/colorAccent" />
+
+                    <TextView
+                        android:id="@+id/task_due_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:text="01/04/2018"
+                        android:textSize="15dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/task_in_progress_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="2"
+                        android:text="In Progress"
+                        android:textColor="@color/colorAccent" />
+
+                    <TextView
+                        android:id="@+id/task_in_progress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:text="3d 4h 18m"
+                        android:textSize="15dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/task_assigned_by_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="2"
+                        android:text="Assigned By"
+                        android:textColor="@color/colorAccent" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/task_assigned_by_picture"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="0"
+                            android:background="@mipmap/user_picture_round" />
+
+                        <TextView
+                            android:id="@+id/task_assigned_by_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:paddingHorizontal="10dp"
+                            android:text="Batista"
+                            android:textSize="15dp" />
+                    </LinearLayout>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/task_assigned_to_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="2"
+                        android:text="Assigned To"
+                        android:textColor="@color/colorAccent" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/task_assigned_to_picture"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="0"
+                            android:background="@mipmap/user_picture_round" />
+
+                        <TextView
+                            android:id="@+id/task_assigned_to_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:paddingHorizontal="10dp"
+                            android:text="Batista"
+                            android:textSize="15dp" />
+                    </LinearLayout>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/task_assigned_via_team_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="2"
+                        android:text="Via Team"
+                        android:textColor="@color/colorAccent" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/task_assigned_via_team_picture"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="0"
+                            android:background="@mipmap/user_picture_round" />
+
+                        <TextView
+                            android:id="@+id/task_assigned_via_team_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:paddingHorizontal="10dp"
+                            android:text="Batista"
+                            android:textSize="15dp" />
+                    </LinearLayout>
+
+                </TableRow>
+
+            </TableLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:id="@+id/task_instructions_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Instructions"
+                    android:textColor="@color/colorAccent" />
+
+                <TextView
+                    android:id="@+id/task_instructions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:justificationMode="inter_word"
+                    android:padding="10dp"
+                    android:text="A quail is a majestic bird. A quail is a majestic bird. A quail is a majestic bird. A quail is a majestic bird. A quail is a majestic bird. A quail is a majestic bird. A quail is a majestic bird. A quail is a majestic bird."
+                    android:textColor="@color/textLight" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:id="@+id/task_results_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Results"
+                    android:textColor="@color/colorAccent" />
+
+                <TextView
+                    android:id="@+id/task_results"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:justificationMode="inter_word"
+                    android:padding="10dp"
+                    android:text="A quail is a majestic bird. A quail is a majestic bird. A quail is a majestic bird. A quail is a majestic bird. A quail is a majestic bird. A quail is a majestic bird. A quail is a majestic bird. A quail is a majestic bird."
+                    android:textColor="@color/textLight" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/task_change_status_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/ripple_effect_accent"
+                android:text="Begin"
+                android:textColor="@color/textdark" />
+
+        </LinearLayout>
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>

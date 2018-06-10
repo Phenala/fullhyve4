@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/reply_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/reply_sender_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="top"
+            android:layout_margin="10dp"
+            android:layout_weight="0"
+            android:background="@mipmap/user_picture_round" />
+
+        <LinearLayout
+            android:id="@+id/reply_trigger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/reply_sender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingVertical="5dp"
+                android:text="Joker Challin" />
+
+            <TextView
+                android:id="@+id/reply_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="lkasdfj;lasdkfjl;adsfkj;lkdsafj;lasdkfjl;adskfj;askldjf;lkasdkjf;lasjdf;lkjdsa;lfkjads;lfj;ladskjf;lkadsjf;ljdsaflkasdfj;lasdkfjl;adsfkj;lkdsafj;lasdkfjl;adskfj;askldjf;lkasdkjf;lasjdf;lkjdsa;lfkjads;lfj;ladskjf;lkadsjf;ljdsaflkasdfj;lasdkfjl;adsfkj;lkdsafj;lasdkfjl;adskfj;askldjf;lkasdkjf;lasjdf;lkjdsa;lfkjads;lfj;ladskjf;lkadsjf;ljdsaf"
+                android:textColor="@color/textLight" />
+
+            <TextView
+                android:id="@+id/reply_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="5dp"
+                android:text="5:12 PM"
+                android:textAlignment="textEnd"
+                android:textColor="@color/textLight"
+                android:textSize="10dp" />
+        </LinearLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

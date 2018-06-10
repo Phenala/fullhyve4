@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#232323</color>
+    <color name="colorAccent">#ff9720</color>
+
+    <color name="colorBackground">#303030</color>
+
+    <color name="messageReceived">#838383</color>
+    <color name="messageSent">#202020</color>
+
+    <color name="textLight">#848484</color>
+    <color name="textFaded">#393939</color>
+    <color name="textdark">#000000</color>
+    <color name="tranparent">#00000000</color>
+
+    <color name="colorWhite">#ffffff</color>
+    <color name="fadeBackground">#aa000000</color>
+
+</resources>

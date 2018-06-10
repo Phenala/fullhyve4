@@ -1,0 +1,53 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragments.AnnouncementsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/announcements_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/announcement_to_send"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Announce"
+                android:inputType="textMultiLine"
+                android:paddingHorizontal="8dp" />
+
+            <ImageButton
+                android:id="@+id/announcement_send_button"
+                android:layout_width="52dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:background="@color/tranparent"
+                android:elevation="0dp"
+                android:scaleType="fitCenter"
+                android:tint="@color/colorAccent"
+                app:srcCompat="@drawable/ic_send_icon" />
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>

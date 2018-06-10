@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/messages_loading_spinner"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/message_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            tools:layout_editor_absoluteX="10dp"
+            tools:layout_editor_absoluteY="5dp">
+
+            <ImageView
+                android:id="@+id/callout_spike_receive"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:background="@drawable/ic_message_callout_spike"
+                android:backgroundTint="@color/messageReceived"
+                android:scaleX="-1" />
+
+            <LinearLayout
+                android:id="@+id/callout_body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/ripple_effect_received"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="8dp">
+
+                <TextView
+                    android:id="@+id/message_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingVertical="8dp"
+                    android:text="TextView"
+                    android:textColor="@color/textdark" />
+
+                <TextView
+                    android:id="@+id/message_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:text="time"
+                    android:textSize="10dp"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/textFaded" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/callout_spike_send"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_weight="0"
+                android:background="@drawable/ic_message_callout_spike"
+                android:backgroundTint="@color/messageSent"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

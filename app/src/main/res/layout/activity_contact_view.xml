@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activities.ContactView">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_shard_bg_mobile"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/messages_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:listitem="@layout/item_message">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="@color/colorPrimary"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/messageToSend"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Reply"
+                    android:maxHeight="150dp"
+                    android:minHeight="60dp"
+                    android:inputType="textMultiLine"
+                    android:paddingHorizontal="8dp" />
+
+                <ImageButton
+                    android:id="@+id/messageSendButton"
+                    android:layout_width="52dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:background="@color/tranparent"
+                    android:elevation="0dp"
+                    android:onClick="enterMessage"
+                    android:scaleType="fitCenter"
+                    android:tint="@color/colorAccent"
+                    app:srcCompat="@drawable/ic_send_icon" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</android.support.constraint.ConstraintLayout>
