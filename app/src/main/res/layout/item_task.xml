@@ -29,7 +29,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:padding="10dp"
-            android:text="Rigging"
+            android:text="Rigging Modifiers"
             android:textColor="@color/textLight" />
 
         <ImageView
