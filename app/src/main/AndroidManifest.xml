@@ -36,6 +36,7 @@
         <activity android:name=".ui.activities.NewTaskSetView" />
         <activity android:name=".ui.activities.NewTaskView" />
         <activity android:name=".ui.activities.LoginView"></activity>
+        <activity android:name=".ui.activities.RegisterView"></activity>
     </application>
 
 </manifest>

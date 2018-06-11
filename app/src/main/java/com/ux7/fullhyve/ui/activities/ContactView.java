@@ -104,12 +104,8 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                Log.e("Yoo", layoutManager.findFirstVisibleItemPosition() + "");
-
-
                 RecyclerView.State x = new RecyclerView.State();
                 layoutManager.computeVerticalScrollOffset(x);
-                Log.e("Yaka", "" + x.getRemainingScrollVertical());
 
                 if (layoutManager.findLastVisibleItemPosition() == messages.size() - 1) {
 

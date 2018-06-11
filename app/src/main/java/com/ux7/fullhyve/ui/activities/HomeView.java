@@ -3,6 +3,7 @@ package com.ux7.fullhyve.ui.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Sensor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -45,6 +46,9 @@ public class HomeView extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        checkRedirect();
+
         setContentView(R.layout.activity_home_view);
 
         buildNavigation();
@@ -82,9 +86,16 @@ public class HomeView extends AppCompatActivity
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
+
             drawer.closeDrawer(GravityCompat.START);
+
         } else {
-            super.onBackPressed();
+
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
         }
     }
 
@@ -174,6 +185,23 @@ public class HomeView extends AppCompatActivity
             }
         });
         fab.hide();
+    }
+
+    public void checkRedirect() {
+
+        if (!isLoggedIn()) {
+
+            Intent intent = new Intent(this, LoginView.class);
+            startActivity(intent);
+
+        }
+
+    }
+
+    public boolean isLoggedIn() {
+
+        return LoginView.loggedIn;
+
     }
 
 
