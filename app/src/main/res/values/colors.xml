@@ -15,6 +15,6 @@
     <color name="tranparent">#00000000</color>
 
     <color name="colorWhite">#ffffff</color>
-    <color name="fadeBackground">#aa000000</color>
+    <color name="fadeBackground">#dd000000</color>
 
 </resources>

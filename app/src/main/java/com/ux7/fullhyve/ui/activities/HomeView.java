@@ -46,11 +46,19 @@ public class HomeView extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_view);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        buildNavigation();
 
         initializeFloatingActionButton();
         initializeAdders();
+
+    }
+
+
+    public void buildNavigation() {
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -60,16 +68,15 @@ public class HomeView extends AppCompatActivity
 
 
         ImageView userPicture = (ImageView)(((NavigationView)findViewById(R.id.nav_view)).getHeaderView(0).findViewById(R.id.userPicture));
-        Picasso.with(this).load(R.mipmap.ic_launcher_round).into(userPicture);
+        Picasso.with(this).load(R.mipmap.user_picture_round).into(userPicture);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contactsListFragment).commit();
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
-
-
 
     @Override
     public void onBackPressed() {

@@ -1,5 +1,6 @@
 package com.ux7.fullhyve.services.Handlers;
 
+import android.app.Activity;
 import android.util.Log;
 
 import com.ux7.fullhyve.services.Models.Contact;
@@ -35,7 +36,7 @@ public class ContactHandler extends Handler {
         });
     }
 
-    public void sendMessage(final int friendId, final String message, final Semaphore semaphore){
+    public void sendMessage(final int friendId, final String message, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("friendId",friendId);
         args.put("message", message);
@@ -54,14 +55,14 @@ public class ContactHandler extends Handler {
                     }
 //                    responseListener.call(messageR);
 
-                    semaphore.release();
+                    activity.runOnUiThread(runnable);
 
                 }
             }
         });
     }
 
-    public void getMessages(final int friendId, int offset, int limit, final List<ListMessage> messageList, final Semaphore semaphore){
+    public void getMessages(final int friendId, int offset, int limit, final List<ListMessage> messageList, final Activity activity, final Runnable runnable){
         final ResponseFormat.GetMessagesR messagesR;
 
 //        final ArrayList<Message> messages = cache.getContacts().getContact(friendId).getMessages(offset, limit);
@@ -96,7 +97,7 @@ public class ContactHandler extends Handler {
 
 
                         // call semaphore here
-                        semaphore.release();
+                        activity.runOnUiThread(runnable);
                     }
                 }
             });
