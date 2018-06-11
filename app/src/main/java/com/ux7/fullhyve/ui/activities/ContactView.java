@@ -1,6 +1,7 @@
 package com.ux7.fullhyve.ui.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -41,7 +42,8 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
     ListContact contact = new ListContact();
     List<ListMessage> messages = new ArrayList<>();
     boolean editing = false;
-    String messageEditingId = "";
+    int messageEditingId;
+    String messageToSend = "";
     AppHandler appHandler;
 
     RecyclerView recyclerView;
@@ -58,6 +60,16 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
         setContentView(R.layout.activity_contact_view);
 
         appHandler =  AppHandler.getInstance();
+        Socket socket = Realtime.getSocket();
+        socket.connect();
+
+
+        appHandler.contactHandler.userConnected(1, new com.ux7.fullhyve.services.Utility.ResponseListener() {
+            @Override
+            public void call(Object... data) {
+                Log.e("userConnected", "sucss");
+            }
+        });
 
         buildContact();
         buildActionBar();
@@ -256,7 +268,6 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
             messages.add(spinnerMessage);
             adapter.update();
 
-
         }
 
         @Override
@@ -265,15 +276,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
             //getMessageHandler
             Semaphore semaphore = new Semaphore(0);
 
-//            Socket socket = Realtime.getSocket();
-//            socket.connect();
-//
-//            appHandler.contactHandler.userConnected(1, new com.ux7.fullhyve.services.Utility.ResponseListener() {
-//                @Override
-//                public void call(Object... data) {
-//                    Log.e("userConnected", "sucss");
-//                }
-//            });
+
 
 //            appHandler.contactHandler.getMessages(2,0,50, messages, semaphore);
 //
@@ -282,12 +285,6 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 //            } catch (InterruptedException e) {
 //                e.printStackTrace();
 //            }
-
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
             for (int i = 0; i < 5; i++) {
 
@@ -329,11 +326,32 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 
     class SendMessageTask extends AsyncTask<String, Integer, String> {
 
+        @Override
+        protected void onPreExecute() {
+
+            ListMessage newMessage = new ListMessage();
+
+            newMessage.id = -1;
+            newMessage.message = messageToSend;
+
+            messages.add(0, newMessage);
+
+            adapter.update();
+
+        }
 
         @Override
         protected String doInBackground(String... strings) {
 
+            Semaphore semaphore = new Semaphore(0);
 
+            appHandler.contactHandler.sendMessage(contact.id, messageToSend, semaphore);
+
+            try {
+                semaphore.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             return null;
         }
@@ -356,12 +374,14 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 
 
     public void sendMessage() {
-        String message = ((EditText)findViewById(R.id.messageToSend)).getText().toString();
+        messageToSend = ((EditText)findViewById(R.id.messageToSend)).getText().toString();
+
+        (new SendMessageTask()).execute();
 
         //messageSendLogic
     }
 
-    public void deleteMessage(String messageId) {
+    public void deleteMessage(int messageId) {
 
         //messageDeleteLogic
 

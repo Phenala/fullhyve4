@@ -3,6 +3,7 @@ package com.ux7.fullhyve.ui.adapters;
 import android.content.Context;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -44,6 +45,8 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
 
         Context context = holder.mView.getContext();
         View body = (View)holder.mView.findViewById(R.id.callout_body);
+
+        Log.e("Binder", "bound " + position);
 
         holder.mMessage = mMessages.get(position);
         holder.mMessageContent.setText(holder.mMessage.message);

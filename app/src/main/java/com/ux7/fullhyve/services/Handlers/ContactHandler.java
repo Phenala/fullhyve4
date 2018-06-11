@@ -35,7 +35,7 @@ public class ContactHandler extends Handler {
         });
     }
 
-    public void sendMessage(final int friendId, final String message, final ResponseListener responseListener){
+    public void sendMessage(final int friendId, final String message, final Semaphore semaphore){
         HashMap<String, Object> args = new HashMap<>();
         args.put("friendId",friendId);
         args.put("message", message);
@@ -52,7 +52,9 @@ public class ContactHandler extends Handler {
                         //Message msg = new Message(messageR.data.msgId, message,);
                         //cache.getContacts().getContact(friendId).addMessages(new )
                     }
-                    responseListener.call(messageR);
+//                    responseListener.call(messageR);
+
+                    semaphore.release();
 
                 }
             }
@@ -107,7 +109,7 @@ public class ContactHandler extends Handler {
 
         for (Message message : messages) {
             ListMessage lstmsg = new ListMessage();
-            lstmsg.id = "" + message.getId();
+            lstmsg.id = message.getId();
             lstmsg.message = message.getMessage();
             lstmsg.sent = message.isSent();
             lstmsg.time = message.getTimestamp();

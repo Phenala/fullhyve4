@@ -80,11 +80,11 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
 
                 if (b)
 
-                    mSelectedUsers.add(holder.mMember.id);
+                    mSelectedUsers.add("" + holder.mMember.id);
 
                 else
 
-                    mSelectedUsers.remove(holder.mMember.id);
+                    mSelectedUsers.remove("" + holder.mMember.id);
 
             }
         });

@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class ListTaskSet implements Serializable {
 
-    public String id = "23412";
+    public int id = 23412;
     public int number = 1;
     public String name = "Query Handling";
     public int assigments = 4;
