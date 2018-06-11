@@ -46,21 +46,30 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
         View body = (View)holder.mView.findViewById(R.id.callout_body);
 
         holder.mMessage = mMessages.get(position);
-        holder.mMessageContent.setText(mMessages.get(position).message);
-        holder.mMessageTime.setText(mMessages.get(position).time);
+        holder.mMessageContent.setText(holder.mMessage.message);
+        holder.mMessageTime.setText(holder.mMessage.time);
 
 
-        if (mMessages.get(position).sent) {
+        if (holder.mMessage.sent) {
             ((ImageView)holder.mView.findViewById(R.id.callout_spike_receive)).setVisibility(View.GONE);
             ((ImageView)holder.mView.findViewById(R.id.callout_spike_send)).setVisibility(View.VISIBLE);
             body.setBackground(context.getResources().getDrawable(R.drawable.ripple_effect_sent));
             holder.mMessageContent.setTextColor(holder.mView.getResources().getColor(R.color.textLight));
             holder.mView.findViewById(R.id.messages_loading_spinner).setVisibility(View.GONE);
+        } else {
+            ((ImageView)holder.mView.findViewById(R.id.callout_spike_receive)).setVisibility(View.VISIBLE);
+            ((ImageView)holder.mView.findViewById(R.id.callout_spike_send)).setVisibility(View.GONE);
+            body.setBackground(context.getResources().getDrawable(R.drawable.ripple_effect_received));
+            holder.mMessageContent.setTextColor(holder.mView.getResources().getColor(R.color.textdark));
+            holder.mView.findViewById(R.id.messages_loading_spinner).setVisibility(View.VISIBLE);
         }
 
         if (mMessages.get(position).spinner) {
             holder.mView.findViewById(R.id.message_layout).setVisibility(View.GONE);
             holder.mView.findViewById(R.id.messages_loading_spinner).setVisibility(View.VISIBLE);
+        } else {
+            holder.mView.findViewById(R.id.message_layout).setVisibility(View.VISIBLE);
+            holder.mView.findViewById(R.id.messages_loading_spinner).setVisibility(View.GONE);
         }
 
         final ListMessage message = holder.mMessage;

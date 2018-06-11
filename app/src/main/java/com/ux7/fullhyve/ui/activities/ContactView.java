@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
@@ -41,18 +42,30 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
     List<ListMessage> messages = new ArrayList<>();
     boolean editing = false;
     String messageEditingId = "";
+    AppHandler appHandler;
+
     RecyclerView recyclerView;
+    MessagesRecyclerViewAdapter adapter;
+    LinearLayoutManager layoutManager;
+
+    int j = 0;
+
+    boolean fetchingMessages = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_view);
 
+        appHandler =  AppHandler.getInstance();
+
         buildContact();
         buildActionBar();
         buildMessages();
 
     }
+
+    //Builder functions
 
     public void buildContact() {
         contact.name = getIntent().getStringExtra("name");
@@ -62,18 +75,44 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
     public void buildMessages() {
 
         recyclerView = (RecyclerView) findViewById(R.id.messages_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        layoutManager = new LinearLayoutManager(this);
+        layoutManager.setReverseLayout(true);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new MessagesRecyclerViewAdapter(messages, this);
+        recyclerView.setAdapter(adapter);
 
-        (new GetMessagesTask()).execute();
+        getMessages();
 
-        recyclerView.setAdapter(new MessagesRecyclerViewAdapter(messages, this));
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                Log.e("Yoo", layoutManager.findFirstVisibleItemPosition() + "");
+
+
+                RecyclerView.State x = new RecyclerView.State();
+                layoutManager.computeVerticalScrollOffset(x);
+                Log.e("Yaka", "" + x.getRemainingScrollVertical());
+
+                if (layoutManager.findLastVisibleItemPosition() == messages.size() - 1) {
+
+                    getMessages();
+
+                }
+            }
+        });
+
+
         recyclerView.getLayoutManager().scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
+
     }
 
 
     public void getMessages() {
 
-        final MessagesRecyclerViewAdapter messagesRecyclerViewAdapter = (MessagesRecyclerViewAdapter)recyclerView.getAdapter();
+        if (!fetchingMessages)
+            (new GetMessagesTask()).execute();
 
 //        ResponseListener listener = new ResponseListener() {
 //            @Override
@@ -109,6 +148,9 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
                 .transform(new CircleTransform())
                 .into(new ActionBarTarget(getResources(), actionBar));
     }
+
+
+    //Activity functions
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -196,9 +238,26 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
     }
 
 
+    //Async Tasks
+
 
     class GetMessagesTask extends AsyncTask<String, Integer, List<ListMessage>>
     {
+
+        @Override
+        protected void onPreExecute() {
+
+            fetchingMessages = true;
+
+            int offset = layoutManager.findFirstVisibleItemPosition();
+
+            ListMessage spinnerMessage = new ListMessage();
+            spinnerMessage.spinner = true;
+            messages.add(spinnerMessage);
+            adapter.update();
+
+
+        }
 
         @Override
         protected List<ListMessage> doInBackground(String... strings) {
@@ -206,32 +265,38 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
             //getMessageHandler
             Semaphore semaphore = new Semaphore(0);
 
-//            ArrayList<ListMessage> nlist = new ArrayList<>();
-//            //nlist.add(ListMessage.getSpinnerValue());
-//            for (int i = 0; i < 2; i++) {
-//                ListMessage l = new ListMessage();
-//                l.sent = Math.random() > 0.5;
-//                nlist.add(l);
+//            Socket socket = Realtime.getSocket();
+//            socket.connect();
+//
+//            appHandler.contactHandler.userConnected(1, new com.ux7.fullhyve.services.Utility.ResponseListener() {
+//                @Override
+//                public void call(Object... data) {
+//                    Log.e("userConnected", "sucss");
+//                }
+//            });
+
+//            appHandler.contactHandler.getMessages(2,0,50, messages, semaphore);
+//
+//            try {
+//                semaphore.acquire();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
 //            }
 
-            Socket socket = Realtime.getSocket();
-            socket.connect();
-
-            AppHandler appHandler = AppHandler.getInstance();
-
-            appHandler.contactHandler.userConnected(1, new com.ux7.fullhyve.services.Utility.ResponseListener() {
-                @Override
-                public void call(Object... data) {
-                    Log.e("userConnected", "sucss");
-                }
-            });
-
-            appHandler.contactHandler.getMessages(2,0,50,messages, semaphore);
-
             try {
-                semaphore.acquire();
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+
+            for (int i = 0; i < 5; i++) {
+
+                ListMessage x = new ListMessage();
+                x.sent = (Math.random() > 0.5d);
+                x.message = j + " coconuts";
+                j++;
+                messages.add(x);
+
             }
 
 //            messages.addAll(nlist);
@@ -243,10 +308,36 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
         @Override
         protected void onPostExecute(List<ListMessage> result) {
 
+            for (int i = 0; i < messages.size(); i++) {
+
+                if (messages.get(i).spinner == true) {
+
+                    messages.remove(messages.get(i));
+
+                }
+
+            }
+
             ((MessagesRecyclerViewAdapter)recyclerView.getAdapter()).update();
+
+            fetchingMessages = false;
+
 
         }
     };
+
+
+    class SendMessageTask extends AsyncTask<String, Integer, String> {
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+
+
+            return null;
+        }
+    }
 
 
 
