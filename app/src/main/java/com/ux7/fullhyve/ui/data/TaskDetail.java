@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Created by hp on 06/08/18.
  */
 
-public class TaskDetail implements Serializable{
+public class TaskDetail extends ListTask implements Serializable{
 
     public int id = 492857;
     public String name = "Rigging";
@@ -23,7 +23,7 @@ public class TaskDetail implements Serializable{
     public String assignerImage = "http://0.gravatar.com/avatar/c77b7988df1396d40ed4a62be4e55565?s=64&d=mm&r=g";
     public String assignerName = "Tokyo Drift";
     public boolean team = true;
-    public String teamId = "142342";
+    public int teamId = 142342;
     public String teamImage = "http://0.gravatar.com/avatar/c77b7988df1396d40ed4a62be4e55565?s=64&d=mm&r=g";
     public String teamName = "Tokyo Drift";
     public TaskStatus status = TaskStatus.WAITING;

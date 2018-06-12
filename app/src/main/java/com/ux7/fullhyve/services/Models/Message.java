@@ -1,20 +1,22 @@
 package com.ux7.fullhyve.services.Models;
 
+import java.util.Date;
+
 public class Message{
     private int id;
     private String message;
-    private String timestamp;
+    private Date timestamp;
     private boolean seen;
     private boolean sent;
 
 
-    public Message(int id, String message, String timestamp, boolean seen, boolean sent) {
-        this.id = id;
-        this.message = message;
-        this.timestamp = timestamp;
-        this.seen = seen;
-        this.sent = sent;
-    }
+//    public Message(int id, String message, Date timestamp, boolean seen, boolean sent) {
+//        this.id = id;
+//        this.message = message;
+//        this.timestamp = timestamp;
+//        this.seen = seen;
+//        this.sent = sent;
+//    }
 
     public int getId() {
         return id;
@@ -32,11 +34,11 @@ public class Message{
         this.message = message;
     }
 
-    public String getTimestamp() {
+    public Date getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 

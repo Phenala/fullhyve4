@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.services.Models.ContactSet;
 import com.ux7.fullhyve.services.Models.Identity;
 import com.ux7.fullhyve.services.Models.NotificationSet;
@@ -14,19 +15,13 @@ import com.ux7.fullhyve.services.Models.TeamSet;
 public class AppData extends Application {
     private static AppData sInstance;
     private static AppData.Cache cache; // Generic your-application handler
-    public static String userToken = "sample";
+    private static AppHandler appHandler;
 
     public static AppData getInstance() {
-        if(sInstance==null){
-            sInstance = new AppData();
-        }
         return sInstance;
     }
 
-    public Cache getCache() {
-//        if(cache == null){
-//            cache = new Cache(this.getSharedPreferences( "PREFS_PRIVATE", Context.MODE_PRIVATE ));
-//        }
+    public static Cache getCache() {
         return cache;
     }
 
@@ -35,8 +30,9 @@ public class AppData extends Application {
         super.onCreate();
         sInstance = this;
         sInstance.initializeInstance();
-        Log.e("Obj",this.toString());
+        Log.e("Obj",cache.getToken()==null?"No token":cache.getToken());
     }
+
     protected void initializeInstance() {
         // do all your initialization here
         cache = new Cache(
@@ -46,7 +42,7 @@ public class AppData extends Application {
 
     /** This is a stand-in for some application-specific session handler. */
     public class Cache {
-        private String token = "";
+        private String token = null;
         private Identity identity = null;
         private final NotificationSet notifications = new NotificationSet();
         private final ContactSet contacts = new ContactSet();

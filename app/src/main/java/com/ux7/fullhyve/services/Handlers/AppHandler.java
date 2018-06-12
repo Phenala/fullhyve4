@@ -1,9 +1,7 @@
 package com.ux7.fullhyve.services.Handlers;
 
 
-import android.app.Application;
-
-public class AppHandler extends Application{
+public class AppHandler{
     public LoginHandler loginHandler;
     public RegisterHandler registerHandler;
     public ContactHandler contactHandler;
@@ -13,7 +11,7 @@ public class AppHandler extends Application{
     public UserSelectHandler userSelectHandler;
     public ImageUploadHandler imageUploadHandler;
 
-    private static AppHandler instance = null;
+    private static AppHandler instance = new AppHandler();
 
     public static AppHandler getInstance(){
         if(instance == null){

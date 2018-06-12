@@ -7,4 +7,9 @@ public class Notification{
     public String comment;
     public Link[] commentLinks;
     public Link[] optionLinks;
+
+    @Override
+    public String toString() {
+        return "Comment: " + comment + " - ID: " + id;
+    }
 }

@@ -9,22 +9,21 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class Handler {
-    protected static AppData appData;
-    protected static AppData.Cache cache;
+    public static AppData.Cache cache;
 
     private static GsonBuilder gsonBuilder;
     static Gson gson;
 
-    Socket socket = Realtime.getSocket();
+    public static Socket socket;
 
-    Handler(){
+    public Handler(){
         gsonBuilder = new GsonBuilder();
         //gsonBuilder.excludeFieldsWithoutExposeAnnotation();
+        gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         gson = gsonBuilder.create();
 
-
-        appData = AppData.getInstance();
-        cache = appData.getCache();
+        cache = AppData.getCache();
+        socket = Realtime.getInstance();
     }
 
     public int generalHandler(Object... args){
