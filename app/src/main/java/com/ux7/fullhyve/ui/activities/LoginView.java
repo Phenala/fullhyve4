@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Handlers.AppHandler;
 
 public class LoginView extends AppCompatActivity {
 
@@ -71,17 +73,37 @@ public class LoginView extends AppCompatActivity {
 
     }
 
+    public void loginFailNotify() {
+
+        Toast.makeText(this, "Username or Password is incorrect.", Toast.LENGTH_LONG).show();
+
+    }
+
     public void login(View view) {
 
         getCredentials();
 
+        LoginRunnable runnable = new LoginRunnable();
+
+        AppHandler.getInstance().loginHandler.signin(username, password, this, runnable);
         //handleLoginLogic
 
+    }
 
-        loggedIn = true;
+    public class LoginRunnable implements Runnable {
 
-        goToHomeView();
+        public boolean loginSuccess;
 
+        @Override
+        public void run() {
+
+            if (loginSuccess)
+                goToHomeView();
+            else
+                loginFailNotify();
+
+
+        }
     }
 
 }

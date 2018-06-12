@@ -27,35 +27,12 @@ public class Handler {
     }
 
     public int generalHandler(Object... args){
-        if(args.length>0){
+        if(args.length > 0){
             ResponseFormat responseFormat = gson.fromJson(args[0].toString(), ResponseFormat.class);
 
             //Log.e("Response: ",responseFormat.toString());
 
-            switch (responseFormat.code){
-                // successful
-                case 200:
-                    return 200;
-
-                // invalid data
-                case 400:
-                    break;
-
-                // unauthenticated
-                case 401:
-                    break;
-
-                // unauthorized
-                case 403:
-                    break;
-
-                // server error
-                case 500:
-                    break;
-
-                default:
-                    return 200;
-            }
+            return responseFormat.code;
         }
 
         return 0;

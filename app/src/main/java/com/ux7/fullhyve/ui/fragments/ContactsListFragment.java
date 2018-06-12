@@ -33,7 +33,7 @@ public class ContactsListFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
 
-    List<ListContact> contacts;
+    List<ListContact> contacts =  new ArrayList<>();
 
     Activity activity;
     View fragmentView;
@@ -70,12 +70,12 @@ public class ContactsListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_contact_list, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_contact_list, container, false);
 
         // Set the adapter
         buildRecyclerView();
 
-        return view;
+        return fragmentView;
     }
 
 

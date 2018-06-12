@@ -20,8 +20,12 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.github.nkzawa.socketio.client.Socket;
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Handlers.AppHandler;
+import com.ux7.fullhyve.services.Storage.AppData;
+import com.ux7.fullhyve.services.Utility.Realtime;
 import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListTeam;
@@ -47,6 +51,8 @@ public class HomeView extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        initApp();
+
         checkRedirect();
 
         setContentView(R.layout.activity_home_view);
@@ -55,6 +61,12 @@ public class HomeView extends AppCompatActivity
 
         initializeFloatingActionButton();
         initializeAdders();
+
+    }
+
+    public void initApp() {
+
+        Realtime.getSocket();
 
     }
 
@@ -200,7 +212,7 @@ public class HomeView extends AppCompatActivity
 
     public boolean isLoggedIn() {
 
-        return LoginView.loggedIn;
+        return AppData.getCache().getToken() != null;
 
     }
 

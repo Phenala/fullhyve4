@@ -1,5 +1,7 @@
 package com.ux7.fullhyve.services.Handlers;
 
+import android.app.Activity;
+
 import com.ux7.fullhyve.services.Models.Contact;
 import com.ux7.fullhyve.services.Models.Message;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
@@ -13,7 +15,7 @@ import java.util.HashMap;
 
 public class ContactHandler extends Handler {
 
-    public void sendMessage(final int friendId, final String message, final ResponseListener responseListener){
+    public void sendMessage(final int friendId, final String message, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("friendId",friendId);
         args.put("message", message);
@@ -30,14 +32,14 @@ public class ContactHandler extends Handler {
                         //Message msg = new Message(messageR.data.msgId, message, Calendar.getInstance().getTime());
                         //cache.getContacts().getContact(friendId).addMessages(new )
                     }
-                    responseListener.call(messageR);
+                    activity.runOnUiThread(runnable);
 
                 }
             }
         });
     }
 
-    public void editMessage(final int messageId, final String newMessage, final ResponseListener responseListener){
+    public void editMessage(final int messageId, final String newMessage, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("messageId", messageId);
         args.put("newMessage", newMessage);
@@ -49,12 +51,12 @@ public class ContactHandler extends Handler {
             public void call(Object... args) {
                 if(generalHandler(args)==200){
 
-                    responseListener.call(true);
+                    activity.runOnUiThread(runnable);
                 }
             }
         });
     }
-    public void forwardMessage(final int[] friendIds, final int messageId, final ResponseListener responseListener){
+    public void forwardMessage(final int[] friendIds, final int messageId, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("friendIds", friendIds);
         args.put("messageId", messageId);
@@ -66,12 +68,12 @@ public class ContactHandler extends Handler {
             public void call(Object... args) {
                 if(generalHandler(args)==200){
 
-                    responseListener.call(true);
+                    activity.runOnUiThread(runnable);
                 }
             }
         });
     }
-    public void deleteMessage(final int messageId, final ResponseListener responseListener){
+    public void deleteMessage(final int messageId, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("messageId", messageId);
 
@@ -82,12 +84,12 @@ public class ContactHandler extends Handler {
             public void call(Object... args) {
                 if(generalHandler(args)==200){
 
-                    responseListener.call(true);
+                    activity.runOnUiThread(runnable);
                 }
             }
         });
     }
-    public void updateMessageSeen(final int contactId, final int lastMessageId, final ResponseListener responseListener){
+    public void updateMessageSeen(final int contactId, final int lastMessageId, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("contactId", contactId);
         args.put("lastMessageId", lastMessageId);
@@ -98,12 +100,12 @@ public class ContactHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    responseListener.call(true);
+                    activity.runOnUiThread(runnable);
                 }
             }
         });
     }
-    public void getFriendLastSeenTime(final int friendId, final ResponseListener responseListener){
+    public void getFriendLastSeenTime(final int friendId, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("friendId", friendId);
 
@@ -119,13 +121,13 @@ public class ContactHandler extends Handler {
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = messageR.data.message;
                     }
-                    responseListener.call(lastOnline);
+                    activity.runOnUiThread(runnable);
                 }
             }
         });
     }
 
-    public void getMessages(final int friendId, int offset, int limit){
+    public void getMessages(final int friendId, int offset, int limit, final Activity activity, final Runnable runnable){
         final ResponseFormat.GetMessagesR messagesR;
 
         ArrayList<Message> messages = cache.getContacts().getContact(friendId).getMessages(offset, limit);
@@ -149,14 +151,14 @@ public class ContactHandler extends Handler {
                             cache.getContacts().getContact(friendId).addMessages(messagesR.data.messages);
                         }
 
-                        // call semaphore here
+                        activity.runOnUiThread(runnable);
                     }
                 }
             });
         }
     }
 
-    public void getFriends(int offset, int limit, final ResponseListener responseListener){
+    public void getFriends(int offset, int limit, final Activity activity, final Runnable runnable){
         final ResponseFormat.GetFriends friendsR = new ResponseFormat().new GetFriends();
 
         ArrayList<Contact> friends = cache.getContacts().getFriends(offset, limit);
@@ -166,11 +168,9 @@ public class ContactHandler extends Handler {
         }
 
         friendsR.friends = friends;
-
-        responseListener.call(friendsR);
     }
 
-    public void getFriendsFromServer(int offset, int limit, final ResponseListener responseListener){
+    public void getFriendsFromServer(int offset, int limit, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("offset", offset);
         args.put("limit", limit);
@@ -188,13 +188,13 @@ public class ContactHandler extends Handler {
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = messageR.data.message;
                     }
-                    responseListener.call(friendsR);
+                    activity.runOnUiThread(runnable);
                 }
             }
         });
     }
 
-    public void searchUsers(final String name, final int offset, final int limit, final ResponseListener responseListener){
+    public void searchUsers(final String name, final int offset, final int limit, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("name", name);
         args.put("offset", offset);
@@ -212,7 +212,7 @@ public class ContactHandler extends Handler {
 
                     searchUsersR.data.friends.addAll(friends);
 
-                    responseListener.call(searchUsersR);
+                    activity.runOnUiThread(runnable);
                 }
             }
         });

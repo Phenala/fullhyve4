@@ -63,18 +63,6 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_view);
 
-        appHandler =  AppHandler.getInstance();
-        Socket socket = Realtime.getSocket();
-        socket.connect();
-
-
-        appHandler.contactHandler.userConnected(1, new com.ux7.fullhyve.services.Utility.ResponseListener() {
-            @Override
-            public void call(Object... data) {
-                Log.e("userConnected", "sucss");
-            }
-        });
-
         buildContact();
         buildActionBar();
         buildMessages();

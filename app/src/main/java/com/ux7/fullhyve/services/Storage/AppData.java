@@ -22,6 +22,10 @@ public class AppData extends Application {
     }
 
     public static Cache getCache() {
+        if (cache == null) {
+            AppData appData = AppData.getInstance();
+            appData.initializeInstance();
+        }
         return cache;
     }
 
@@ -33,7 +37,7 @@ public class AppData extends Application {
         Log.e("Obj",cache.getToken()==null?"No token":cache.getToken());
     }
 
-    protected void initializeInstance() {
+    public void initializeInstance() {
         // do all your initialization here
         cache = new Cache(
                 this.getSharedPreferences( "PREFS_PRIVATE", Context.MODE_PRIVATE ) );
