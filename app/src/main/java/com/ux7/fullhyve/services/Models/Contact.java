@@ -2,6 +2,7 @@ package com.ux7.fullhyve.services.Models;
 
 import com.ux7.fullhyve.services.Utility.Util;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;

@@ -48,10 +48,10 @@ public class MainActivity extends AppCompatActivity {
         Log.e("On view page",cache.getToken()==null?"No token":cache.getToken());
         // set the list of actions to the spinner
         spinner = findViewById(R.id.spinner);
-        String[] acts = {"Show token","Show identity","Show notifications",
+        String[] acts = {"Show token","Show identity","Show notifications", "Save cache","Read cache",
                 "User connected","Signup","Add friend","Reply friend request",
                 "Unfriend","Get notifications", "Get profile","Sign-out", "Edit profile",
-                "Get messages", "Get friends"};
+                "Get messages", "Get friends","Send message"};
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item,acts);
 
@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
                 appHandler.contactHandler.getMessages(friendId2,0,10, new ArrayList<ListMessage>(), this, new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("Profile",cache.getIdentity().toString());
+                        Log.e("Messages", "retrieved messages");
                     }
                 });
                 break;
@@ -271,6 +271,44 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 break;
+
+            case "Send message":
+                Integer friendId3 = Integer.parseInt(arg1.getText().toString());
+                String msg = arg2.getText().toString();
+
+                appHandler.contactHandler.sendMessage(friendId3,msg, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Message","Sent");
+                    }
+                });
+                break;
+
+            case "Save cache":
+                AppData appData = AppData.getInstance();
+                try{
+                    appData.writeObject(this, AppData.KEY, AppData.getCache());
+
+                    Object obj = appData.readObject(this, AppData.KEY);
+                    Log.e("Read object",obj.toString());
+
+                }catch (Exception e){
+                    Log.e("Writing to cache",e.getMessage());
+                }
+
+                break;
+
+            case "Read cache":
+                AppData appData1 = AppData.getInstance();
+                try{
+                    Object obj = appData1.readObject(this, AppData.KEY);
+                    Log.e("Read object",obj.toString());
+
+                }catch (Exception e){
+                    Log.e("Reading from cache",e.getMessage());
+                }
+                break;
+
 
 
             default:

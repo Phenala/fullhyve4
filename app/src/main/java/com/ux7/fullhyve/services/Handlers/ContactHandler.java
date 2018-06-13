@@ -35,6 +35,7 @@ public class ContactHandler extends Handler {
                     final ResponseFormat.MessageR messageR = gson.fromJson(args[0].toString(), ResponseFormat.MessageR.class);
 
                     if(messageR!=null && messageR.data != null){
+                        Log.e("Message","Sent");
                         //Message msg = new Message(messageR.data.msgId, message, Calendar.getInstance().getTime());
                         //cache.getContacts().getContact(friendId).addMessages(new )
                     }
@@ -95,9 +96,8 @@ public class ContactHandler extends Handler {
             }
         });
     }
-    public void updateMessageSeen(final int contactId, final int lastMessageId, final Activity activity, final Runnable runnable){
+    public void updateMessageSeen(final int lastMessageId, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
-        args.put("contactId", contactId);
         args.put("lastMessageId", lastMessageId);
 
         JSONObject req = RequestFormat.createRequestObj("updateMessageSeen",args);
@@ -138,9 +138,15 @@ public class ContactHandler extends Handler {
 
 //        final ArrayList<Message> messages = cache.getContacts().getContact(friendId).getMessages(offset, limit);
 
-//        if(messages != null){
-//            // call semaphore here
-//        } else{
+        Contact contact = cache.getContacts().getContact(friendId);
+        ArrayList<Message> messages = null;
+        if(contact!=null){
+            messages = contact.getMessages(offset, limit);
+        }
+
+        if(messages != null){
+            // call semaphore here
+        } else{
             HashMap<String, Object> args = new HashMap<>();
             args.put("friendId",friendId);
             args.put("offset", offset);
@@ -157,16 +163,23 @@ public class ContactHandler extends Handler {
 //                        if(messagesR != null && messagesR.data.done){
 //
 //                            cache.getContacts().getContact(friendId).addMessages(messagesR.data.messages);
+//
 //                        }
 
                         listMessages.clear();
                         listMessages.addAll(Converter.portMessageToListMessage(messagesR.data.messages));
 
+                        if(messagesR != null && messagesR.data.done){
+                            Log.e("Messages", "Received");
+                            Log.e("Message",messagesR.data.messages.get(0).getMessage());
+                            //cache.getContacts().getContact(friendId).addMessages(messagesR.data.messages);
+                        }
+
                         activity.runOnUiThread(runnable);
                     }
                 }
             });
-//        }
+        }
     }
 
     public void getFriends(int offset, int limit, final Activity activity, final Runnable runnable){

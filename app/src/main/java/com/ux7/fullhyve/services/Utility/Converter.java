@@ -23,14 +23,7 @@ import com.ux7.fullhyve.ui.enums.TaskStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by hp on 06/12/18.
- */
-
 public class Converter {
-
-
-
 
     public static List<ListMessage> portMessageToListMessage(List<Message> messages) {
 

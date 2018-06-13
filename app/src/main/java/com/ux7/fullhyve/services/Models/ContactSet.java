@@ -2,12 +2,13 @@ package com.ux7.fullhyve.services.Models;
 
 import com.ux7.fullhyve.services.Utility.Util;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
 // contacts
-public class ContactSet{
+public class ContactSet implements Serializable{
     private final ArrayList<SendMessage> sendQueue = new ArrayList<>();
     private final HashMap<Integer, Contact> chats = new HashMap<>();
     private final HashMap<Integer, User> users = new HashMap<>();
