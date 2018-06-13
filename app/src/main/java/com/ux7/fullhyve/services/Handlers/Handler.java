@@ -19,7 +19,7 @@ public class Handler {
     public Handler(){
         gsonBuilder = new GsonBuilder();
         //gsonBuilder.excludeFieldsWithoutExposeAnnotation();
-        gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        //gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         gson = gsonBuilder.create();
 
         cache = AppData.getCache();

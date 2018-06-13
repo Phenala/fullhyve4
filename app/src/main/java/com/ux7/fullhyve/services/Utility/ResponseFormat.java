@@ -3,8 +3,8 @@ package com.ux7.fullhyve.services.Utility;
 
 import com.ux7.fullhyve.services.Models.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ResponseFormat{
@@ -23,7 +23,7 @@ public class ResponseFormat{
     // server triggered
     public class DisconnectedUser{
         public int userId;
-        public LocalDateTime timestamp;
+        public String timestamp;
     }
     public class DisconnectedUserR{
         public DisconnectedUser data;

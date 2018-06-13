@@ -1,6 +1,7 @@
 package com.ux7.fullhyve.services.Handlers;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.ux7.fullhyve.services.Models.Contact;
 import com.ux7.fullhyve.services.Models.Message;
@@ -188,7 +189,9 @@ public class ContactHandler extends Handler {
                     if(friendsR!=null){
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = messageR.data.message;
+                        Log.e("Friends number",friendsR.data.friends.size()+"");
                     }
+
                     activity.runOnUiThread(runnable);
                 }
             }
