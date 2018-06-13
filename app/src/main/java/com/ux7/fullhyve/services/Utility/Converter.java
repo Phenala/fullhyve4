@@ -87,7 +87,11 @@ public class Converter {
         nContact.image = contact.getImage();
         nContact.name = contact.getFirstName() + " " + contact.getLastName();
         nContact.newMessages = contact.getUnseenMessages();
-        nContact.lastMessage = contact.getMessages().get(0).getMessage();
+        if (contact.getMessages().size() > 0) {
+            nContact.lastMessage = contact.getMessages().get(0).getMessage();
+        } else {
+            nContact.lastMessage = "";
+        }
 
         return nContact;
 

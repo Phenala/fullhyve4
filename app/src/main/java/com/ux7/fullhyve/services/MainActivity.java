@@ -19,6 +19,7 @@ import com.ux7.fullhyve.services.Utility.Realtime;
 import com.ux7.fullhyve.services.Utility.ResponseListener;
 import com.github.nkzawa.socketio.client.Socket;
 import com.ux7.fullhyve.ui.activities.LoginView;
+import com.ux7.fullhyve.ui.data.ListContact;
 
 import java.util.ArrayList;
 
@@ -262,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case "Get friends":
-                appHandler.contactHandler.getFriendsFromServer(0,10, this, new Runnable() {
+                appHandler.contactHandler.getFriendsFromServer(0,10, new ArrayList<ListContact>(), this, new Runnable() {
                     @Override
                     public void run() {
                         Log.e("Friends","Successfully fetched");
