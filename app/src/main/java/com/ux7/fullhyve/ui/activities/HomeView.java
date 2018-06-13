@@ -205,6 +205,10 @@ public class HomeView extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, projectsListFragment).commit();
             fab.show();
             fab.setOnClickListener(addProject);
+        } else if (id == R.id.nav_edit_profile) {
+
+            editProfile();
+
         } else if (id == R.id.nav_log_out) {
 
             logoutConfirmation();
@@ -244,6 +248,13 @@ public class HomeView extends AppCompatActivity
     public boolean isLoggedIn() {
 
         return AppData.getCache().getToken() != null;
+
+    }
+
+    public void editProfile() {
+
+        Intent intent = new Intent(this, EditProfileView.class);
+        startActivity(intent);
 
     }
 

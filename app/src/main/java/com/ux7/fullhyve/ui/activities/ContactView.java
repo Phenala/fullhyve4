@@ -45,7 +45,8 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
     boolean editing = false;
     int messageEditingId;
     String messageToSend = "";
-    int retrieveLimit = 5;
+    int retrieveLimit = 10;
+    int size = retrieveLimit;
 
     Activity activity = this;
     RecyclerView recyclerView;
@@ -89,18 +90,18 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                Log.e("Scrolllllling", "By half");
+                Log.e("Scrolllllling", "By half " + dy);
 
-                if (layoutManager.findLastVisibleItemPosition() == messages.size() - 1) {
+                if (layoutManager.findLastVisibleItemPosition() == messages.size() - 1 && dy != 0) {
 
+                    size += retrieveLimit;
                     getMessages();
 
                 }
             }
         });
 
-
-        recyclerView.getLayoutManager().scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
+        //recyclerView.getLayoutManager().scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
 
     }
 
@@ -111,12 +112,11 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 
             fetchingMessages = true;
 
-            ListMessage spinnerMessage = new ListMessage();
+//            ListMessage spinnerMessage = new ListMessage();
 //            spinnerMessage.spinner = true;
 //            messages.add(spinnerMessage);
-            adapter.update();
 
-            Runnable runnable = new Runnable() {
+            final Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
 
@@ -146,7 +146,9 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
                 }
             };
 
-            AppHandler.getInstance().contactHandler.getMessages(contact.id, messages.size(), retrieveLimit, messages, activity, runnable);
+            //adapter.update();
+
+            AppHandler.getInstance().contactHandler.getMessages(contact.id, 0, size, messages, activity, runnable);
 //            activity.runOnUiThread(runnable);
 
         }
@@ -410,17 +412,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
             @Override
             public void run() {
 
-                for (int i = 0; i < messages.size(); i++) {
-
-                    if (messages.get(i).id == -1) {
-
-                        messages.remove(messages.get(i));
-
-                    }
-
-                }
-
-                adapter.update();
+                getMessages();
 
             }
         };
