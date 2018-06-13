@@ -280,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
         String userName = userNameTxt.getText().toString();
         String password = passwordTxt.getText().toString();
 
+<<<<<<< HEAD
 
         appHandler.loginHandler.signin(userName, password, this, new Runnable() {
             @Override
@@ -287,6 +288,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Status","Successfully loggedin");
             }
         });
+=======
+        //appHandler.loginHandler.signin(userName, password, this, new LoginView.LoginRunnable());
+>>>>>>> origin/cache
     }
 
 

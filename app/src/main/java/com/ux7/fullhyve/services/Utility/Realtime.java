@@ -26,7 +26,7 @@ public class Realtime {
     private static Emitter.Listener onAuthenticationError;
 
 
-    private static Socket socket=null;
+    private static Socket socket = null;
     private static AppData.Cache cache;
     private static AppHandler appHandler = AppHandler.getInstance();
 
