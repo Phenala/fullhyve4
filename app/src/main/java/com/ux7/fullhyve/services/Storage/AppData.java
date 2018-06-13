@@ -20,6 +20,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class AppData extends Application {
+    public static String KEY = "fullhyveCache";
+
     private static AppData sInstance;
     private static AppData.Cache cache; // Generic your-application handler
 

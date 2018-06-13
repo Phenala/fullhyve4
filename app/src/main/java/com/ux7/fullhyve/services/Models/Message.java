@@ -5,7 +5,7 @@ import java.util.Date;
 public class Message{
     private int id;
     private String message;
-    private Date timestamp;
+    private String timestamp;
     private boolean seen;
     private boolean sent;
 
@@ -34,11 +34,11 @@ public class Message{
         this.message = message;
     }
 
-    public Date getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
