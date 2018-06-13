@@ -36,6 +36,7 @@ public class ContactHandler extends Handler {
 
                     if(messageR!=null && messageR.data != null){
                         Log.e("Message","Sent");
+                        Log.e("Message",messageR.data.msgId+"");
                         //Message msg = new Message(messageR.data.msgId, message, Calendar.getInstance().getTime());
                         //cache.getContacts().getContact(friendId).addMessages(new )
                     }

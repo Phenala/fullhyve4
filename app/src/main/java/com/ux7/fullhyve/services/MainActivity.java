@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         String[] acts = {"Show token","Show identity","Show notifications", "Save cache","Read cache",
                 "User connected","Signup","Add friend","Reply friend request",
                 "Unfriend","Get notifications", "Get profile","Sign-out", "Edit profile",
-                "Get messages", "Get friends","Send message"};
+                "Get messages", "Get friends","Send message", "Edit message", "Delete message", "Forward message", "Search users", "Update message seen"};
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item,acts);
 
@@ -280,6 +280,65 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Log.e("Message","Sent");
+                    }
+                });
+                break;
+
+            case "Edit message":
+                Integer msgId = Integer.parseInt(arg1.getText().toString());
+                String newMsg = arg2.getText().toString();
+
+                appHandler.contactHandler.editMessage(msgId, newMsg, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Message","Edited");
+                    }
+                });
+                break;
+
+            case "Forward message":
+                Integer msgId1 = Integer.parseInt(arg1.getText().toString());
+                int[] receiverId = {Integer.parseInt(arg1.getText().toString())};
+
+                appHandler.contactHandler.forwardMessage(receiverId, msgId1, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Message","Forwarded");
+                    }
+                });
+                break;
+
+            case "Delete message":
+                Integer msgId2 = Integer.parseInt(arg1.getText().toString());
+
+                appHandler.contactHandler.deleteMessage(msgId2, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Message","Deleted");
+                    }
+                });
+                break;
+
+            case "Search users":
+                int offset = 0;
+                int limit = 10;
+                String name = arg1.getText().toString();
+
+                appHandler.contactHandler.searchUsers(name, offset, limit, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Users","Searched");
+                    }
+                });
+                break;
+
+            case "Update message seen":
+                Integer lastMessageId = Integer.parseInt(arg1.getText().toString());
+
+                appHandler.contactHandler.updateMessageSeen(lastMessageId, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Message","All seen");
                     }
                 });
                 break;
