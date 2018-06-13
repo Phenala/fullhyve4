@@ -2,6 +2,7 @@ package com.ux7.fullhyve.services.Handlers;
 
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.ux7.fullhyve.services.Models.MyTeam;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
@@ -36,6 +37,11 @@ public class TeamHandler extends Handler {
                         final ResponseFormat.GetTeamsR teamsR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamsR.class);
 
                         if (teamsR != null) {
+                            Log.e("My teams","Fetched");
+                            if(teamsR.data.myTeams.size()>0){
+                                Log.e("Team name",teamsR.data.myTeams.get(0).name);
+                            }
+
                             //cache.contacts.addReceivedMessage(friendId, {message});
                             //cache.teams.myTeams.addTeams(teamsR.data);
                         }
@@ -91,6 +97,10 @@ public class TeamHandler extends Handler {
                     final ResponseFormat.GetTeamMemberR teamMembersR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamMemberR.class);
 
                     if(teamMembersR!=null){
+                        Log.e("Members","Fetched");
+                        if(teamMembersR.data.teamMembers != null && teamMembersR.data.teamMembers.size()>0){
+                            Log.e("Member",teamMembersR.data.teamMembers.get(0).getFirstName());
+                        }
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
@@ -117,6 +127,10 @@ public class TeamHandler extends Handler {
                     final ResponseFormat.GetTeamProjectR teamProjectsR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamProjectR.class);
 
                     if(teamProjectsR!=null){
+                        Log.e("Team projects","Fetched");
+                        if(teamProjectsR.data.teamProjects.size()>0){
+                            Log.e("Project",teamProjectsR.data.teamProjects.get(0).name);
+                        }
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }

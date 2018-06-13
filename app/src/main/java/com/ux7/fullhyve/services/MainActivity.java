@@ -46,11 +46,13 @@ public class MainActivity extends AppCompatActivity {
         Log.e("On view page",cache.getToken()==null?"No token":cache.getToken());
         // set the list of actions to the spinner
         spinner = findViewById(R.id.spinner);
-        String[] acts = {"Show token","Show identity","Show notifications", "Save cache","Read cache",
+        String[] acts1 = {"Show token","Show identity","Show notifications", "Save cache","Read cache",
                 "User connected","Signup","Add friend","Reply friend request",
                 "Unfriend","Get notifications", "Get profile","Sign-out", "Edit profile",
                 "Get messages", "Get friends","Send message", "Edit message", "Delete message", "Forward message",
                 "Search users", "Update message seen", "Get friend last seen time"};
+
+        String[] acts = {"Get my teams","Get team members","Get team projects"};
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item,acts);
 
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         execute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                testAccount(view);
+                testTeams(view);
 
             }
         });
@@ -122,6 +124,41 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
     }
+
+
+    public void testTeams(View view){
+        switch (spinner.getSelectedItem().toString()){
+            case "Get my teams":
+                appHandler.teamHandler.getMyTeams(0, 10, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("My teams","Fetched");
+                    }
+                });
+                break;
+
+            case "Get team members":
+                Integer teamId = Integer.parseInt(arg1.getText().toString());
+                appHandler.teamHandler.getTeamMembers(teamId, 0, 10, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Team members","Fetched");
+                    }
+                });
+                break;
+
+            case "Get team projects":
+                Integer teamId1 = Integer.parseInt(arg1.getText().toString());
+                appHandler.teamHandler.getTeamProjects(teamId1, 0, 10, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Team projects","Fetched");
+                    }
+                });
+                break;
+        }
+    }
+
 
     public void testAccount(View view){
         Log.e("Selected item",spinner.getSelectedItem().toString());
