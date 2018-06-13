@@ -3,6 +3,7 @@ package com.ux7.fullhyve.services.Handlers;
 import android.app.Activity;
 import android.util.Log;
 
+import com.google.gson.JsonElement;
 import com.ux7.fullhyve.services.Models.Contact;
 import com.ux7.fullhyve.services.Models.Message;
 import com.ux7.fullhyve.services.Utility.Converter;
@@ -69,7 +70,7 @@ public class ContactHandler extends Handler {
         args.put("friendIds", friendIds);
         args.put("messageId", messageId);
 
-        JSONObject req = RequestFormat.createRequestObj("forwardMessage",args);
+        JsonElement req = RequestFormat.createRequestObj(args,"forwardMessage");
 
         socket.emit("forwardMessage", req, new Ack() {
             @Override
@@ -122,9 +123,15 @@ public class ContactHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    final ResponseFormat.GetLastOnline lastOnline = gson.fromJson(args[0].toString(), ResponseFormat.GetLastOnline.class);
+                    final ResponseFormat.GetLastOnlineR lastOnline = gson.fromJson(args[0].toString(), ResponseFormat.GetLastOnlineR.class);
 
-                    if(lastOnline!=null){
+                    if(lastOnline!=null && lastOnline.data!=null){
+                        if(lastOnline.data.online){
+                            Log.e("Online","True");
+                        } else{
+                            Log.e("Seen at",lastOnline.data.timestamp);
+                        }
+
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = messageR.data.message;
                     }
@@ -238,10 +245,13 @@ public class ContactHandler extends Handler {
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     final ResponseFormat.SearchUsersR searchUsersR = gson.fromJson(args[0].toString(), ResponseFormat.SearchUsersR.class);
-                    ArrayList<Contact> friends = cache.getContacts().searchFriends(name, offset, limit);
+                    //ArrayList<Contact> friends = cache.getContacts().searchFriends(name, offset, limit);
 
-                    searchUsersR.data.friends.addAll(friends);
-
+                    //searchUsersR.data.friends.addAll(friends);
+                    if(searchUsersR!=null && searchUsersR.data.users.size()>0){
+                        Log.e("User",searchUsersR.data.users.get(0).getFirstName());
+                    }
+                    Log.e("Searched","true");
                     activity.runOnUiThread(runnable);
                 }
             }

@@ -41,6 +41,11 @@ public class TeamHandler extends Handler {
                         final ResponseFormat.GetTeamsR teamsR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamsR.class);
 
                         if (teamsR != null) {
+                            Log.e("My teams","Fetched");
+                            if(teamsR.data.myTeams.size()>0){
+                                Log.e("Team name",teamsR.data.myTeams.get(0).name);
+                            }
+
                             //cache.contacts.addReceivedMessage(friendId, {message});
                             //cache.teams.myTeams.addTeams(teamsR.data);
                         }
@@ -99,9 +104,16 @@ public class TeamHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    final ResponseFormat.GetTeamMemberR teamMembersR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamMemberR.class);
+                    final ResponseFormat.GetTeamMemberR membersR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamMemberR.class);
 
-                    if(teamMembersR!=null){
+                    if(membersR!=null){
+                        Log.e("Members","Fetched");
+                        if(membersR.data.members==null){
+
+                        }
+                        if(membersR.data.members != null && membersR.data.members.size()>0){
+                            Log.e("Member",membersR.data.members.get(0).getFirstName());
+                        }
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
@@ -131,6 +143,10 @@ public class TeamHandler extends Handler {
                     final ResponseFormat.GetTeamProjectR teamProjectsR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamProjectR.class);
 
                     if(teamProjectsR!=null){
+                        Log.e("Team projects","Fetched");
+                        if(teamProjectsR.data.projects.size()>0){
+                            Log.e("Project",teamProjectsR.data.projects.get(0).name);
+                        }
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
@@ -157,6 +173,9 @@ public class TeamHandler extends Handler {
                     final ResponseFormat.GetTeamAnnouncementR teamAnnouncementsR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamAnnouncementR.class);
 
                     if(teamAnnouncementsR!=null){
+                        if(teamAnnouncementsR.data.announcements!=null && teamAnnouncementsR.data.announcements.size()>0){
+                            Log.e("Annoucement",teamAnnouncementsR.data.announcements.get(0).mainMessage.getMessage());
+                        }
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }

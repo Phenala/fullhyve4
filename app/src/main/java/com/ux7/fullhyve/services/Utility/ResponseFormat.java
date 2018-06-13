@@ -100,6 +100,10 @@ public class ResponseFormat{
         public String timestamp;
     }
 
+    public class GetLastOnlineR{
+        public GetLastOnline data;
+    }
+
     /// teams
     //=========================================================
 
