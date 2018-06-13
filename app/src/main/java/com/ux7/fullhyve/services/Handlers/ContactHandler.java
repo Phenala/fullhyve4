@@ -4,14 +4,18 @@ import android.app.Activity;
 
 import com.ux7.fullhyve.services.Models.Contact;
 import com.ux7.fullhyve.services.Models.Message;
+import com.ux7.fullhyve.services.Utility.Converter;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
 import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.ux7.fullhyve.services.Utility.ResponseListener;
 import com.github.nkzawa.socketio.client.Ack;
+import com.ux7.fullhyve.ui.data.ListContact;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ContactHandler extends Handler {
 
@@ -171,7 +175,7 @@ public class ContactHandler extends Handler {
         friendsR.friends = friends;
     }
 
-    public void getFriendsFromServer(int offset, int limit, final Activity activity, final Runnable runnable){
+    public void getFriendsFromServer(int offset, int limit, final List<ListContact> listContacts, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("offset", offset);
         args.put("limit", limit);
@@ -188,6 +192,8 @@ public class ContactHandler extends Handler {
                     if(friendsR!=null){
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = messageR.data.message;
+                        listContacts.clear();
+                        listContacts.addAll(Converter.portContactToListContact(friendsR.data.friends));
                     }
                     activity.runOnUiThread(runnable);
                 }
