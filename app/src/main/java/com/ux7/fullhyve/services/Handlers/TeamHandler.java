@@ -119,7 +119,7 @@ public class TeamHandler extends Handler {
                     }
 
                     members.clear();
-                    members.addAll(Converter.portUsersToListMember(teamMembersR.data.members));
+                    members.addAll(Converter.portUsersToListMember(membersR.data.members));
 
                     activity.runOnUiThread(runnable);
                 }

@@ -20,7 +20,9 @@ import com.ux7.fullhyve.services.Utility.ResponseListener;
 import com.github.nkzawa.socketio.client.Socket;
 import com.ux7.fullhyve.ui.activities.LoginView;
 import com.ux7.fullhyve.ui.data.ListContact;
+import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.ListMessage;
+import com.ux7.fullhyve.ui.data.ListTeam;
 
 import java.util.ArrayList;
 
@@ -131,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
     public void testTeams(View view){
         switch (spinner.getSelectedItem().toString()){
             case "Get my teams":
-                appHandler.teamHandler.getMyTeams(0, 10, this, new Runnable() {
+                appHandler.teamHandler.getMyTeams(0, 10, new ArrayList<ListTeam>(), this, new Runnable() {
                     @Override
                     public void run() {
                         Log.e("My teams","Fetched");
@@ -151,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
             case "Get team members":
                 int teamId = Integer.parseInt(arg1.getText().toString());
-                appHandler.teamHandler.getTeamMembers(teamId, 0, 10, this, new Runnable() {
+                appHandler.teamHandler.getTeamMembers(teamId, 0, 10, new ArrayList<ListMember>(),this, new Runnable() {
                     @Override
                     public void run() {
                         Log.e("Team members","Fetched");
