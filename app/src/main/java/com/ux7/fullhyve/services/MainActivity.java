@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         String[] acts = {"Show token","Show identity","Show notifications", "Save cache","Read cache",
                 "User connected","Signup","Add friend","Reply friend request",
                 "Unfriend","Get notifications", "Get profile","Sign-out", "Edit profile",
-                "Get messages", "Get friends"};
+                "Get messages", "Get friends","Send message"};
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item,acts);
 
@@ -266,6 +266,18 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Log.e("Friends","Successfully fetched");
+                    }
+                });
+                break;
+
+            case "Send message":
+                Integer friendId3 = Integer.parseInt(arg1.getText().toString());
+                String msg = arg2.getText().toString();
+
+                appHandler.contactHandler.sendMessage(friendId3,msg, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Message","Sent");
                     }
                 });
                 break;
