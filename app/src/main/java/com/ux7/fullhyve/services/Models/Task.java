@@ -1,9 +1,11 @@
 package com.ux7.fullhyve.services.Models;
 
+import java.io.Serializable;
+
 /**
  * Created by TOSHIBA on 4/21/2018.
  */
-public class Task{
+public class Task implements Serializable{
     public int id;
     public int number;
     public String title;

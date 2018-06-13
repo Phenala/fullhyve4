@@ -1,9 +1,8 @@
 package com.ux7.fullhyve.services.Models;
 
-/**
- * Created by TOSHIBA on 4/21/2018.
- */
-public class Project{
+import java.io.Serializable;
+
+public class Project implements Serializable{
     public int id;
     public String name;
     public String image;

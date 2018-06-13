@@ -1,9 +1,10 @@
 package com.ux7.fullhyve.services.Models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class ContributorSet{
+public class ContributorSet implements Serializable{
     public ArrayList<User> individuals;
     public ArrayList<Team> teams;
 

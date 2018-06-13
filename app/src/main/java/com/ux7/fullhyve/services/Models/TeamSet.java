@@ -1,10 +1,11 @@
 package com.ux7.fullhyve.services.Models;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class TeamSet{
+public class TeamSet implements Serializable{
     public HashMap<Integer, MyTeam> myTeams;
     public HashMap<Integer, Team> teams;
     public SendAnnouncement[] sendAnnouncementQueue;

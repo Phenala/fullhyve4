@@ -256,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
                 appHandler.contactHandler.getMessages(friendId2,0,10, this, new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("Profile",cache.getIdentity().toString());
+                        Log.e("Messages", "retrieved messages");
                     }
                 });
                 break;

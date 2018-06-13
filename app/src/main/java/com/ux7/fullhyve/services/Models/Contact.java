@@ -2,6 +2,7 @@ package com.ux7.fullhyve.services.Models;
 
 import com.ux7.fullhyve.services.Utility.Util;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,7 +13,7 @@ public class Contact extends User{
     boolean online;
     String lastOnline;
     int unseenMessages;
-    ArrayList<Message> messages;
+    ArrayList<Message> messages = new ArrayList<>();
 
     public boolean isOnline() {
         return online;

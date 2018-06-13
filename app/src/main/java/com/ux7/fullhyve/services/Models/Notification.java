@@ -1,7 +1,9 @@
 package com.ux7.fullhyve.services.Models;
 
 
-public class Notification{
+import java.io.Serializable;
+
+public class Notification implements Serializable{
     public int id;
     public String image;
     public String comment;
