@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 "Get messages", "Get friends","Send message", "Edit message", "Delete message", "Forward message",
                 "Search users", "Update message seen", "Get friend last seen time"};
 
-        String[] acts = {"Get my teams","Get team members","Get team projects"};
+        String[] acts = {"Get my teams","Get team members","Get team projects", "Get team announcements"};
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item,acts);
 
@@ -137,8 +137,18 @@ public class MainActivity extends AppCompatActivity {
                 });
                 break;
 
+            case "Get team announcements":
+                int teamId2 = Integer.parseInt(arg1.getText().toString());
+                appHandler.teamHandler.getTeamAnnouncements(teamId2, 0, 10, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Team announcement","Fetched");
+                    }
+                });
+                break;
+
             case "Get team members":
-                Integer teamId = Integer.parseInt(arg1.getText().toString());
+                int teamId = Integer.parseInt(arg1.getText().toString());
                 appHandler.teamHandler.getTeamMembers(teamId, 0, 10, this, new Runnable() {
                     @Override
                     public void run() {
