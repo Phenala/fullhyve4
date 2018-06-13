@@ -90,12 +90,16 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                Log.e("Scrolllllling", "By half " + dy);
-
                 if (layoutManager.findLastVisibleItemPosition() == messages.size() - 1 && dy != 0) {
 
                     size += retrieveLimit;
-                    getMessages();
+
+                    recyclerView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            getMessages();
+                        }
+                    });
 
                 }
             }
@@ -142,11 +146,13 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 
                     ((MessagesRecyclerViewAdapter)recyclerView.getAdapter()).update();
 
+                    updateSeen();
+
                     fetchingMessages = false;
                 }
             };
 
-            //adapter.update();
+            adapter.update();
 
             AppHandler.getInstance().contactHandler.getMessages(contact.id, 0, size, messages, activity, runnable);
 //            activity.runOnUiThread(runnable);
@@ -234,6 +240,24 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
         }
 
     }
+
+    public void updateSeen() {
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+
+
+            }
+        };
+
+        if (messages.size() > 0)
+
+            AppHandler.getInstance().contactHandler.updateMessageSeen(messages.get(0).id, this, runnable);
+
+    }
+
 
     @Override
     public void onDeleteMessage(View view, final ListMessage message) {

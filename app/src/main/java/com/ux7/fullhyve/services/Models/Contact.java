@@ -13,6 +13,7 @@ public class Contact extends User{
     boolean online;
     String lastOnline;
     int unseenMessages;
+    public Message lastMessage;
     ArrayList<Message> messages = new ArrayList<>();
 
     public boolean isOnline() {

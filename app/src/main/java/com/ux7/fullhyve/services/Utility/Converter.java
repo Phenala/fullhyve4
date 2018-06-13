@@ -80,11 +80,8 @@ public class Converter {
         nContact.image = contact.getImage();
         nContact.name = contact.getFirstName() + " " + contact.getLastName();
         nContact.newMessages = contact.getUnseenMessages();
-        if (contact.getMessages().size() > 0) {
-            nContact.lastMessage = contact.getMessages().get(0).getMessage();
-        } else {
-            nContact.lastMessage = "";
-        }
+        nContact.lastMessage = contact.lastMessage.getMessage();
+        nContact.lastMessageSent = contact.lastMessage.isSent();
 
         return nContact;
 
