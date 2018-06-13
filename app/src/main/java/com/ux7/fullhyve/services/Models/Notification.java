@@ -5,8 +5,9 @@ public class Notification{
     public int id;
     public String image;
     public String comment;
-    public Link[] commentLinks;
-    public Link[] optionLinks;
+    //public Link[] commentLinks;
+    //public Link[] optionLinks;
+    public Link[] options;
 
     @Override
     public String toString() {

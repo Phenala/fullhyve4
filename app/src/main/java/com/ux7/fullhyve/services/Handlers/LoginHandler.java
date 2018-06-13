@@ -4,6 +4,7 @@ package com.ux7.fullhyve.services.Handlers;
 import android.app.Activity;
 import android.util.Log;
 
+import com.google.gson.JsonElement;
 import com.ux7.fullhyve.services.Models.Identity;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
 import com.ux7.fullhyve.services.Utility.ResponseFormat;
@@ -18,7 +19,7 @@ import java.util.HashMap;
 public class LoginHandler extends Handler {
 
     public void userConnected(final Activity activity, final Runnable runnable){
-        JSONObject req = RequestFormat.createRequestObj("userConnected",null);
+        JsonElement req = RequestFormat.createRequestObj(null, "userConnected");
 
         socket.emit("userConnected", req, new Ack() {
             @Override
@@ -85,7 +86,7 @@ public class LoginHandler extends Handler {
 
 
     public void signout(final Activity activity, final Runnable runnable){
-        JSONObject req = RequestFormat.createRequestObj("signout",null);
+        JsonElement req = RequestFormat.createRequestObj(null, "signout");
 
         socket.emit("signout", req, new Ack() {
             @Override
@@ -107,8 +108,8 @@ public class LoginHandler extends Handler {
         if(identity != null){
             activity.runOnUiThread(runnable);
         } else{
-            JSONObject req = RequestFormat.createRequestObj("getProfile",null);
-
+            JsonElement req = RequestFormat.createRequestObj(null, "getProfile");
+            //Log.e("GSOn", req);
             socket.emit("getProfile", req, new Ack() {
                 @Override
                 public void call(Object... args) {
@@ -130,12 +131,13 @@ public class LoginHandler extends Handler {
         args.put("firstName", identity.getFirstName());
         args.put("lastName",identity.getLastName());
         args.put("email",identity.getEmail());
-        args.put("username",identity.getUserName());
         args.put("image",identity.getImage());
         args.put("skills",identity.getSkills());
         args.put("description",identity.getDescription());
+        args.put("title", identity.getTitle());
 
-        JSONObject req = RequestFormat.createRequestObj("editProfile",args);
+        JsonElement req = RequestFormat.createRequestObj(args, "editProfile");
+        Log.e("GSON1",req.toString());
 
         socket.emit("editProfile", req, new Ack() {
             @Override
@@ -186,7 +188,6 @@ public class LoginHandler extends Handler {
         HashMap<String, Object> args = new HashMap<>();
         args.put("friendId", friendId);
 
-
         JSONObject req = RequestFormat.createRequestObj("unfriend",args);
 
         socket.emit("unfriend", req, new Ack() {
@@ -213,7 +214,10 @@ public class LoginHandler extends Handler {
                 if(generalHandler(args)==200){
                     final ResponseFormat.GetNotificationsR notificationsR = gson.fromJson(args[0].toString(), ResponseFormat.GetNotificationsR.class);
 
+                    Log.e("Notification","Success");
+
                     if(notificationsR!=null){
+                        Log.e("Notif size", "" + notificationsR.data.notifications.size());
                         cache.getNotifications().add(notificationsR.data.notifications);
                     }
                     activity.runOnUiThread(runnable);

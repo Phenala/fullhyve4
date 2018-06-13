@@ -131,6 +131,7 @@ public class ContactHandler extends Handler {
         final ResponseFormat.GetMessagesR messagesR;
 
         ArrayList<Message> messages = cache.getContacts().getContact(friendId).getMessages(offset, limit);
+
         if(messages != null){
             // call semaphore here
         } else{

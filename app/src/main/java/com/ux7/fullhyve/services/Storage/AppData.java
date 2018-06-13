@@ -15,7 +15,6 @@ import com.ux7.fullhyve.services.Models.TeamSet;
 public class AppData extends Application {
     private static AppData sInstance;
     private static AppData.Cache cache; // Generic your-application handler
-    private static AppHandler appHandler;
 
     public static AppData getInstance() {
         return sInstance;

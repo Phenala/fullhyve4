@@ -2,6 +2,7 @@ package com.ux7.fullhyve.services.Utility;
 
 import android.util.Log;
 
+import com.google.gson.JsonElement;
 import com.ux7.fullhyve.services.Storage.AppData;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,27 +40,15 @@ public class RequestFormat {
     }
 
 
-    public static JSONObject createRequestObj(String action, Object arg){
+    public static JsonElement createRequestObj(Object arg, String action){
         Gson gson = new GsonBuilder().create();
-        String reqDataStr = null;
 
-        JSONObject req = new JSONObject();
-        JSONObject reqData = new JSONObject();
-        try{
-            req.put("action", action);
+        HashMap<String, Object> req = new HashMap<>();
 
-            req.put("token", "Bearer " + (cache.getToken()==null?"":cache.getToken()));
-            Log.e("Token in request", cache.getToken()==null?"No token":cache.getToken());
-            if(arg != null){
-                reqDataStr = gson.toJson(arg);
-            }
+        req.put("action", action);
+        req.put("token", "Bearer " + (cache.getToken()==null?"":cache.getToken()));
+        req.put("reqData", arg==null?new HashMap<String,Object>():arg);
 
-            req.put("reqData", reqDataStr);
-        } catch (Exception e){
-            Log.e("JSONObject",e.getMessage());
-            return null;
-        }
-
-        return req;
+        return gson.toJsonTree(req);
     }
 }
