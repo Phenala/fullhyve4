@@ -63,6 +63,34 @@ public class LoginHandler extends Handler {
         });
     }
 
+    public void signin(String userName, String password, final Activity activity, final Runnable runnable){
+        HashMap<String, Object> args = new HashMap<>();
+        args.put("userName",userName);
+        args.put("password",password);
+
+        JSONObject req = RequestFormat.createRequestObj("signin",args);
+
+        Log.e("Sent Request", "true");
+
+        socket.emit("signin", req, new Ack() {
+            @Override
+            public void call(Object... args) {
+                Log.e("Responded", "true");
+                if(generalHandler(args)==200){
+                    Log.e("Responded", "true");
+                    final ResponseFormat.SignInR statusR = gson.fromJson(args[0].toString(), ResponseFormat.SignInR.class);
+                    cache.setToken(statusR.data.token);
+
+                    activity.runOnUiThread(runnable);
+                } else if (generalHandler(args) == 401) {
+
+                    activity.runOnUiThread(runnable);
+
+                }
+            }
+        });
+    }
+
     public void signup(String firstName, String lastName, String email, String userName, String password, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("firstName",firstName);

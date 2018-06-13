@@ -4,12 +4,13 @@ import com.ux7.fullhyve.services.Utility.Util;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
 public class Contact extends User{
     boolean online;
-    LocalDateTime lastOnline;
+    String lastOnline;
     int unseenMessages;
     ArrayList<Message> messages;
 
@@ -21,11 +22,11 @@ public class Contact extends User{
         this.online = online;
     }
 
-    public LocalDateTime getLastOnline() {
+    public String getLastOnline() {
         return lastOnline;
     }
 
-    public void setLastOnline(LocalDateTime lastOnline) {
+    public void setLastOnline(String lastOnline) {
         this.lastOnline = lastOnline;
     }
 
@@ -62,7 +63,7 @@ public class Contact extends User{
         return Util.sliceArray((ArrayList<Message>) getMessages(), offset, limit);
     }
 
-    public void changeFriendOnlineStatus(boolean onlineStatus, LocalDateTime lastOnline){
+    public void changeFriendOnlineStatus(boolean onlineStatus, String lastOnline){
         this.online = onlineStatus;
         this.lastOnline = lastOnline;
     }

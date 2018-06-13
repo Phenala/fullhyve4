@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         String[] acts = {"Show token","Show identity","Show notifications",
                 "User connected","Signup","Add friend","Reply friend request",
                 "Unfriend","Get notifications", "Get profile","Sign-out", "Edit profile",
-                "Get messages"};
+                "Get messages", "Get friends"};
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item,acts);
 
@@ -261,6 +261,16 @@ public class MainActivity extends AppCompatActivity {
                 });
                 break;
 
+            case "Get friends":
+                appHandler.contactHandler.getFriendsFromServer(0,10, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Friends","Successfully fetched");
+                    }
+                });
+                break;
+
+
             default:
                 Log.e("Action", "Unknown");
         }
@@ -270,7 +280,15 @@ public class MainActivity extends AppCompatActivity {
         String userName = userNameTxt.getText().toString();
         String password = passwordTxt.getText().toString();
 
-        //appHandler.loginHandler.signin(userName, password, this, new LoginView.LoginRunnable());
+
+
+        appHandler.loginHandler.signin(userName, password, this, new Runnable() {
+            @Override
+            public void run() {
+                Log.e("Status","Successfully loggedin");
+            }
+        });
+
     }
 
 
