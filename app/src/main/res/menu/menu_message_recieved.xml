@@ -4,7 +4,4 @@
     <item
         android:id="@+id/message_option_forward"
         android:title="Forward" />
-    <item
-        android:id="@+id/message_option_delete"
-        android:title="Delete" />
 </menu>

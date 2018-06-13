@@ -1,10 +1,12 @@
 package com.ux7.fullhyve.ui.data;
 
+import java.io.Serializable;
+
 /**
  * Created by hp on 5/29/2018.
  */
 
-public class ListTeam {
+public class ListTeam implements Serializable {
 
     public int id = 2436;
     public String name = "Low Town Locos";

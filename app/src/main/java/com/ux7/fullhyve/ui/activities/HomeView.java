@@ -126,7 +126,7 @@ public class HomeView extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home_view, menu);
 
-        searchView = (SearchView) ((MenuItem) menu.findItem(R.id.add_user_search)).getActionView();
+        searchView = (SearchView) ((MenuItem) menu.findItem(R.id.app_bar_search)).getActionView();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

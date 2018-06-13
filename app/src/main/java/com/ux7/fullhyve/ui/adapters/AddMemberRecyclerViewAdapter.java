@@ -30,7 +30,7 @@ import java.util.List;
 public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMemberRecyclerViewAdapter.ViewHolder> {
 
     private final List<ListMember> mMembers;
-    public final List<String> mSelectedUsers;
+    public final List<Integer> mSelectedUsers;
 
     public AddMemberRecyclerViewAdapter(List<ListMember> items) {
         mMembers = items;
@@ -80,11 +80,11 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
 
                 if (b)
 
-                    mSelectedUsers.add("" + holder.mMember.id);
+                    mSelectedUsers.add(holder.mMember.id);
 
                 else
 
-                    mSelectedUsers.remove("" + holder.mMember.id);
+                    mSelectedUsers.remove(mSelectedUsers.indexOf(holder.mMember.id));
 
             }
         });
@@ -116,9 +116,17 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
         }
     }
 
-    public String[] getSelectedUserIds() {
+    public int[] getSelectedUserIds() {
 
-        return mSelectedUsers.toArray(new String[]{});
+        int[] outids = new int[mSelectedUsers.size()];
+
+        for (int i = 0; i < mSelectedUsers.size(); i++) {
+
+            outids[i] = mSelectedUsers.get(i);
+
+        }
+
+        return outids;
 
     }
 

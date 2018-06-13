@@ -2,12 +2,16 @@ package com.ux7.fullhyve.services.Handlers;
 
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.ux7.fullhyve.services.Models.MyTeam;
+import com.ux7.fullhyve.services.Utility.Converter;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
 import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.ux7.fullhyve.services.Utility.ResponseListener;
 import com.github.nkzawa.socketio.client.Ack;
+import com.ux7.fullhyve.ui.data.ListMember;
+import com.ux7.fullhyve.ui.data.ListTeam;
 
 import org.json.JSONObject;
 
@@ -16,7 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class TeamHandler extends Handler {
-    public void getMyTeams(final int offset, final int limit, final Activity activity, final Runnable runnable){
+    public void getMyTeams(final int offset, final int limit, final List<ListTeam> teams, final Activity activity, final Runnable runnable){
+
         final List<MyTeam> myTeams = new ArrayList<>();
         //myTeams=cache.contacts.getMyTeams(offset,limit).toArray();
 
@@ -39,6 +44,12 @@ public class TeamHandler extends Handler {
                             //cache.contacts.addReceivedMessage(friendId, {message});
                             //cache.teams.myTeams.addTeams(teamsR.data);
                         }
+
+                        Log.e("Got teams ", "Length of " + teamsR.data.myTeams.size());
+
+                        teams.clear();
+                        teams.addAll(Converter.portMyTeamToListTeam(teamsR.data.myTeams));
+
                         activity.runOnUiThread(runnable);
                     }
                 }
@@ -76,7 +87,7 @@ public class TeamHandler extends Handler {
 
 
 
-    public void getTeamMembers(int teamId,final int offset, final int limit, final Activity activity, final Runnable runnable){
+    public void getTeamMembers(int teamId, final int offset, final int limit, final List<ListMember> members, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("teamId",teamId);
         args.put("offset",offset);
@@ -94,6 +105,9 @@ public class TeamHandler extends Handler {
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
+
+                    members.clear();
+                    members.addAll(Converter.portUsersToListMember(teamMembersR.data.members));
 
                     activity.runOnUiThread(runnable);
                 }

@@ -15,6 +15,7 @@ import com.ux7.fullhyve.ui.activities.ContactView;
 import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.Util;
 
 import java.util.List;
 
@@ -55,7 +56,13 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
             holder.mNewMessageCountFrame.setVisibility(View.GONE);
         else
             holder.mNewMessageCountFrame.setVisibility(View.VISIBLE);
-        Picasso.with(holder.itemView.getContext()).load(holder.mContact.image).transform(new CircleTransform()).into(holder.mPicture);
+
+        if (holder.mContact.image != null)
+
+        Picasso.with(holder.itemView.getContext())
+                .load(Util.getImageUrl(holder.mContact.image))
+                .transform(new CircleTransform())
+                .into(holder.mPicture);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

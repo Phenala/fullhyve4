@@ -1,5 +1,6 @@
 package com.ux7.fullhyve.ui.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,19 +14,43 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Handlers.AppHandler;
+import com.ux7.fullhyve.services.Models.User;
 import com.ux7.fullhyve.ui.activities.AddMember;
 import com.ux7.fullhyve.ui.adapters.MemberRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListMember;
+import com.ux7.fullhyve.ui.data.ListTeam;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MemberFragment extends Fragment {
 
     View view;
     Context context;
+    ListTeam team;
 
-    public MemberFragment() {
+    MemberOf type;
+    List<ListMember> members = new ArrayList<>();
+    LinearLayoutManager layoutManager;
+    MemberRecyclerViewAdapter adapter;
+
+    public enum MemberOf {
+
+        TEAM,
+        PROJECT
+
+    }
+
+    public void setMemberType(MemberOf takeType) {
+
+        type = takeType;
+
+    }
+
+    public void setTeam(ListTeam team) {
+        this.team = team;
     }
 
     // TODO: Customize parameter initialization
@@ -53,23 +78,23 @@ public class MemberFragment extends Fragment {
         initializeRecyclerView();
         initializeFloatingActionButton();
 
+        getMembers();
+
         return view;
     }
 
     public void initializeRecyclerView() {
 
+        final FloatingActionButton fab = (FloatingActionButton)view.findViewById(R.id.add_member_fab);
+
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.member_list);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new MemberRecyclerViewAdapter(members);
+        recyclerView.setAdapter(adapter);
 
-
-        ArrayList<ListMember> items = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            items.add(new ListMember());
-        }
-
-        final FloatingActionButton fab = (FloatingActionButton)view.findViewById(R.id.add_member_fab);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -86,10 +111,26 @@ public class MemberFragment extends Fragment {
                 }
             }
         });
-
-        recyclerView.setAdapter(new MemberRecyclerViewAdapter(items));
     }
 
+    public void getMembers() {
+
+        Activity activity = getActivity();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                adapter.update();
+
+            }
+        };
+
+        if (type == MemberOf.TEAM)
+
+            AppHandler.getInstance().teamHandler.getTeamMembers(team.id, 0, 500, members, activity, runnable);
+
+    }
 
     @Override
     public void onAttach(Context context) {

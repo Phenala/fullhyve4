@@ -69,8 +69,7 @@ public class TeamView extends AppCompatActivity {
 
     public void buildTeam() {
 
-        team.name = getIntent().getStringExtra("name");
-        team.image = getIntent().getStringExtra("image");
+        team = (ListTeam) getIntent().getSerializableExtra("team");
 
     }
 
@@ -171,6 +170,8 @@ public class TeamView extends AppCompatActivity {
                     return teamAnnounce;
                 case 1:
                     MemberFragment teamMembers = new MemberFragment();
+                    teamMembers.setMemberType(MemberFragment.MemberOf.TEAM);
+                    teamMembers.setTeam(team);
                     return teamMembers;
                 case 2:
                     TeamProjectsFragment projects = new TeamProjectsFragment();

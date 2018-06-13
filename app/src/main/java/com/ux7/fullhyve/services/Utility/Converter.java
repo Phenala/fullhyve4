@@ -9,9 +9,11 @@ import com.ux7.fullhyve.services.Models.Project;
 import com.ux7.fullhyve.services.Models.Task;
 import com.ux7.fullhyve.services.Models.TaskSet;
 import com.ux7.fullhyve.services.Models.Team;
+import com.ux7.fullhyve.services.Models.User;
 import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.ui.data.ListAnnouncement;
 import com.ux7.fullhyve.ui.data.ListContact;
+import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.ListMessage;
 import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListTask;
@@ -371,5 +373,44 @@ public class Converter {
         return taskDetail;
 
     }
+
+
+
+
+
+
+
+
+    public static  List<ListMember> portUsersToListMember (List<User> users) {
+
+        List<ListMember> listMembers = new ArrayList<>();
+
+        for (User user : users) {
+
+            ListMember listMember = portUsersToListMember(user);
+
+            listMembers.add(listMember);
+
+        }
+
+        return listMembers;
+
+    }
+
+
+
+    public static ListMember portUsersToListMember (User user) {
+
+        ListMember listMember = new ListMember();
+
+        listMember.id = user.getId();
+        listMember.image = user.getImage();
+        listMember.leader = false;
+        listMember.name = user.getFirstName() + " " + user.getLastName();
+
+        return listMember;
+
+    }
+
 
 }

@@ -112,21 +112,21 @@ public class ResponseFormat{
     }
     public class TeamMember{
         public boolean done;
-        public List<User> teamMembers;
+        public List<User> members;
     }
     public class GetTeamMemberR{
         public TeamMember data;
     }
     public class TeamProject{
         public boolean done;
-        public List<Project> teamProjects;
+        public List<Project> projects;
     }
     public class GetTeamProjectR{
         public TeamProject data;
     }
     public class TeamAnnouncement{
         public boolean done;
-        public List<Announcement> teamAnnouncement;
+        public List<Announcement> announcements;
     }
     public class GetTeamAnnouncementR{
         public TeamAnnouncement data;

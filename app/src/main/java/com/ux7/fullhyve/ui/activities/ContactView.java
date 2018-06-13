@@ -2,6 +2,7 @@ package com.ux7.fullhyve.ui.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -17,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -45,6 +47,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
     boolean editing = false;
     int messageEditingId;
     String messageToSend = "";
+    int messageForwardingId;
     int retrieveLimit = 10;
     int size = retrieveLimit;
 
@@ -116,9 +119,9 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 
             fetchingMessages = true;
 
-//            ListMessage spinnerMessage = new ListMessage();
-//            spinnerMessage.spinner = true;
-//            messages.add(spinnerMessage);
+            ListMessage spinnerMessage = new ListMessage();
+            spinnerMessage.spinner = true;
+            messages.add(spinnerMessage);
 
             final Runnable runnable = new Runnable() {
                 @Override
@@ -200,6 +203,8 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
     @Override
     public void onForwardMessage(View view, ListMessage message) {
 
+        messageForwardingId = message.id;
+
         Intent intent = new Intent(this, AddMember.class);
         intent.putExtra("type", AddMember.AddUserType.FORWARD);
         startActivityForResult(intent, 11);
@@ -211,6 +216,9 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 
         EditText messageEditor = ((EditText)findViewById(R.id.messageToSend));
 
+        messageEditor.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         messageEditor.setText(message.message);
         messageEditingId = message.id;
         setMessageEditMode(true);
@@ -235,7 +243,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 
         if (resultCode == RESULT_OK && requestCode == 11) {
 
-            Toast.makeText(this, data.getStringArrayExtra("users").length + "", Toast.LENGTH_LONG).show();
+           forwardMessage(messageForwardingId, data.getIntArrayExtra("users"));
 
         }
 
@@ -411,7 +419,6 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 
         if (editing) {
             editMessage();
-            setMessageEditMode(false);
         } else {
             sendMessage();
         }
@@ -445,22 +452,79 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 
     }
 
-    public void deleteMessage(int messageId) {
+    public void deleteMessage(final int messageId) {
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                for (int i = 0; i < messages.size(); i++) {
+
+                    if (messages.get(i).id == messageId)
+
+                        messages.remove(i);
+
+                }
+
+                adapter.update();
+
+            }
+        };
+
+        AppHandler.getInstance().contactHandler.deleteMessage(messageId, this, runnable);
 
         //messageDeleteLogic
 
     }
 
     public void editMessage() {
-        String message = ((EditText)findViewById(R.id.messageToSend)).getText().toString();
+
+        messageToSend = ((EditText)findViewById(R.id.messageToSend)).getText().toString();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                for (ListMessage message : messages) {
+                    if (message.id == messageEditingId) {
+
+                        message.message = messageToSend;
+
+                    }
+                }
+
+                messageEditingId = -1;
+
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(((EditText)findViewById(R.id.messageToSend)).getWindowToken(), 0);
+
+                adapter.update();
+            }
+        };
+
+        AppHandler.getInstance().contactHandler.editMessage(messageEditingId, messageToSend, this, runnable);
+
+        setMessageEditMode(false);
 
         //messageEditLogic
 
     }
 
-    public void forwardMessage(String message, int[] receiverIds) {
+    public void forwardMessage(int messageId, int[] receiverIds) {
 
         //messageForwardLogic
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+
+
+            }
+        };
+
+        AppHandler.getInstance().contactHandler.forwardMessage(receiverIds, messageId, this, runnable);
+
 
     }
 }

@@ -1,5 +1,6 @@
 package com.ux7.fullhyve.ui.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,30 +13,31 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.ui.adapters.TeamsRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListTeam;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnHomeInteractionListener}
- * interface.
- */
 public class TeamsListFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+
     private OnHomeInteractionListener mListener;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
+
+
+
+    List<ListTeam> teams = new ArrayList<>();
+
+    TeamsRecyclerViewAdapter adapter;
+    LinearLayoutManager layoutManager;
+
     public TeamsListFragment() {
     }
 
@@ -63,24 +65,18 @@ public class TeamsListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_team_list, container, false);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
+        Context context = view.getContext();
+        RecyclerView recyclerView = (RecyclerView) view;
 
-            ArrayList<ListTeam> items = new ArrayList<>();
-            for (int i = 0; i < 10; i++) {
-                items.add(new ListTeam());
-            }
+        recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
 
-            recyclerView.setAdapter(new TeamsRecyclerViewAdapter(items, mListener));
-        }
+        layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new TeamsRecyclerViewAdapter(teams, mListener);
+        recyclerView.setAdapter(adapter);
+
+        getTeams();
+
         return view;
     }
 
@@ -102,14 +98,20 @@ public class TeamsListFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    public void getTeams() {
+
+        Activity activity = getActivity();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                adapter.update();
+
+            }
+        };
+
+        AppHandler.getInstance().teamHandler.getMyTeams(0, 500, teams,activity, runnable);
+
+    }
 }
