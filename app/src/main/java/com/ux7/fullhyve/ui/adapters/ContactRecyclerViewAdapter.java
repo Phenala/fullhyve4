@@ -67,6 +67,12 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
         mListener.onStartNewActivity(intent);
     }
 
+    public void update() {
+
+        notifyDataSetChanged();
+
+    }
+
 
     @Override
     public int getItemCount() {

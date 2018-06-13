@@ -9,54 +9,30 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class Handler {
-    protected static AppData appData;
-    protected static AppData.Cache cache;
+    public static AppData.Cache cache;
 
     private static GsonBuilder gsonBuilder;
     static Gson gson;
 
-    Socket socket = Realtime.getSocket();
+    public static Socket socket;
 
-    Handler(){
+    public Handler(){
         gsonBuilder = new GsonBuilder();
         //gsonBuilder.excludeFieldsWithoutExposeAnnotation();
+        //gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         gson = gsonBuilder.create();
 
-
-        appData = AppData.getInstance();
-        cache = appData.getCache();
+        cache = AppData.getCache();
+        socket = Realtime.getInstance();
     }
 
     public int generalHandler(Object... args){
-        if(args.length>0){
+        if(args.length > 0){
             ResponseFormat responseFormat = gson.fromJson(args[0].toString(), ResponseFormat.class);
 
             //Log.e("Response: ",responseFormat.toString());
 
-            switch (responseFormat.code){
-                // successful
-                case 200:
-                    return 200;
-
-                // invalid data
-                case 400:
-                    break;
-
-                // unauthenticated
-                case 401:
-                    break;
-
-                // unauthorized
-                case 403:
-                    break;
-
-                // server error
-                case 500:
-                    break;
-
-                default:
-                    return 200;
-            }
+            return responseFormat.code;
         }
 
         return 0;

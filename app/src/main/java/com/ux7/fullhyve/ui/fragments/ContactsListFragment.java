@@ -1,5 +1,6 @@
 package com.ux7.fullhyve.ui.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -30,6 +32,14 @@ public class ContactsListFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+
+    List<ListContact> contacts =  new ArrayList<>();
+
+    Activity activity;
+    View fragmentView;
+    LinearLayoutManager layoutManager;
+    ContactRecyclerViewAdapter adapter;
+
     private OnHomeInteractionListener mListener;
 
     /**
@@ -60,29 +70,12 @@ public class ContactsListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_contact_list, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_contact_list, container, false);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
+        buildRecyclerView();
 
-
-            ArrayList<ListContact> items = new ArrayList<>();
-            for (int i = 0; i < 10; i++) {
-                items.add(new ListContact());
-            }
-
-
-            recyclerView.setAdapter(new ContactRecyclerViewAdapter(items, mListener));
-        }
-        return view;
+        return fragmentView;
     }
 
 
@@ -101,6 +94,35 @@ public class ContactsListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void buildRecyclerView() {
+
+        Context context = fragmentView.getContext();
+        RecyclerView recyclerView = (RecyclerView) fragmentView;
+        recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+        layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new ContactRecyclerViewAdapter(contacts, mListener);
+        recyclerView.setAdapter(adapter);
+
+        getContacts();
+
+    }
+
+    public void getContacts() {
+
+        activity = getActivity();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                adapter.update();
+
+            }
+        };
+
     }
 
 

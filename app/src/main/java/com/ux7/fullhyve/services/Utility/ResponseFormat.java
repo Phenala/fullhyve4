@@ -2,9 +2,9 @@ package com.ux7.fullhyve.services.Utility;
 
 
 import com.ux7.fullhyve.services.Models.*;
-import com.google.gson.annotations.Expose;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ResponseFormat{
@@ -23,7 +23,7 @@ public class ResponseFormat{
     // server triggered
     public class DisconnectedUser{
         public int userId;
-        public LocalDateTime timestamp;
+        public String timestamp;
     }
     public class DisconnectedUserR{
         public DisconnectedUser data;
@@ -88,7 +88,7 @@ public class ResponseFormat{
 
     //getNotifications
     public class GetNotifications extends Counted{
-        public List<Notification> notifications;
+        public ArrayList<Notification> notifications;
     }
     public class GetNotificationsR{
         public GetNotifications data;
@@ -206,7 +206,6 @@ public class ResponseFormat{
 
     public class SignedIn{
         public String token;
-        public boolean status;
     }
     public class SignInR{
         public SignedIn data;

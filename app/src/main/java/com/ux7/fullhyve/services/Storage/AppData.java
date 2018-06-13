@@ -5,28 +5,35 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.services.Models.ContactSet;
 import com.ux7.fullhyve.services.Models.Identity;
 import com.ux7.fullhyve.services.Models.NotificationSet;
 import com.ux7.fullhyve.services.Models.ProjectSet;
 import com.ux7.fullhyve.services.Models.TeamSet;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 public class AppData extends Application {
+    public static String KEY = "fullhyveCache";
+
     private static AppData sInstance;
     private static AppData.Cache cache; // Generic your-application handler
-    public static String userToken = "sample";
 
     public static AppData getInstance() {
-        if(sInstance==null){
-            sInstance = new AppData();
-        }
         return sInstance;
     }
 
-    public Cache getCache() {
-//        if(cache == null){
-//            cache = new Cache(this.getSharedPreferences( "PREFS_PRIVATE", Context.MODE_PRIVATE ));
-//        }
+    public static Cache getCache() {
+        if (cache == null) {
+            AppData appData = AppData.getInstance();
+            appData.initializeInstance();
+        }
         return cache;
     }
 
@@ -35,18 +42,43 @@ public class AppData extends Application {
         super.onCreate();
         sInstance = this;
         sInstance.initializeInstance();
-        Log.e("Obj",this.toString());
+        Log.e("Obj",cache.getToken()==null?"No token":cache.getToken());
     }
-    protected void initializeInstance() {
+
+    public void initializeInstance() {
         // do all your initialization here
         cache = new Cache(
                 this.getSharedPreferences( "PREFS_PRIVATE", Context.MODE_PRIVATE ) );
     }
 
 
+
+    // read and write to data
+    // ================================================================
+
+    public void writeObject(Context context, String key, Object object) throws IOException {
+        FileOutputStream fos = context.openFileOutput(key, Context.MODE_PRIVATE);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(object);
+        oos.close();
+        fos.close();
+    }
+
+    public Object readObject(Context context, String key) throws IOException, ClassNotFoundException {
+        FileInputStream fis = context.openFileInput(key);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        Object object = ois.readObject();
+        Log.e("Saved object",object.toString());
+        return object;
+    }
+
+
+    //===========================================================
+
+
     /** This is a stand-in for some application-specific session handler. */
-    public class Cache {
-        private String token = "";
+    public class Cache implements Serializable{
+        private String token = null;
         private Identity identity = null;
         private final NotificationSet notifications = new NotificationSet();
         private final ContactSet contacts = new ContactSet();

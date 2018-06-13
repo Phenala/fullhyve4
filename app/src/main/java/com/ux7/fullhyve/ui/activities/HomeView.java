@@ -1,12 +1,15 @@
 package com.ux7.fullhyve.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Sensor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,10 +20,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.nkzawa.socketio.client.Socket;
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Handlers.AppHandler;
+import com.ux7.fullhyve.services.Models.Identity;
+import com.ux7.fullhyve.services.Storage.AppData;
+import com.ux7.fullhyve.services.Utility.Realtime;
 import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListTeam;
@@ -29,6 +38,7 @@ import com.ux7.fullhyve.ui.fragments.NotificationFragment;
 import com.ux7.fullhyve.ui.fragments.ProjectsListFragment;
 import com.ux7.fullhyve.ui.fragments.TeamsListFragment;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
+import com.ux7.fullhyve.ui.util.CircleTransform;
 
 public class HomeView extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnHomeInteractionListener {
@@ -38,6 +48,7 @@ public class HomeView extends AppCompatActivity
     ProjectsListFragment projectsListFragment = new ProjectsListFragment();
     NotificationFragment notificationFragment = new NotificationFragment();
 
+    NavigationView navigationView;
     FloatingActionButton fab;
     View.OnClickListener addTeam;
     View.OnClickListener addProject;
@@ -45,12 +56,31 @@ public class HomeView extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        initApp();
+
+        checkRedirect();
+
         setContentView(R.layout.activity_home_view);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        buildNavigation();
 
         initializeFloatingActionButton();
         initializeAdders();
+
+    }
+
+    public void initApp() {
+
+        Realtime.getSocket();
+
+    }
+
+
+    public void buildNavigation() {
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -60,24 +90,32 @@ public class HomeView extends AppCompatActivity
 
 
         ImageView userPicture = (ImageView)(((NavigationView)findViewById(R.id.nav_view)).getHeaderView(0).findViewById(R.id.userPicture));
-        Picasso.with(this).load(R.mipmap.ic_launcher_round).into(userPicture);
+        Picasso.with(this).load(R.mipmap.user_picture_round).into(userPicture);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contactsListFragment).commit();
 
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        updateUserImage();
+
     }
-
-
 
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
+
             drawer.closeDrawer(GravityCompat.START);
+
         } else {
-            super.onBackPressed();
+
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
         }
     }
 
@@ -118,6 +156,29 @@ public class HomeView extends AppCompatActivity
                 startActivity(intent);
             }
         };
+    }
+
+    public void updateUserImage() {
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                Identity identity = AppData.getCache().getIdentity();
+                ((TextView)navigationView.findViewById(R.id.profile_identity_name)).setText(identity.getFirstName() + " " + identity.getFirstName());
+
+                Log.e("Picture", identity.getImage());
+
+                Picasso.with(getBaseContext())
+                        .load(identity.getImage())
+                        .transform(new CircleTransform())
+                        .into((ImageView)navigationView.findViewById(R.id.userPicture));
+
+            }
+        };
+
+        AppHandler.getInstance().loginHandler.getProfile(this, runnable);
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -167,6 +228,23 @@ public class HomeView extends AppCompatActivity
             }
         });
         fab.hide();
+    }
+
+    public void checkRedirect() {
+
+        if (!isLoggedIn()) {
+
+            Intent intent = new Intent(this, LoginView.class);
+            startActivity(intent);
+
+        }
+
+    }
+
+    public boolean isLoggedIn() {
+
+        return AppData.getCache().getToken() != null;
+
     }
 
 

@@ -21,5 +21,8 @@ public class Identity extends User{
         this.email = email;
     }
 
-
+    @Override
+    public String toString() {
+        return "Name: " + getFirstName() + " " + getLastName() + " - Username: " + getUserName() + " - Email: " + getEmail();
+    }
 }

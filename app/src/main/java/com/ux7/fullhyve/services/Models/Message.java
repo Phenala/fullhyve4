@@ -1,6 +1,9 @@
 package com.ux7.fullhyve.services.Models;
 
-public class Message{
+import java.io.Serializable;
+import java.util.Date;
+
+public class Message implements Serializable{
     private int id;
     private String message;
     private String timestamp;
@@ -8,13 +11,13 @@ public class Message{
     private boolean sent;
 
 
-    public Message(int id, String message, String timestamp, boolean seen, boolean sent) {
-        this.id = id;
-        this.message = message;
-        this.timestamp = timestamp;
-        this.seen = seen;
-        this.sent = sent;
-    }
+//    public Message(int id, String message, Date timestamp, boolean seen, boolean sent) {
+//        this.id = id;
+//        this.message = message;
+//        this.timestamp = timestamp;
+//        this.seen = seen;
+//        this.sent = sent;
+//    }
 
     public int getId() {
         return id;

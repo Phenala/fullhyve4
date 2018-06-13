@@ -6,7 +6,7 @@ package com.ux7.fullhyve.ui.data;
 
 public class ProjectDetail {
 
-    public String id = "32545";
+    public int id = 32545;
     public String name = "Poltergeist";
     public String image = "https://demo.accesspressthemes.com/wordpress-plugins/smart-logo-showcase/wp-content/uploads/2016/12/spartan-security.jpg";
     public String focus = "Hologram Research";

@@ -6,7 +6,7 @@ package com.ux7.fullhyve.ui.data;
 
 public class TeamDetail {
 
-    public String id = "32545";
+    public int id = 32545;
     public String name = "Monarch";
     public String image = "http://www.artisticquiltdesign.com/wp-content/uploads/cool-gaming-logos-gruppr-logo-edwin-de-jongh-dribbble.png";
     public String focus = "Cloud Computing";
