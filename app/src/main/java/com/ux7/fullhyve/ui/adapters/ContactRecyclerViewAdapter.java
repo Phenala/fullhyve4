@@ -62,8 +62,7 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
 
     public void openMessages(ListContact contact) {
         Intent intent = new Intent(mListener.getHomeContext(), ContactView.class);
-        intent.putExtra("name", contact.name);
-        intent.putExtra("image", contact.image);
+        intent.putExtra("contact", contact);
         mListener.onStartNewActivity(intent);
     }
 

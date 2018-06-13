@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.ui.adapters.ContactRecyclerViewAdapter;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.ui.data.ListContact;
@@ -122,6 +123,8 @@ public class ContactsListFragment extends Fragment {
 
             }
         };
+
+        AppHandler.getInstance().contactHandler.getFriendsFromServer(0, 500, contacts, activity, runnable);
 
     }
 

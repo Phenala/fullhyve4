@@ -47,8 +47,6 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
     String messageToSend = "";
     int retrieveLimit = 5;
 
-
-    AppHandler appHandler;
     Activity activity = this;
     RecyclerView recyclerView;
     MessagesRecyclerViewAdapter adapter;
@@ -72,8 +70,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
     //Builder functions
 
     public void buildContact() {
-        contact.name = getIntent().getStringExtra("name");
-        contact.image = getIntent().getStringExtra("image");
+        contact = (ListContact) getIntent().getSerializableExtra("contact");
     }
 
     public void buildMessages() {
@@ -92,8 +89,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                RecyclerView.State x = new RecyclerView.State();
-                layoutManager.computeVerticalScrollOffset(x);
+                Log.e("Scrolllllling", "By half");
 
                 if (layoutManager.findLastVisibleItemPosition() == messages.size() - 1) {
 
@@ -116,33 +112,33 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
             fetchingMessages = true;
 
             ListMessage spinnerMessage = new ListMessage();
-            spinnerMessage.spinner = true;
-            messages.add(spinnerMessage);
+//            spinnerMessage.spinner = true;
+//            messages.add(spinnerMessage);
             adapter.update();
 
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
 
-                    for (int i = 0; i < 5; i++) {
-
-                        ListMessage x = new ListMessage();
-                        x.sent = (Math.random() > 0.5d);
-                        x.message = j + " coconuts";
-                        j++;
-                        messages.add(x);
-
-                    }
-
-                    for (int i = 0; i < messages.size(); i++) {
-
-                        if (messages.get(i).spinner == true) {
-
-                            messages.remove(messages.get(i));
-
-                        }
-
-                    }
+//                    for (int i = 0; i < 5; i++) {
+//
+//                        ListMessage x = new ListMessage();
+//                        x.sent = (Math.random() > 0.5d);
+//                        x.message = j + " coconuts";
+//                        j++;
+//                        messages.add(x);
+//
+//                    }
+//
+//                    for (int i = 0; i < messages.size(); i++) {
+//
+//                        if (messages.get(i).spinner == true) {
+//
+//                            messages.remove(messages.get(i));
+//
+//                        }
+//
+//                    }
 
                     ((MessagesRecyclerViewAdapter)recyclerView.getAdapter()).update();
 
@@ -150,8 +146,8 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
                 }
             };
 
-//            appHandler.contactHandler.getMessages(contact.id, messages.size(), retrieveLimit, messages, activity, runnable);
-            activity.runOnUiThread(runnable);
+            AppHandler.getInstance().contactHandler.getMessages(contact.id, messages.size(), retrieveLimit, messages, activity, runnable);
+//            activity.runOnUiThread(runnable);
 
         }
 
@@ -429,13 +425,8 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
             }
         };
 
-//        appHandler.contactHandler.sendMessage(contact.id, messageToSend, activity, runnable);
-        activity.runOnUiThread(runnable);
+        AppHandler.getInstance().contactHandler.sendMessage(contact.id, messageToSend, activity, runnable);
 
-
-//        (new SendMessageTask()).execute();
-
-        //messageSendLogic
     }
 
     public void deleteMessage(int messageId) {

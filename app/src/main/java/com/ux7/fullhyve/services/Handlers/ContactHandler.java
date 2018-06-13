@@ -30,7 +30,6 @@ public class ContactHandler extends Handler {
                     final ResponseFormat.MessageR messageR = gson.fromJson(args[0].toString(), ResponseFormat.MessageR.class);
 
                     if(messageR!=null && messageR.data != null){
-                        Log.e("Message","Sent");
                         //Message msg = new Message(messageR.data.msgId, message, Calendar.getInstance().getTime());
                         //cache.getContacts().getContact(friendId).addMessages(new )
                     }
@@ -132,12 +131,7 @@ public class ContactHandler extends Handler {
     public void getMessages(final int friendId, int offset, int limit, final Activity activity, final Runnable runnable){
         final ResponseFormat.GetMessagesR messagesR;
 
-        Contact contact = cache.getContacts().getContact(friendId);
-        ArrayList<Message> messages = null;
-        if(contact!=null){
-            messages = contact.getMessages(offset, limit);
-        }
-
+        ArrayList<Message> messages = cache.getContacts().getContact(friendId).getMessages(offset, limit);
 
         if(messages != null){
             // call semaphore here
@@ -156,9 +150,7 @@ public class ContactHandler extends Handler {
                         ResponseFormat.GetMessagesR messagesR = gson.fromJson(args[0].toString(), ResponseFormat.GetMessagesR.class);
 
                         if(messagesR != null && messagesR.data.done){
-                            Log.e("Messages", "Received");
-                            Log.e("Message",messagesR.data.messages.get(0).getMessage());
-                            //cache.getContacts().getContact(friendId).addMessages(messagesR.data.messages);
+                            cache.getContacts().getContact(friendId).addMessages(messagesR.data.messages);
                         }
 
                         activity.runOnUiThread(runnable);
