@@ -31,6 +31,7 @@ public class ContactHandler extends Handler {
 
                     if(messageR!=null && messageR.data != null){
                         Log.e("Message","Sent");
+                        Log.e("Message",messageR.data.msgId+"");
                         //Message msg = new Message(messageR.data.msgId, message, Calendar.getInstance().getTime());
                         //cache.getContacts().getContact(friendId).addMessages(new )
                     }
@@ -91,9 +92,8 @@ public class ContactHandler extends Handler {
             }
         });
     }
-    public void updateMessageSeen(final int contactId, final int lastMessageId, final Activity activity, final Runnable runnable){
+    public void updateMessageSeen(final int lastMessageId, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
-        args.put("contactId", contactId);
         args.put("lastMessageId", lastMessageId);
 
         JSONObject req = RequestFormat.createRequestObj("updateMessageSeen",args);
