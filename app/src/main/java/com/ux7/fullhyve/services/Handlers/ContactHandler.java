@@ -30,6 +30,7 @@ public class ContactHandler extends Handler {
                     final ResponseFormat.MessageR messageR = gson.fromJson(args[0].toString(), ResponseFormat.MessageR.class);
 
                     if(messageR!=null && messageR.data != null){
+                        Log.e("Message","Sent");
                         //Message msg = new Message(messageR.data.msgId, message, Calendar.getInstance().getTime());
                         //cache.getContacts().getContact(friendId).addMessages(new )
                     }
