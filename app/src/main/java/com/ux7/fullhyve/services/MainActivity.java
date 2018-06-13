@@ -270,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 break;
 
+
             default:
                 Log.e("Action", "Unknown");
         }
