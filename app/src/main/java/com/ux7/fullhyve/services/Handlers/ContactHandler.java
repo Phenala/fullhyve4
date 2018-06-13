@@ -11,6 +11,7 @@ import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.ux7.fullhyve.services.Utility.ResponseListener;
 import com.github.nkzawa.socketio.client.Ack;
 import com.ux7.fullhyve.ui.data.ListContact;
+import com.ux7.fullhyve.ui.data.ListMessage;
 
 import org.json.JSONObject;
 
@@ -132,14 +133,14 @@ public class ContactHandler extends Handler {
         });
     }
 
-    public void getMessages(final int friendId, int offset, int limit, final Activity activity, final Runnable runnable){
+    public void getMessages(final int friendId, int offset, int limit, final List<ListMessage> listMessages, final Activity activity, final Runnable runnable){
         final ResponseFormat.GetMessagesR messagesR;
 
-        ArrayList<Message> messages = cache.getContacts().getContact(friendId).getMessages(offset, limit);
+//        final ArrayList<Message> messages = cache.getContacts().getContact(friendId).getMessages(offset, limit);
 
-        if(messages != null){
-            // call semaphore here
-        } else{
+//        if(messages != null){
+//            // call semaphore here
+//        } else{
             HashMap<String, Object> args = new HashMap<>();
             args.put("friendId",friendId);
             args.put("offset", offset);
@@ -153,15 +154,19 @@ public class ContactHandler extends Handler {
                     if(generalHandler(args)==200){
                         ResponseFormat.GetMessagesR messagesR = gson.fromJson(args[0].toString(), ResponseFormat.GetMessagesR.class);
 
-                        if(messagesR != null && messagesR.data.done){
-                            cache.getContacts().getContact(friendId).addMessages(messagesR.data.messages);
-                        }
+//                        if(messagesR != null && messagesR.data.done){
+//
+//                            cache.getContacts().getContact(friendId).addMessages(messagesR.data.messages);
+//                        }
+
+                        listMessages.clear();
+                        listMessages.addAll(Converter.portMessageToListMessage(messagesR.data.messages));
 
                         activity.runOnUiThread(runnable);
                     }
                 }
             });
-        }
+//        }
     }
 
     public void getFriends(int offset, int limit, final Activity activity, final Runnable runnable){

@@ -20,6 +20,7 @@ import com.ux7.fullhyve.services.Utility.ResponseListener;
 import com.github.nkzawa.socketio.client.Socket;
 import com.ux7.fullhyve.ui.activities.LoginView;
 import com.ux7.fullhyve.ui.data.ListContact;
+import com.ux7.fullhyve.ui.data.ListMessage;
 
 import java.util.ArrayList;
 
@@ -254,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
 
             case "Get messages":
                 Integer friendId2 = Integer.parseInt(arg1.getText().toString());
-                appHandler.contactHandler.getMessages(friendId2,0,10, this, new Runnable() {
+                appHandler.contactHandler.getMessages(friendId2,0,10, new ArrayList<ListMessage>(), this, new Runnable() {
                     @Override
                     public void run() {
                         Log.e("Profile",cache.getIdentity().toString());
