@@ -270,13 +270,7 @@ public class MainActivity extends AppCompatActivity {
         String userName = userNameTxt.getText().toString();
         String password = passwordTxt.getText().toString();
 
-
-        appHandler.loginHandler.signin(userName, password, this, new LoginView.LoginRunnable() {
-            @Override
-            public void run() {
-                Log.e("Status","Successfully loggedin");
-            }
-        });
+        //appHandler.loginHandler.signin(userName, password, this, new LoginView.LoginRunnable());
     }
 
 

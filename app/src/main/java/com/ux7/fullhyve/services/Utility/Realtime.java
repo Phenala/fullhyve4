@@ -26,14 +26,14 @@ public class Realtime {
     private static Emitter.Listener onAuthenticationError;
 
 
-    private static Socket socket=null;
+    private static Socket socket = null;
     private static AppData.Cache cache;
     private static AppHandler appHandler = AppHandler.getInstance();
 
     private static GsonBuilder gsonBuilder;
     private static Gson gson;
 
-    private static final String URL = "http://192.168.0.105:8000/chat";
+    private static final String URL = "http://192.168.137.38:8000/chat";
 
 
     private Realtime(){

@@ -1,5 +1,6 @@
 package com.ux7.fullhyve.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,12 +20,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.nkzawa.socketio.client.Socket;
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
+import com.ux7.fullhyve.services.Models.Identity;
 import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.services.Utility.Realtime;
 import com.ux7.fullhyve.ui.data.ListContact;
@@ -34,6 +38,7 @@ import com.ux7.fullhyve.ui.fragments.NotificationFragment;
 import com.ux7.fullhyve.ui.fragments.ProjectsListFragment;
 import com.ux7.fullhyve.ui.fragments.TeamsListFragment;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
+import com.ux7.fullhyve.ui.util.CircleTransform;
 
 public class HomeView extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnHomeInteractionListener {
@@ -43,6 +48,7 @@ public class HomeView extends AppCompatActivity
     ProjectsListFragment projectsListFragment = new ProjectsListFragment();
     NotificationFragment notificationFragment = new NotificationFragment();
 
+    NavigationView navigationView;
     FloatingActionButton fab;
     View.OnClickListener addTeam;
     View.OnClickListener addProject;
@@ -89,8 +95,10 @@ public class HomeView extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contactsListFragment).commit();
 
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        updateUserImage();
 
     }
 
@@ -148,6 +156,29 @@ public class HomeView extends AppCompatActivity
                 startActivity(intent);
             }
         };
+    }
+
+    public void updateUserImage() {
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                Identity identity = AppData.getCache().getIdentity();
+                ((TextView)navigationView.findViewById(R.id.profile_identity_name)).setText(identity.getFirstName() + " " + identity.getFirstName());
+
+                Log.e("Picture", identity.getImage());
+
+                Picasso.with(getBaseContext())
+                        .load(identity.getImage())
+                        .transform(new CircleTransform())
+                        .into((ImageView)navigationView.findViewById(R.id.userPicture));
+
+            }
+        };
+
+        AppHandler.getInstance().loginHandler.getProfile(this, runnable);
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
