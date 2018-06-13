@@ -220,10 +220,10 @@ public class ContactHandler extends Handler {
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     final ResponseFormat.SearchUsersR searchUsersR = gson.fromJson(args[0].toString(), ResponseFormat.SearchUsersR.class);
-                    ArrayList<Contact> friends = cache.getContacts().searchFriends(name, offset, limit);
+                    //ArrayList<Contact> friends = cache.getContacts().searchFriends(name, offset, limit);
 
-                    searchUsersR.data.friends.addAll(friends);
-
+                    //searchUsersR.data.friends.addAll(friends);
+                    Log.e("Searched","true");
                     activity.runOnUiThread(runnable);
                 }
             }
