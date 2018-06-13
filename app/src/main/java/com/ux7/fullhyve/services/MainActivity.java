@@ -49,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
         String[] acts = {"Show token","Show identity","Show notifications", "Save cache","Read cache",
                 "User connected","Signup","Add friend","Reply friend request",
                 "Unfriend","Get notifications", "Get profile","Sign-out", "Edit profile",
-                "Get messages", "Get friends","Send message", "Edit message", "Delete message", "Forward message", "Search users", "Update message seen"};
+                "Get messages", "Get friends","Send message", "Edit message", "Delete message", "Forward message",
+                "Search users", "Update message seen", "Get friend last seen time"};
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item,acts);
 
@@ -296,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
 
             case "Forward message":
                 Integer msgId1 = Integer.parseInt(arg1.getText().toString());
-                int[] receiverId = {Integer.parseInt(arg1.getText().toString())};
+                int[] receiverId = {Integer.parseInt(arg2.getText().toString())};
 
                 appHandler.contactHandler.forwardMessage(receiverId, msgId1, this, new Runnable() {
                     @Override
@@ -337,6 +338,17 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Log.e("Message","All seen");
+                    }
+                });
+                break;
+
+            case "Get friend last seen time":
+                Integer friendId4 = Integer.parseInt(arg1.getText().toString());
+
+                appHandler.contactHandler.getFriendLastSeenTime(friendId4, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Friend","Seen");
                     }
                 });
                 break;
