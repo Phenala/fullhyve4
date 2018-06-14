@@ -40,6 +40,7 @@ import com.ux7.fullhyve.ui.fragments.ProjectsListFragment;
 import com.ux7.fullhyve.ui.fragments.TeamsListFragment;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.Util;
 
 public class HomeView extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnHomeInteractionListener {
@@ -192,12 +193,12 @@ public class HomeView extends AppCompatActivity
             public void run() {
 
                 Identity identity = AppData.getCache().getIdentity();
-                ((TextView)navigationView.findViewById(R.id.profile_identity_name)).setText(identity.getFirstName() + " " + identity.getFirstName());
+                ((TextView)navigationView.findViewById(R.id.profile_identity_name)).setText(identity.getFirstName() + " " + identity.getLastName());
 
                 Log.e("Picture", identity.getImage());
 
                 Picasso.with(getBaseContext())
-                        .load(identity.getImage())
+                        .load(Util.getImageUrl(identity.getImage()))
                         .transform(new CircleTransform())
                         .into((ImageView)navigationView.findViewById(R.id.userPicture));
 

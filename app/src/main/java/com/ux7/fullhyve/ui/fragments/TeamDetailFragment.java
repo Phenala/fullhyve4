@@ -12,17 +12,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Models.Team;
 import com.ux7.fullhyve.ui.data.TeamDetail;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.Util;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link TeamDetailFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link TeamDetailFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class TeamDetailFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,6 +29,8 @@ public class TeamDetailFragment extends Fragment {
     private String mParam2;
 
     public View rootView;
+
+    TeamDetail teamDetail;
 
     private OnFragmentInteractionListener mListener;
 
@@ -81,16 +78,17 @@ public class TeamDetailFragment extends Fragment {
 
     public void buildTeamDetail() {
 
-        TeamDetail teamDetail = new TeamDetail();
         ((TextView)rootView.findViewById(R.id.team_name)).setText(teamDetail.name);
         ((TextView)rootView.findViewById(R.id.team_focus)).setText(teamDetail.focus);
         ((TextView)rootView.findViewById(R.id.team_description)).setText(teamDetail.description);
         ((TextView)rootView.findViewById(R.id.team_member_count)).setText(teamDetail.members + " members");
         ImageView teamImageView = ((ImageView)rootView.findViewById(R.id.team_image));
-        Picasso.with(getActivity())
-                .load(teamDetail.image)
-                .transform(new CircleTransform())
-                .into(teamImageView);
+
+        if (teamDetail.image != null)
+            Picasso.with(getActivity())
+                    .load(Util.getImageUrl(teamDetail.image))
+                    .transform(new CircleTransform())
+                    .into(teamImageView);
 
     }
 
@@ -99,6 +97,10 @@ public class TeamDetailFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    public void setTeamDetail(TeamDetail detail) {
+        teamDetail = detail;
     }
 
     @Override

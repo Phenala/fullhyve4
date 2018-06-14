@@ -19,7 +19,9 @@ import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListTask;
 import com.ux7.fullhyve.ui.data.ListTaskSet;
 import com.ux7.fullhyve.ui.data.ListTeam;
+import com.ux7.fullhyve.ui.data.ProjectDetail;
 import com.ux7.fullhyve.ui.data.TaskDetail;
+import com.ux7.fullhyve.ui.data.TeamDetail;
 import com.ux7.fullhyve.ui.enums.TaskStatus;
 
 import java.util.ArrayList;
@@ -151,6 +153,14 @@ public class Converter {
         nProject.image = project.image;
         nProject.contributor = true;
 
+        ProjectDetail projectDetail = new ProjectDetail();
+
+        projectDetail.id = project.id;
+        projectDetail.name = project.name;
+        projectDetail.contributors = project.contributorCount;
+        projectDetail.focus = project.field;
+        projectDetail.image = project.image;
+
         return nProject;
 
     }
@@ -215,6 +225,17 @@ public class Converter {
         nTeam.image = team.image;
         nTeam.member = true;
 
+        TeamDetail teamDetail = new TeamDetail();
+
+        teamDetail.id = team.id;
+        teamDetail.name = team.name;
+        teamDetail.image = team.image;
+        teamDetail.focus = team.focus;
+        teamDetail.description = team.description;
+        teamDetail.members = team.memberCount;
+
+        nTeam.detail = teamDetail;
+
         return nTeam;
 
     }
@@ -249,7 +270,7 @@ public class Converter {
         nAnnouncement.replies = announcement.replies.length;
         nAnnouncement.senderId = announcement.mainMessage.sender.getId();
         nAnnouncement.senderImage = announcement.mainMessage.sender.getImage();
-        nAnnouncement.senderName = announcement.mainMessage.sender.getFirstName() + " " + announcement.mainMessage.sender.getFirstName();
+        nAnnouncement.senderName = announcement.mainMessage.sender.getFirstName() + " " + announcement.mainMessage.sender.getLastName();
         nAnnouncement.sent = announcement.mainMessage.isSent();
         nAnnouncement.sentTime = announcement.mainMessage.getTimestamp();
 

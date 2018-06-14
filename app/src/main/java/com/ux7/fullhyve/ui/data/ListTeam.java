@@ -13,4 +13,6 @@ public class ListTeam implements Serializable {
     public String image = "http://www.artisticquiltdesign.com/wp-content/uploads/cool-gaming-logos-gruppr-logo-edwin-de-jongh-dribbble.png";
     public boolean member = false;
 
+    public TeamDetail detail;
+
 }

@@ -1,10 +1,12 @@
 package com.ux7.fullhyve.ui.data;
 
+import java.io.Serializable;
+
 /**
  * Created by hp on 6/3/2018.
  */
 
-public class TeamDetail {
+public class TeamDetail implements Serializable {
 
     public int id = 32545;
     public String name = "Monarch";

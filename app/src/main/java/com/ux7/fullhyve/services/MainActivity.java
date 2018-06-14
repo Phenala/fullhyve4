@@ -19,9 +19,11 @@ import com.ux7.fullhyve.services.Utility.Realtime;
 import com.ux7.fullhyve.services.Utility.ResponseListener;
 import com.github.nkzawa.socketio.client.Socket;
 import com.ux7.fullhyve.ui.activities.LoginView;
+import com.ux7.fullhyve.ui.data.ListAnnouncement;
 import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.ListMessage;
+import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListTeam;
 
 import java.util.ArrayList;
@@ -143,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
             case "Get team announcements":
                 int teamId2 = Integer.parseInt(arg1.getText().toString());
-                appHandler.teamHandler.getTeamAnnouncements(teamId2, 0, 10, this, new Runnable() {
+                appHandler.teamHandler.getTeamAnnouncements(teamId2, 0, 10, new ArrayList<ListAnnouncement>(), this, new Runnable() {
                     @Override
                     public void run() {
                         Log.e("Team announcement","Fetched");
@@ -163,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
             case "Get team projects":
                 Integer teamId1 = Integer.parseInt(arg1.getText().toString());
-                appHandler.teamHandler.getTeamProjects(teamId1, 0, 10, this, new Runnable() {
+                appHandler.teamHandler.getTeamProjects(teamId1, 0, 10, new ArrayList<ListProject>(),this, new Runnable() {
                     @Override
                     public void run() {
                         Log.e("Team projects","Fetched");

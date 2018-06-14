@@ -29,6 +29,7 @@ public class AnnouncementView extends AppCompatActivity {
 
         buildActionBar();
         buildReplies();
+
     }
 
     public void buildAnnouncement() {
@@ -79,8 +80,8 @@ public class AnnouncementView extends AppCompatActivity {
         Picasso.with(this)
                 .load(getIntent().getStringExtra("image"))
                 .transform(new CircleTransform())
-                .resize(64,64)
-                .into(new ActionBarTarget(getResources(), actionBar));
+                .resize( CircleTransform.dimen, CircleTransform.dimen)
+                .into(new ActionBarTarget(this, actionBar));
     }
 
 

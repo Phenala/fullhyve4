@@ -15,6 +15,8 @@ import com.ux7.fullhyve.ui.activities.ProjectView;
 import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.Images;
+import com.ux7.fullhyve.ui.util.Util;
 
 import java.util.List;
 
@@ -44,11 +46,21 @@ public class ProjectsRecyclerViewAdapter extends RecyclerView.Adapter<ProjectsRe
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mProject = mProjects.get(position);
         holder.mNameView.setText(mProjects.get(position).name);
+        holder.mPicture.setBackgroundResource(Images.PROJECT);
 
-        Picasso.with(holder.mView.getContext())
-                .load(holder.mProject.image)
-                .transform(new CircleTransform())
-                .into(holder.mPicture);
+        if (holder.mProject.image != null) {
+
+            Picasso.with(holder.mView.getContext())
+                    .load(Util.getImageUrl(holder.mProject.image))
+                    .transform(new CircleTransform())
+                    .into(holder.mPicture);
+
+        } else {
+
+            holder.mPicture.setImageResource(Images.PROJECT);
+
+        }
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +80,12 @@ public class ProjectsRecyclerViewAdapter extends RecyclerView.Adapter<ProjectsRe
         intent.putExtra("name", project.name);
         intent.putExtra("image", project.image);
         context.startActivity(intent);
+
+    }
+
+    public void update() {
+
+        notifyDataSetChanged();
 
     }
 

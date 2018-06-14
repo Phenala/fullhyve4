@@ -10,7 +10,9 @@ import com.ux7.fullhyve.services.Utility.RequestFormat;
 import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.ux7.fullhyve.services.Utility.ResponseListener;
 import com.github.nkzawa.socketio.client.Ack;
+import com.ux7.fullhyve.ui.data.ListAnnouncement;
 import com.ux7.fullhyve.ui.data.ListMember;
+import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListTeam;
 
 import org.json.JSONObject;
@@ -128,7 +130,7 @@ public class TeamHandler extends Handler {
     }
 
 
-    public void getTeamProjects(int teamId,final int offset, final int limit, final Activity activity, final Runnable runnable){
+    public void getTeamProjects(int teamId, final int offset, final int limit, final List<ListProject> listProjects, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("teamId",teamId);
         args.put("offset",offset);
@@ -136,11 +138,15 @@ public class TeamHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("getTeamProjects",args);
 
+        Log.e("team projecto", "");
+
         socket.emit("getTeamProjects", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     final ResponseFormat.GetTeamProjectR teamProjectsR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamProjectR.class);
+
+                    Log.e("team projecto", teamProjectsR.data.projects.size() + "");
 
                     if(teamProjectsR!=null){
                         Log.e("Team projects","Fetched");
@@ -149,7 +155,12 @@ public class TeamHandler extends Handler {
                         }
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
+
+                        listProjects.clear();
+                        listProjects.addAll(Converter.portProjectToListProject(teamProjectsR.data.projects));
+
                     }
+
 
                     activity.runOnUiThread(runnable);
                 }
@@ -158,7 +169,7 @@ public class TeamHandler extends Handler {
     }
 
 
-    public void getTeamAnnouncements(int teamId,final int offset, final int limit, final Activity activity, final Runnable runnable){
+    public void getTeamAnnouncements(int teamId, final int offset, final int limit, final List<ListAnnouncement> listAnnouncements, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("teamId",teamId);
         args.put("offset",offset);
@@ -178,6 +189,10 @@ public class TeamHandler extends Handler {
                         }
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
+
+                        listAnnouncements.clear();
+                        listAnnouncements.addAll(Converter.portAnnouncementToListAnnouncement(teamAnnouncementsR.data.announcements));
+
                     }
 
                     activity.runOnUiThread(runnable);

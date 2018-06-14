@@ -1,5 +1,6 @@
 package com.ux7.fullhyve.ui.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,20 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.ui.adapters.AnnouncementRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListAnnouncement;
 import com.ux7.fullhyve.ui.data.ListTeam;
 
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link AnnouncementsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link AnnouncementsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class AnnouncementsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,6 +29,15 @@ public class AnnouncementsFragment extends Fragment {
 
     View fragmentView;
     public ListTeam team;
+    List<ListAnnouncement> announcements = new ArrayList<>();
+    int retrieveLimit = 7;
+    int size = retrieveLimit;
+    boolean fetchAnnouncements = false;
+
+    LinearLayoutManager layoutManager;
+    AnnouncementRecyclerViewAdapter adapter;
+
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -65,18 +70,34 @@ public class AnnouncementsFragment extends Fragment {
     public void buildAnnouncements() {
 
         RecyclerView recyclerView = (RecyclerView) fragmentView.findViewById(R.id.announcements_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setReverseLayout(true);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new AnnouncementRecyclerViewAdapter(announcements, team.image);
+        recyclerView.setAdapter(adapter);
 
-        ArrayList<ListAnnouncement> nlist = new ArrayList<>();
-        //nlist.add(ListMessage.getSpinnerValue());
-        for (int i = 0; i < 20; i++) {
-            ListAnnouncement l = new ListAnnouncement();
-            l.sent = Math.random() > 0.5;
-            nlist.add(l);
-        }
 
-        recyclerView.setAdapter(new AnnouncementRecyclerViewAdapter(nlist, team.image));
-        recyclerView.getLayoutManager().scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
+        getAnnouncements();
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (layoutManager.findLastVisibleItemPosition() == announcements.size() - 1 && dy != 0) {
+
+                    size += retrieveLimit;
+
+                    recyclerView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            getAnnouncements();
+                        }
+                    });
+
+                }
+            }
+        });
     }
 
     @Override
@@ -86,6 +107,31 @@ public class AnnouncementsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+    }
+
+    public void getAnnouncements() {
+
+        if (!fetchAnnouncements) {
+
+            fetchAnnouncements = true;
+
+            Activity activity = getActivity();
+
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+
+                    adapter.update();
+
+                    fetchAnnouncements = false;
+
+                }
+            };
+
+            AppHandler.getInstance().teamHandler.getTeamAnnouncements(team.id, 0, size, announcements, activity, runnable);
+
+        }
+
     }
 
     @Override

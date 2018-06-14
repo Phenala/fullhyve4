@@ -1,5 +1,6 @@
 package com.ux7.fullhyve.ui.adapters;
 
+import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.ui.data.ListReply;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.Images;
+import com.ux7.fullhyve.ui.util.Util;
 
 import java.util.List;
 
@@ -41,10 +44,20 @@ public class ReplyRecyclerViewAdapter extends RecyclerView.Adapter<ReplyRecycler
         holder.mReplyContent.setText(holder.mReply.reply);
         holder.mReplyTime.setText(holder.mReply.time);
         holder.mSenderName.setText(holder.mReply.senderName);
-        Picasso.with(holder.mView.getContext())
-                .load(holder.mReply.senderImage)
-                .transform(new CircleTransform())
-                .into(holder.mSenderImage);
+        holder.mSenderImage.setBackgroundResource(Images.USER);
+
+        if (holder.mReply.senderImage != null) {
+
+            Picasso.with(holder.mView.getContext())
+                    .load(Util.getImageUrl(holder.mReply.senderImage))
+                    .transform(new CircleTransform())
+                    .into(holder.mSenderImage);
+
+        } else {
+
+            holder.mSenderImage.setImageResource(Images.USER);
+
+        }
 
         LinearLayout body = (LinearLayout)holder.mView.findViewById(R.id.reply_body);
         int normalPadding = body.getPaddingBottom();
@@ -61,6 +74,13 @@ public class ReplyRecyclerViewAdapter extends RecyclerView.Adapter<ReplyRecycler
             body.setPadding(body.getPaddingLeft(), body.getPaddingTop(), body.getPaddingRight(), normalPadding );
         }
 
+
+    }
+
+
+    public void update() {
+
+        notifyDataSetChanged();
 
     }
 

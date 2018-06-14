@@ -16,6 +16,7 @@ import com.ux7.fullhyve.ui.data.ListTask;
 import com.ux7.fullhyve.ui.data.TaskDetail;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.Images;
 import com.ux7.fullhyve.ui.util.Util;
 
 import java.util.List;
@@ -46,10 +47,19 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         holder.mTaskNumberView.setText("Task " + holder.mTask.number);
         holder.mTaskNameView.setText(holder.mTask.name);
         holder.mTaskStatusView.setImageResource(Util.getTaskStatusIcon(holder.mTask.status));
-        Picasso.with(holder.itemView.getContext())
-                .load(holder.mTask.assigneeImage)
-                .transform(new CircleTransform())
-                .into(holder.mTaskAssigneeView);
+
+        if (holder.mTask.assigneeImage != null) {
+
+            Picasso.with(holder.itemView.getContext())
+                    .load(Util.getImageUrl(holder.mTask.assigneeImage))
+                    .transform(new CircleTransform())
+                    .into(holder.mTaskAssigneeView);
+
+        } else {
+
+            holder.mTaskAssigneeView.setImageResource(Images.USER);
+
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +77,14 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         context.startActivity(intent);
 
     }
+
+
+    public void update() {
+
+        notifyDataSetChanged();
+
+    }
+
 
     @Override
     public int getItemCount() {

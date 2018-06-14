@@ -61,6 +61,14 @@ public class TaskSetRecyclerViewAdapter extends RecyclerView.Adapter<TaskSetRecy
 
     }
 
+
+
+    public void update() {
+
+        notifyDataSetChanged();
+
+    }
+
     @Override
     public int getItemCount() {
         return mTaskSets.size();

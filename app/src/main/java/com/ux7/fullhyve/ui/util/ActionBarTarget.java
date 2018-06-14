@@ -1,5 +1,7 @@
 package com.ux7.fullhyve.ui.util;
 
+import android.app.Activity;
+import android.content.Context;
 import android.support.v7.app.ActionBar;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -16,20 +18,30 @@ import com.squareup.picasso.Target;
 public class ActionBarTarget implements Target {
 
     ActionBar actionBar;
-    Resources resources;
+    Activity activity;
 
-    public ActionBarTarget(Resources resources, ActionBar actionBar) {
+    public ActionBarTarget(Activity activity, ActionBar actionBar) {
         this.actionBar = actionBar;
-        this.resources = resources;
+        this.activity = activity;
     }
 
     @Override
     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
     {
-        Drawable d = new BitmapDrawable(resources, bitmap);
-        actionBar.setIcon(d);
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        final Drawable d = new BitmapDrawable(activity.getResources(), bitmap);
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                actionBar.setIcon(d);
+                actionBar.setDisplayShowHomeEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+
+            }
+        };
+
+        activity.runOnUiThread(runnable);
     }
 
     @Override

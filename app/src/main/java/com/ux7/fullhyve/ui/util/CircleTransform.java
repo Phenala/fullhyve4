@@ -10,6 +10,9 @@ import com.squareup.picasso.Transformation;
 
 public class CircleTransform implements Transformation {
 
+
+    public static int dimen = 96;
+
     @Override
     public Bitmap transform(Bitmap source) {
         int size = Math.min(source.getWidth(), source.getHeight());

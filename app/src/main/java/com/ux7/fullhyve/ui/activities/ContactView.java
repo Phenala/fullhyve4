@@ -34,6 +34,8 @@ import com.ux7.fullhyve.ui.data.ListMessage;
 import com.ux7.fullhyve.ui.interfaces.ResponseListener;
 import com.ux7.fullhyve.ui.util.ActionBarTarget;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.Images;
+import com.ux7.fullhyve.ui.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -172,10 +174,22 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
-        Picasso.with(this)
-                .load(contact.image)
-                .transform(new CircleTransform())
-                .into(new ActionBarTarget(getResources(), actionBar));
+
+        if (contact.image != null)
+
+            Picasso.with(this)
+                    .load(Util.getImageUrl(contact.image))
+                    .transform(new CircleTransform())
+                    .resize(96,96)
+                    .into(new ActionBarTarget(this, actionBar));
+
+        else
+
+            actionBar.setIcon(Images.USER);
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+
+
     }
 
 

@@ -147,6 +147,11 @@ public class MemberFragment extends Fragment {
             public void onClick(View view) {
 
                 Intent intent = new Intent(context, AddMember.class);
+                if (type == MemberOf.TEAM) {
+
+                    intent.putExtra("type", AddMember.AddUserType.INVITE_TO_TEAM);
+
+                }
                 startActivity(intent);
 
             }

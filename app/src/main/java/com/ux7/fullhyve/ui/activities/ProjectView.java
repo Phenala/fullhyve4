@@ -85,7 +85,7 @@ public class ProjectView extends AppCompatActivity {
                 .load(project.image)
                 .transform(new CircleTransform())
                 .resize(64,64)
-                .into(new ActionBarTarget(getResources(), actionBar));
+                .into(new ActionBarTarget(this, actionBar));
     }
 
 

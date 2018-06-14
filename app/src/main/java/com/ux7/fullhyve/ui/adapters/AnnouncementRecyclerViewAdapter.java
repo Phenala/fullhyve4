@@ -15,6 +15,8 @@ import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.ui.activities.AnnouncementView;
 import com.ux7.fullhyve.ui.data.ListAnnouncement;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.Images;
+import com.ux7.fullhyve.ui.util.Util;
 
 import java.io.Serializable;
 import java.util.List;
@@ -47,10 +49,20 @@ public class AnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<Announ
         holder.mAnnouncementContent.setText(holder.mAnnouncement.message);
         holder.mAnnouncementTime.setText(holder.mAnnouncement.sentTime + "   " + holder.mAnnouncement.replies + " replies");
         holder.mAnnouncerName.setText(holder.mAnnouncement.senderName);
-        Picasso.with(holder.mView.getContext())
-                .load(holder.mAnnouncement.senderImage)
-                .transform(new CircleTransform())
-                .into(holder.mAnnouncerImage);
+        holder.mAnnouncerImage.setBackgroundResource(Images.USER);
+
+        if (holder.mAnnouncement.senderImage != null) {
+
+            Picasso.with(holder.mView.getContext())
+                    .load(Util.getImageUrl(holder.mAnnouncement.senderImage))
+                    .transform(new CircleTransform())
+                    .into(holder.mAnnouncerImage);
+
+        } else {
+
+            holder.mAnnouncerImage.setImageResource(Images.USER);
+
+        }
 
         Context context = holder.mView.getContext();
 
@@ -60,8 +72,17 @@ public class AnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<Announ
             ((ImageView)holder.mView.findViewById(R.id.callout_spike_send)).setVisibility(View.VISIBLE);
             ((View)holder.mView.findViewById(R.id.callout_body)).setBackground(context.getResources().getDrawable(R.drawable.ripple_effect_sent));
             holder.mAnnouncementContent.setTextColor(holder.mView.getResources().getColor(R.color.textLight));
-            holder.mView.findViewById(R.id.messages_loading_spinner).setVisibility(View.GONE);
+            //holder.mView.findViewById(R.id.messages_loading_spinner).setVisibility(View.GONE);
+        } else {
+            ((ImageView)holder.mView.findViewById(R.id.callout_spike_receive)).setVisibility(View.VISIBLE);
+            ((ImageView)holder.mView.findViewById(R.id.announcer_image)).setVisibility(View.VISIBLE);
+            ((ImageView)holder.mView.findViewById(R.id.callout_spike_send)).setVisibility(View.GONE);
+            ((View)holder.mView.findViewById(R.id.callout_body)).setBackground(context.getResources().getDrawable(R.drawable.ripple_effect_received));
+            holder.mAnnouncementContent.setTextColor(holder.mView.getResources().getColor(R.color.textdark));
+            //holder.mView.findViewById(R.id.messages_loading_spinner).setVisibility(View.VISIBLE);
         }
+
+
         holder.mAnnouncementTrigger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,6 +97,13 @@ public class AnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<Announ
         intent.putExtra("announcement", (Serializable) announcement);
         intent.putExtra("image", teamImage);
         context.startActivity(intent);
+    }
+
+
+    public void update() {
+
+        notifyDataSetChanged();
+
     }
 
     @Override
