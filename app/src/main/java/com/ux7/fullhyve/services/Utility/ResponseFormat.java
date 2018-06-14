@@ -138,14 +138,17 @@ public class ResponseFormat{
     public class CreateNewTeamR{
         public int data;
     }
+    public class Announce{
+        public Integer replyId;
+    }
     public class AnnounceR{
-        public int data;
+        public Announce data;
     }
     public class StatusR{
         public Boolean data;
     }
     public class ReplyR{
-        public int data;
+        public Announce data;
     }
     public class GetTeamProfileR{
         public Team data;

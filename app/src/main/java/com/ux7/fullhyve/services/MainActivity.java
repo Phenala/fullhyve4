@@ -58,7 +58,8 @@ public class MainActivity extends AppCompatActivity {
                 "Get messages", "Get friends","Send message", "Edit message", "Delete message", "Forward message",
                 "Search users", "Update message seen", "Get friend last seen time"};
 
-        String[] acts = {"Get my teams","Get team members","Get team projects", "Get team announcements"};
+        String[] acts = {"Get my teams","Get team members","Get team projects", "Get team announcements", "Announcement reply",
+                        "Announce"};
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item,acts);
 
@@ -171,6 +172,33 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("Team projects","Fetched");
                     }
                 });
+                break;
+
+            case "Announce":
+                Integer teamId3 = Integer.parseInt(arg1.getText().toString());
+                String announcement = arg2.getText().toString();
+
+                appHandler.teamHandler.announce(teamId3,announcement, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Announcement","Posted");
+                    }
+                });
+
+                break;
+
+            case "Announcement reply":
+                Integer teamId4 = Integer.parseInt(arg1.getText().toString());
+                String reply = arg2.getText().toString();
+                Integer mainAnnouncementId = Integer.parseInt(arg3.getText().toString());
+
+                appHandler.teamHandler.reply(teamId4,reply, mainAnnouncementId, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Announcement reply","Posted");
+                    }
+                });
+
                 break;
         }
     }
