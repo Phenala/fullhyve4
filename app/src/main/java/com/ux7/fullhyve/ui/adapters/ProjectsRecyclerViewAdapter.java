@@ -77,8 +77,7 @@ public class ProjectsRecyclerViewAdapter extends RecyclerView.Adapter<ProjectsRe
     public void goToProject(Context context, ListProject project) {
 
         Intent intent = new Intent(context, ProjectView.class);
-        intent.putExtra("name", project.name);
-        intent.putExtra("image", project.image);
+        intent.putExtra("project", project);
         context.startActivity(intent);
 
     }

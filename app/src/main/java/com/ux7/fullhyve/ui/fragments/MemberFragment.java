@@ -19,6 +19,7 @@ import com.ux7.fullhyve.services.Models.User;
 import com.ux7.fullhyve.ui.activities.AddMember;
 import com.ux7.fullhyve.ui.adapters.MemberRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListMember;
+import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListTeam;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class MemberFragment extends Fragment {
     View view;
     Context context;
     ListTeam team;
+    ListProject project;
 
     MemberOf type;
     List<ListMember> members = new ArrayList<>();
@@ -51,6 +53,10 @@ public class MemberFragment extends Fragment {
 
     public void setTeam(ListTeam team) {
         this.team = team;
+    }
+
+    public void setProject(ListProject listProject) {
+        this.project = listProject;
     }
 
     // TODO: Customize parameter initialization
@@ -130,6 +136,10 @@ public class MemberFragment extends Fragment {
 
             AppHandler.getInstance().teamHandler.getTeamMembers(team.id, 0, 500, members, activity, runnable);
 
+        else if (type == MemberOf.PROJECT)
+
+            AppHandler.getInstance().projectHandler.getContributors(project.id, 0, 500, members, activity, runnable);
+
     }
 
     @Override
@@ -150,6 +160,10 @@ public class MemberFragment extends Fragment {
                 if (type == MemberOf.TEAM) {
 
                     intent.putExtra("type", AddMember.AddUserType.INVITE_TO_TEAM);
+
+                } else if (type == MemberOf.PROJECT) {
+
+                    intent.putExtra("type", AddMember.AddUserType.INVITE_TO_PROJECT);
 
                 }
                 startActivity(intent);

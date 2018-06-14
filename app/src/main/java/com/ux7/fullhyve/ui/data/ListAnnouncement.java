@@ -1,6 +1,8 @@
 package com.ux7.fullhyve.ui.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by hp on 6/3/2018.

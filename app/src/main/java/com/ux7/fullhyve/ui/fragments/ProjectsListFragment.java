@@ -17,25 +17,19 @@ import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnHomeInteractionListener}
- * interface.
- */
 public class ProjectsListFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
+    List<ListProject> projects = new ArrayList<>();
+
+    View fragmentView;
+    LinearLayoutManager layoutManager;
+    ProjectsRecyclerViewAdapter adapter;
+
+
     private OnHomeInteractionListener mListener;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public ProjectsListFragment() {
     }
 
@@ -44,7 +38,6 @@ public class ProjectsListFragment extends Fragment {
     public static ProjectsListFragment newInstance(int columnCount) {
         ProjectsListFragment fragment = new ProjectsListFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,10 +45,6 @@ public class ProjectsListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override
@@ -63,25 +52,20 @@ public class ProjectsListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_project_list, container, false);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
 
-            ArrayList<ListProject> items = new ArrayList<>();
-            for (int i = 0; i < 10; i++) {
-                items.add(new ListProject());
-            }
-
-            recyclerView.setAdapter(new ProjectsRecyclerViewAdapter(items, mListener));
-        }
         return view;
+    }
+
+    public void buildRecycler() {
+
+        Context context = fragmentView.getContext();
+        RecyclerView recyclerView = (RecyclerView) fragmentView;
+        recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+        layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new ProjectsRecyclerViewAdapter(projects, mListener);
+        recyclerView.setAdapter(adapter);
+
     }
 
 

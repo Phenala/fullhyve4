@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.ui.activities.TaskSetView;
+import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListTaskSet;
 import com.ux7.fullhyve.ui.data.TaskSetDetail;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
@@ -24,9 +25,11 @@ import java.util.List;
 public class TaskSetRecyclerViewAdapter extends RecyclerView.Adapter<TaskSetRecyclerViewAdapter.ViewHolder> {
 
     private final List<ListTaskSet> mTaskSets;
+    ListProject project;
 
-    public TaskSetRecyclerViewAdapter(List<ListTaskSet> items) {
+    public TaskSetRecyclerViewAdapter(List<ListTaskSet> items, ListProject listProject) {
         mTaskSets = items;
+        project = listProject;
     }
 
     @Override
@@ -56,7 +59,8 @@ public class TaskSetRecyclerViewAdapter extends RecyclerView.Adapter<TaskSetRecy
     public void goToTaskSet(Context context, ListTaskSet taskSet) {
 
         Intent intent = new Intent(context, TaskSetView.class);
-        intent.putExtra("taskset", new TaskSetDetail());
+        intent.putExtra("taskset", taskSet.detail);
+        intent.putExtra("project", project);
         context.startActivity(intent);
 
     }

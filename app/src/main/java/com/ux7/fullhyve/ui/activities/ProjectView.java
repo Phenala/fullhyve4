@@ -24,6 +24,8 @@ import com.ux7.fullhyve.ui.fragments.ProjectDetailFragment;
 import com.ux7.fullhyve.ui.fragments.TaskSetFragment;
 import com.ux7.fullhyve.ui.util.ActionBarTarget;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.Images;
+import com.ux7.fullhyve.ui.util.Util;
 
 public class ProjectView extends AppCompatActivity {
 
@@ -69,8 +71,7 @@ public class ProjectView extends AppCompatActivity {
 
     public void buildProject() {
 
-        project.name = getIntent().getStringExtra("name");
-        project.image = getIntent().getStringExtra("image");
+        project = (ListProject) getIntent().getSerializableExtra("project");
 
     }
 
@@ -81,11 +82,20 @@ public class ProjectView extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
-        Picasso.with(this)
-                .load(project.image)
-                .transform(new CircleTransform())
-                .resize(64,64)
-                .into(new ActionBarTarget(this, actionBar));
+
+        if (project.image != null) {
+
+            Picasso.with(this)
+                    .load(Util.getImageUrl(project.image))
+                    .transform(new CircleTransform())
+                    .resize(CircleTransform.dimen, CircleTransform.dimen)
+                    .into(new ActionBarTarget(this, actionBar));
+
+        } else {
+
+            actionBar.setIcon(Images.PROJECT);
+
+        }
     }
 
 
@@ -167,15 +177,18 @@ public class ProjectView extends AppCompatActivity {
             switch (position) {
                 case 0:
                     TaskSetFragment taskSetFragment = new TaskSetFragment();
+                    taskSetFragment.setProject(project);
                     return taskSetFragment;
                 case 1:
                     MemberFragment projectMembers = new MemberFragment();
+                    projectMembers.setProject(project);
                     return projectMembers;
                 case 2:
                     ProjectDetailFragment projectDetails = new ProjectDetailFragment();
+                    projectDetails.setProject(project);
                     return projectDetails;
             }
-            return new AnnouncementsFragment();
+            return null;
         }
 
         @Override

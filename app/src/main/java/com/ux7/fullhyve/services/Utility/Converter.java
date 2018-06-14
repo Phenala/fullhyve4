@@ -21,9 +21,11 @@ import com.ux7.fullhyve.ui.data.ListTaskSet;
 import com.ux7.fullhyve.ui.data.ListTeam;
 import com.ux7.fullhyve.ui.data.ProjectDetail;
 import com.ux7.fullhyve.ui.data.TaskDetail;
+import com.ux7.fullhyve.ui.data.TaskSetDetail;
 import com.ux7.fullhyve.ui.data.TeamDetail;
 import com.ux7.fullhyve.ui.enums.TaskStatus;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -321,6 +323,20 @@ public class Converter {
         }
         nTaskSet.completion = (int)(100 * completed/(float)taskSet.tasks.length);
         nTaskSet.assigments = assigments;
+
+        TaskSetDetail detail = new TaskSetDetail();
+
+        detail = (TaskSetDetail) (Serializable) nTaskSet;
+
+        detail.id = nTaskSet.id;
+        detail.name = nTaskSet.name;
+        detail.assigments = nTaskSet.assigments;
+        detail.completion = nTaskSet.completion;
+        detail.deadline = taskSet.deadline;
+        detail.description = taskSet.description;
+        detail.number = nTaskSet.number;
+
+        nTaskSet.detail = detail;
 
         return nTaskSet;
 

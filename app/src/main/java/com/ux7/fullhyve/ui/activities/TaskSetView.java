@@ -18,18 +18,26 @@ import android.widget.LinearLayout;
 
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.ui.adapters.TaskRecyclerViewAdapter;
+import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListTask;
 import com.ux7.fullhyve.ui.data.TaskSetDetail;
 import com.ux7.fullhyve.ui.util.ActionBarTarget;
 import com.ux7.fullhyve.ui.util.CircleTransform;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TaskSetView extends AppCompatActivity {
 
+    ListProject project;
     TaskSetDetail taskSetDetail;
     LinearLayout taskDetailsLayout;
+    List<ListTask> tasks;
+
+    LinearLayoutManager layoutManager;
+    TaskRecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +59,13 @@ public class TaskSetView extends AppCompatActivity {
     public void buildRecyclerView() {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.task_list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new TaskRecyclerViewAdapter(tasks);
+        recyclerView.setAdapter(adapter);
 
-        ArrayList<ListTask> tasks = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-
-            tasks.add(new ListTask());
-
-        }
+        getTasks();
 
         final FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.task_add_task_fab);
 
@@ -72,6 +78,8 @@ public class TaskSetView extends AppCompatActivity {
         });
 
         final LinearLayout taskSetDets = taskDetailsLayout;
+
+
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -90,13 +98,12 @@ public class TaskSetView extends AppCompatActivity {
             }
         });
 
-        recyclerView.setAdapter(new TaskRecyclerViewAdapter(tasks));
-
     }
 
     public void buildTaskSet() {
 
         taskSetDetail = (TaskSetDetail) getIntent().getSerializableExtra("taskset");
+        project = (ListProject) getIntent().getSerializableExtra("project");
 
     }
 
@@ -108,6 +115,20 @@ public class TaskSetView extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
     }
 
+    public void getTasks() {
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                adapter.update();
+
+            }
+        };
+
+        AppHandler.getInstance().projectHandler.getTasks(project.id, taskSetDetail.id, 0, 500, tasks, this, runnable);
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
