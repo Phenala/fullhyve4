@@ -176,7 +176,7 @@ public class TeamHandler extends Handler {
     public void announce(final int teamId, final String announcement, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("teamId",teamId);
-        args.put("announcement", announcement);
+        args.put("message", announcement);
 
         JSONObject req = RequestFormat.createRequestObj("announce",args);
 
@@ -186,7 +186,8 @@ public class TeamHandler extends Handler {
                 if(generalHandler(args)==200){
                     final ResponseFormat.AnnounceR announceR = gson.fromJson(args[0].toString(), ResponseFormat.AnnounceR.class);
 
-                    if(announceR!=null){
+                    if(announceR!=null && announceR.data != null){
+                        Log.e("Announcement id",announceR.data.replyId.toString());
                         //cache.contacts.addReceivedMessage(friendId, {message});
                     }
 
@@ -215,20 +216,22 @@ public class TeamHandler extends Handler {
 
 
 
-    public void reply(final int teamId, final String reply, final Activity activity, final Runnable runnable){
+    public void reply(final int teamId, final String reply, final int mainAnnouncementId, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
-        args.put("reply",reply);
+        args.put("message",reply);
         args.put("teamId",teamId);
+        args.put("mainAnnouncementId", mainAnnouncementId);
 
-        JSONObject req = RequestFormat.createRequestObj("reply",args);
+        JSONObject req = RequestFormat.createRequestObj("replyAnnouncement",args);
 
-        socket.emit("reply", req, new Ack() {
+        socket.emit("replyAnnouncement", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     final ResponseFormat.ReplyR replyR = gson.fromJson(args[0].toString(), ResponseFormat.ReplyR.class);
 
-                    if(replyR!=null){
+                    if(replyR!=null && replyR.data!=null){
+                        Log.e("Reply id",replyR.data.replyId.toString());
                         //cache.contacts.addReceivedMessage(friendId, {message});
                     }
 
