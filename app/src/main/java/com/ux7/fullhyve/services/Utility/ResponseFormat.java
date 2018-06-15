@@ -147,6 +147,7 @@ public class ResponseFormat{
     public class StatusR{
         public Boolean data;
     }
+
     public class ReplyR{
         public Announce data;
     }
@@ -194,7 +195,7 @@ public class ResponseFormat{
     }
     public class TaskSets{
         public boolean done;
-        public List<TaskSet> taskSets;
+        public List<TaskSet> tasksets;
     }
     public class GetTaskSetsR{
         public TaskSets data;

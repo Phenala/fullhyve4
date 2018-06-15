@@ -243,7 +243,7 @@ public class Converter {
 
         nAnnouncement.id = announcement.mainMessage.getId();
         nAnnouncement.message = announcement.mainMessage.getMessage();
-        nAnnouncement.replies = announcement.replies.length;
+        nAnnouncement.replies = announcement.replies.size();
         nAnnouncement.senderId = announcement.mainMessage.sender.getId();
         nAnnouncement.senderImage = announcement.mainMessage.sender.getImage();
         nAnnouncement.senderName = announcement.mainMessage.sender.getFirstName() + " " + announcement.mainMessage.sender.getFirstName();
@@ -295,7 +295,7 @@ public class Converter {
                 completed++;
             }
         }
-        nTaskSet.completion = (int)(100 * completed/(float)taskSet.tasks.length);
+        nTaskSet.completion = (int)(100 * completed/(float)taskSet.tasks.size());
         nTaskSet.assigments = assigments;
 
         return nTaskSet;

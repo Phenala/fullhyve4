@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.gson.JsonElement;
 import com.ux7.fullhyve.services.Models.Identity;
+import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
 import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.ux7.fullhyve.services.Utility.ResponseListener;
@@ -70,14 +71,10 @@ public class LoginHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("signin",args);
 
-        Log.e("Sent Request", "true");
-
         socket.emit("signin", req, new Ack() {
             @Override
             public void call(Object... args) {
-                Log.e("Responded", "true");
                 if(generalHandler(args)==200){
-                    Log.e("Responded", "true");
                     final ResponseFormat.SignInR statusR = gson.fromJson(args[0].toString(), ResponseFormat.SignInR.class);
                     cache.setToken(statusR.data.token);
 
@@ -105,7 +102,6 @@ public class LoginHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    //final ResponseFormat.StatusR statusR = gson.fromJson(args[0].toString(), ResponseFormat.StatusR.class);
                     activity.runOnUiThread(runnable);
                 }
             }
@@ -120,8 +116,13 @@ public class LoginHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    //final ResponseFormat.StatusR statusR = gson.fromJson(args[0].toString(), ResponseFormat.StatusR.class);
-                    cache.setToken(null);
+                    // remove the cache
+                    AppData.resetCache();
+                    AppData.getInstance().saveCache(activity);
+
+                    // replace the cache instance of the handler with the new one
+                    Handler.cache = AppData.getCache();
+
                     activity.runOnUiThread(runnable);
                 }
             }
@@ -137,7 +138,7 @@ public class LoginHandler extends Handler {
             activity.runOnUiThread(runnable);
         } else{
             JsonElement req = RequestFormat.createRequestObj(null, "getProfile");
-            //Log.e("GSOn", req);
+
             socket.emit("getProfile", req, new Ack() {
                 @Override
                 public void call(Object... args) {
@@ -165,7 +166,6 @@ public class LoginHandler extends Handler {
         args.put("title", identity.getTitle());
 
         JsonElement req = RequestFormat.createRequestObj(args, "editProfile");
-        Log.e("GSON1",req.toString());
 
         socket.emit("editProfile", req, new Ack() {
             @Override
@@ -207,6 +207,7 @@ public class LoginHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
+                    // update the contacts list
                     activity.runOnUiThread(runnable);
                 }
             }
@@ -222,6 +223,7 @@ public class LoginHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
+                    cache.getContacts().removeFriend(friendId);
                     activity.runOnUiThread(runnable);
                 }
             }
@@ -242,15 +244,17 @@ public class LoginHandler extends Handler {
                 if(generalHandler(args)==200){
                     final ResponseFormat.GetNotificationsR notificationsR = gson.fromJson(args[0].toString(), ResponseFormat.GetNotificationsR.class);
 
-                    Log.e("Notification","Success");
-
-                    if(notificationsR!=null){
-                        Log.e("Notif size", "" + notificationsR.data.notifications.size());
-                        cache.getNotifications().add(notificationsR.data.notifications);
+                    if(notificationsR!=null && notificationsR.data.notifications!=null){
+                        cache.getNotifications().load(notificationsR.data.notifications);
                     }
                     activity.runOnUiThread(runnable);
                 }
             }
         });
+    }
+
+
+    public void loadInitialData(){
+
     }
 }
