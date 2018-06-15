@@ -4,9 +4,13 @@ import android.app.Activity;
 
 import com.ux7.fullhyve.services.Models.MyProject;
 import com.ux7.fullhyve.services.Models.Task;
+import com.ux7.fullhyve.services.Utility.Converter;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
 import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.github.nkzawa.socketio.client.Ack;
+import com.ux7.fullhyve.ui.data.ListMember;
+import com.ux7.fullhyve.ui.data.ListTask;
+import com.ux7.fullhyve.ui.data.ListTaskSet;
 
 import org.json.JSONObject;
 
@@ -101,7 +105,7 @@ public class ProjectHandler extends Handler {
 
 
 
-    public void getContributors(int projectId,final int offset, final int limit, final Activity activity, final Runnable runnable){
+    public void getContributors(int projectId, final int offset, final int limit, final List<ListMember> listMembers, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("projectId",projectId);
         args.put("offset",offset);
@@ -120,6 +124,9 @@ public class ProjectHandler extends Handler {
                         //AppData.userToken = teamsR.data.message;
                     }
 
+                    listMembers.clear();
+                    listMembers.addAll(Converter.portUsersToListMember(projectContributorsR.data.individuals));
+
                     activity.runOnUiThread(runnable);
                 }
             }
@@ -127,7 +134,7 @@ public class ProjectHandler extends Handler {
     }
 
 
-    public void getTaskSets(int projectId,final int offset, final int limit, final Activity activity, final Runnable runnable){
+    public void getTaskSets(int projectId, final int offset, final int limit, final List<ListTaskSet> listTaskSets, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("projectId",projectId);
         args.put("offset",offset);
@@ -146,6 +153,9 @@ public class ProjectHandler extends Handler {
                         //AppData.userToken = teamsR.data.message;
                     }
 
+                    listTaskSets.clear();
+                    listTaskSets.addAll(Converter.portTaskSetToListTaskSet(taskSetsR.data.taskSets));
+
                     activity.runOnUiThread(runnable);
                 }
             }
@@ -155,7 +165,7 @@ public class ProjectHandler extends Handler {
 
 
 
-    public void getTasks(int projectId,int tasksetId,final int offset, final int limit, final Activity activity, final Runnable runnable){
+    public void getTasks(int projectId, int tasksetId, final int offset, final int limit, final List<ListTask> listTasks, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("projectId",projectId);
         args.put("tasksetId",tasksetId);
@@ -174,6 +184,9 @@ public class ProjectHandler extends Handler {
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
+
+                    listTasks.clear();
+                    listTasks.addAll(Converter.portTaskToListTask(tasksR.data.tasks));
 
                     activity.runOnUiThread(runnable);
                 }

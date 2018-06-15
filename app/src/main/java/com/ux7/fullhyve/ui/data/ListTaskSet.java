@@ -13,5 +13,6 @@ public class ListTaskSet implements Serializable {
     public String name = "Query Handling";
     public int assigments = 4;
     public int completion = 22;
+    public TaskSetDetail detail;
 
 }

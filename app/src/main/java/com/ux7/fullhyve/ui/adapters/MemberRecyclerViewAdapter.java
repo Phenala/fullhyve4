@@ -16,6 +16,8 @@ import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.UserDetail;
 import com.ux7.fullhyve.ui.fragments.MemberFragment.OnListFragmentInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.Images;
+import com.ux7.fullhyve.ui.util.Util;
 
 import java.util.List;
 
@@ -43,10 +45,20 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<MemberRecycl
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mMember = mMembers.get(position);
         holder.mMemberNameView.setText(mMembers.get(position).name);
-        Picasso.with(holder.itemView.getContext())
-                .load(holder.mMember.image)
-                .transform(new CircleTransform())
-                .into(holder.mMemberPictureView);
+        holder.mMemberPictureView.setBackgroundResource(Images.USER);
+
+        if (holder.mMember.image != null) {
+
+            Picasso.with(holder.itemView.getContext())
+                    .load(Util.getImageUrl(holder.mMember.image))
+                    .transform(new CircleTransform())
+                    .into(holder.mMemberPictureView);
+
+        } else {
+
+            holder.mMemberPictureView.setImageResource(Images.USER);
+
+        }
 
         if (holder.mMember.leader) {
             holder.mMemberLeaderShipStatus.setVisibility(View.VISIBLE);
@@ -72,6 +84,10 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<MemberRecycl
 
             }
         });
+    }
+
+    public void update() {
+        notifyDataSetChanged();
     }
 
     @Override

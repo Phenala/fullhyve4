@@ -3,6 +3,7 @@ package com.ux7.fullhyve.ui.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import com.ux7.fullhyve.ui.activities.TeamView;
 import com.ux7.fullhyve.ui.data.ListTeam;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.Images;
+import com.ux7.fullhyve.ui.util.Util;
 
 import java.util.List;
 
@@ -44,11 +47,22 @@ public class TeamsRecyclerViewAdapter extends RecyclerView.Adapter<TeamsRecycler
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mTeam = mTeams.get(position);
         holder.mNameView.setText(mTeams.get(position).name);
+        holder.mPicture.setBackgroundResource(Images.TEAM);
 
-        Picasso.with(holder.mView.getContext())
-                .load(holder.mTeam.image)
-                .transform(new CircleTransform())
-                .into(holder.mPicture);
+        Log.e("Retrieving image", "" + holder.mTeam.image + " for team " + holder.mTeam.name);
+
+        if (holder.mTeam.image != null) {
+
+            Picasso.with(holder.mView.getContext())
+                    .load(Util.getImageUrl(holder.mTeam.image))
+                    .transform(new CircleTransform())
+                    .into(holder.mPicture);
+
+        } else {
+
+            holder.mPicture.setImageResource(Images.TEAM);
+
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,9 +79,14 @@ public class TeamsRecyclerViewAdapter extends RecyclerView.Adapter<TeamsRecycler
     public void goToTeam(Context context, ListTeam team) {
 
         Intent intent = new Intent(context, TeamView.class);
-        intent.putExtra("name", team.name);
-        intent.putExtra("image", team.image);
+        intent.putExtra("team", team);
         context.startActivity(intent);
+
+    }
+
+    public void update() {
+
+        notifyDataSetChanged();
 
     }
 

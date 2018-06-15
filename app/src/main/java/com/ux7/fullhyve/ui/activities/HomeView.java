@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import com.ux7.fullhyve.ui.fragments.ProjectsListFragment;
 import com.ux7.fullhyve.ui.fragments.TeamsListFragment;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.Util;
 
 public class HomeView extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnHomeInteractionListener {
@@ -48,6 +50,7 @@ public class HomeView extends AppCompatActivity
     ProjectsListFragment projectsListFragment = new ProjectsListFragment();
     NotificationFragment notificationFragment = new NotificationFragment();
 
+    SearchView searchView;
     NavigationView navigationView;
     FloatingActionButton fab;
     View.OnClickListener addTeam;
@@ -123,7 +126,32 @@ public class HomeView extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home_view, menu);
+
+        searchView = (SearchView) ((MenuItem) menu.findItem(R.id.app_bar_search)).getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+
+                searchUsers();
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
+
         return true;
+    }
+
+    public void searchUsers() {
+
+
+
     }
 
     @Override
@@ -165,12 +193,12 @@ public class HomeView extends AppCompatActivity
             public void run() {
 
                 Identity identity = AppData.getCache().getIdentity();
-                ((TextView)navigationView.findViewById(R.id.profile_identity_name)).setText(identity.getFirstName() + " " + identity.getFirstName());
+                ((TextView)navigationView.findViewById(R.id.profile_identity_name)).setText(identity.getFirstName() + " " + identity.getLastName());
 
                 Log.e("Picture", identity.getImage());
 
                 Picasso.with(getBaseContext())
-                        .load(identity.getImage())
+                        .load(Util.getImageUrl(identity.getImage()))
                         .transform(new CircleTransform())
                         .into((ImageView)navigationView.findViewById(R.id.userPicture));
 
@@ -205,6 +233,10 @@ public class HomeView extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, projectsListFragment).commit();
             fab.show();
             fab.setOnClickListener(addProject);
+        } else if (id == R.id.nav_edit_profile) {
+
+            editProfile();
+
         } else if (id == R.id.nav_log_out) {
 
             logoutConfirmation();
@@ -244,6 +276,13 @@ public class HomeView extends AppCompatActivity
     public boolean isLoggedIn() {
 
         return AppData.getCache().getToken() != null;
+
+    }
+
+    public void editProfile() {
+
+        Intent intent = new Intent(this, EditProfileView.class);
+        startActivity(intent);
 
     }
 

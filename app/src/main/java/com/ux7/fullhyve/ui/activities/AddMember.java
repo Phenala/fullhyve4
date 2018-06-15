@@ -140,7 +140,7 @@ public class AddMember extends AppCompatActivity {
 
     }
 
-    public String[] getSelectedUserIds() {
+    public int[] getSelectedUserIds() {
 
         return ((AddMemberRecyclerViewAdapter)recyclerView.getAdapter()).getSelectedUserIds();
 

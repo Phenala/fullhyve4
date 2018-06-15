@@ -19,8 +19,12 @@ import com.ux7.fullhyve.services.Utility.Realtime;
 import com.ux7.fullhyve.services.Utility.ResponseListener;
 import com.github.nkzawa.socketio.client.Socket;
 import com.ux7.fullhyve.ui.activities.LoginView;
+import com.ux7.fullhyve.ui.data.ListAnnouncement;
 import com.ux7.fullhyve.ui.data.ListContact;
+import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.ListMessage;
+import com.ux7.fullhyve.ui.data.ListProject;
+import com.ux7.fullhyve.ui.data.ListTeam;
 
 import java.util.ArrayList;
 
@@ -48,10 +52,14 @@ public class MainActivity extends AppCompatActivity {
         Log.e("On view page",cache.getToken()==null?"No token":cache.getToken());
         // set the list of actions to the spinner
         spinner = findViewById(R.id.spinner);
-        String[] acts = {"Show token","Show identity","Show notifications", "Save cache","Read cache",
+        String[] acts1 = {"Show token","Show identity","Show notifications", "Save cache","Read cache",
                 "User connected","Signup","Add friend","Reply friend request",
                 "Unfriend","Get notifications", "Get profile","Sign-out", "Edit profile",
-                "Get messages", "Get friends","Send message"};
+                "Get messages", "Get friends","Send message", "Edit message", "Delete message", "Forward message",
+                "Search users", "Update message seen", "Get friend last seen time"};
+
+        String[] acts = {"Get my teams","Get team members","Get team projects", "Get team announcements", "Announcement reply",
+                        "Announce"};
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item,acts);
 
@@ -87,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         execute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                testAccount(view);
+                testTeams(view);
 
             }
         });
@@ -123,6 +131,78 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
     }
+
+
+    public void testTeams(View view){
+        switch (spinner.getSelectedItem().toString()){
+            case "Get my teams":
+                appHandler.teamHandler.getMyTeams(0, 10, new ArrayList<ListTeam>(), this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("My teams","Fetched");
+                    }
+                });
+                break;
+
+            case "Get team announcements":
+                int teamId2 = Integer.parseInt(arg1.getText().toString());
+                appHandler.teamHandler.getTeamAnnouncements(teamId2, 0, 10, new ArrayList<ListAnnouncement>(), this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Team announcement","Fetched");
+                    }
+                });
+                break;
+
+            case "Get team members":
+                int teamId = Integer.parseInt(arg1.getText().toString());
+                appHandler.teamHandler.getTeamMembers(teamId, 0, 10, new ArrayList<ListMember>(),this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Team members","Fetched");
+                    }
+                });
+                break;
+
+            case "Get team projects":
+                Integer teamId1 = Integer.parseInt(arg1.getText().toString());
+                appHandler.teamHandler.getTeamProjects(teamId1, 0, 10, new ArrayList<ListProject>(),this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Team projects","Fetched");
+                    }
+                });
+                break;
+
+            case "Announce":
+                Integer teamId3 = Integer.parseInt(arg1.getText().toString());
+                String announcement = arg2.getText().toString();
+
+                appHandler.teamHandler.announce(teamId3,announcement, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Announcement","Posted");
+                    }
+                });
+
+                break;
+
+            case "Announcement reply":
+                Integer teamId4 = Integer.parseInt(arg1.getText().toString());
+                String reply = arg2.getText().toString();
+                Integer mainAnnouncementId = Integer.parseInt(arg3.getText().toString());
+
+                appHandler.teamHandler.reply(teamId4,reply, mainAnnouncementId, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Announcement reply","Posted");
+                    }
+                });
+
+                break;
+        }
+    }
+
 
     public void testAccount(View view){
         Log.e("Selected item",spinner.getSelectedItem().toString());
@@ -280,6 +360,76 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Log.e("Message","Sent");
+                    }
+                });
+                break;
+
+            case "Edit message":
+                Integer msgId = Integer.parseInt(arg1.getText().toString());
+                String newMsg = arg2.getText().toString();
+
+                appHandler.contactHandler.editMessage(msgId, newMsg, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Message","Edited");
+                    }
+                });
+                break;
+
+            case "Forward message":
+                Integer msgId1 = Integer.parseInt(arg1.getText().toString());
+                int[] receiverId = {Integer.parseInt(arg2.getText().toString())};
+
+                appHandler.contactHandler.forwardMessage(receiverId, msgId1, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Message","Forwarded");
+                    }
+                });
+                break;
+
+            case "Delete message":
+                Integer msgId2 = Integer.parseInt(arg1.getText().toString());
+
+                appHandler.contactHandler.deleteMessage(msgId2, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Message","Deleted");
+                    }
+                });
+                break;
+
+            case "Search users":
+                int offset = 0;
+                int limit = 10;
+                String name = arg1.getText().toString();
+
+                appHandler.contactHandler.searchUsers(name, offset, limit, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Users","Searched");
+                    }
+                });
+                break;
+
+            case "Update message seen":
+                Integer lastMessageId = Integer.parseInt(arg1.getText().toString());
+
+                appHandler.contactHandler.updateMessageSeen(lastMessageId, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Message","All seen");
+                    }
+                });
+                break;
+
+            case "Get friend last seen time":
+                Integer friendId4 = Integer.parseInt(arg1.getText().toString());
+
+                appHandler.contactHandler.getFriendLastSeenTime(friendId4, this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Friend","Seen");
                     }
                 });
                 break;

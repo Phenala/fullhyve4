@@ -100,6 +100,10 @@ public class ResponseFormat{
         public String timestamp;
     }
 
+    public class GetLastOnlineR{
+        public GetLastOnline data;
+    }
+
     /// teams
     //=========================================================
 
@@ -112,21 +116,21 @@ public class ResponseFormat{
     }
     public class TeamMember{
         public boolean done;
-        public List<User> teamMembers;
+        public List<User> members;
     }
     public class GetTeamMemberR{
         public TeamMember data;
     }
     public class TeamProject{
         public boolean done;
-        public List<Project> teamProjects;
+        public List<Project> projects;
     }
     public class GetTeamProjectR{
         public TeamProject data;
     }
     public class TeamAnnouncement{
         public boolean done;
-        public List<Announcement> teamAnnouncement;
+        public List<Announcement> announcements;
     }
     public class GetTeamAnnouncementR{
         public TeamAnnouncement data;
@@ -134,14 +138,17 @@ public class ResponseFormat{
     public class CreateNewTeamR{
         public int data;
     }
+    public class Announce{
+        public Integer replyId;
+    }
     public class AnnounceR{
-        public int data;
+        public Announce data;
     }
     public class StatusR{
         public Boolean data;
     }
     public class ReplyR{
-        public int data;
+        public Announce data;
     }
     public class GetTeamProfileR{
         public Team data;

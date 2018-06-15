@@ -21,7 +21,8 @@ public class User implements Serializable{
     }
 
     public String getFirstName() {
-        return firstName;
+
+        return (firstName.charAt(0) + "").toUpperCase() + firstName.substring(1);
     }
 
     public void setFirstName(String firstName) {
@@ -29,7 +30,8 @@ public class User implements Serializable{
     }
 
     public String getLastName() {
-        return lastName;
+
+        return (lastName.charAt(0) + "").toUpperCase() + lastName.substring(1);
     }
 
     public void setLastName(String lastName) {

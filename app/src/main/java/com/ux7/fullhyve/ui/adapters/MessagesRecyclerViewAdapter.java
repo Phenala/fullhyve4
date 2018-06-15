@@ -27,6 +27,8 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
     public List<ListMessage> mMessages;
     public final OnMessageRecyclerInteractionListener mListener;
 
+    public OnUpdateComplete completedRun;
+
     public MessagesRecyclerViewAdapter(List<ListMessage> messageList, OnMessageRecyclerInteractionListener listener) {
 
         mMessages = messageList;
@@ -128,6 +130,12 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
             }
         });
 
+        if (position == getItemCount() - 1 && completedRun != null) {
+
+            completedRun.onUpdateComplete();
+
+        }
+
     }
 
     @Override
@@ -156,6 +164,13 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
 
     }
 
+    public void update(OnUpdateComplete completedRun) {
+
+        this.completedRun = completedRun;
+        notifyDataSetChanged();
+
+    }
+
     public void update() {
 
         notifyDataSetChanged();
@@ -169,6 +184,12 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
         void onEditMessage(View view, ListMessage message);
 
         void onDeleteMessage(View view, ListMessage message);
+
+    }
+
+    public interface OnUpdateComplete {
+
+        public void onUpdateComplete();
 
     }
 

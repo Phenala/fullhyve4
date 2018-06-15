@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +15,8 @@ import com.ux7.fullhyve.ui.activities.ContactView;
 import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.Images;
+import com.ux7.fullhyve.ui.util.Util;
 
 import java.util.List;
 
@@ -44,8 +47,32 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
         holder.mContact = mContacts.get(position);
         holder.mName.setText(holder.mContact.name);
         holder.mMessage.setText(holder.mContact.lastMessage);
+        if (holder.mContact.lastMessageSent) {
+            holder.mLastMessageSent.setVisibility(View.VISIBLE);
+        } else {
+            holder.mLastMessageSent.setVisibility(View.GONE);
+        }
         holder.mMessageCount.setText(String.valueOf(holder.mContact.newMessages));
-        Picasso.with(holder.itemView.getContext()).load(holder.mContact.image).transform(new CircleTransform()).into(holder.mPicture);
+        if (holder.mContact.newMessages == 0)
+            holder.mNewMessageCountFrame.setVisibility(View.GONE);
+        else
+            holder.mNewMessageCountFrame.setVisibility(View.VISIBLE);
+
+
+        holder.mPicture.setBackgroundResource(Images.USER);
+
+        if (holder.mContact.image != null) {
+
+            Picasso.with(holder.itemView.getContext())
+                    .load(Util.getImageUrl(holder.mContact.image))
+                    .transform(new CircleTransform())
+                    .into(holder.mPicture);
+
+        } else {
+
+                holder.mPicture.setImageResource(Images.USER);
+
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +90,9 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
     public void openMessages(ListContact contact) {
         Intent intent = new Intent(mListener.getHomeContext(), ContactView.class);
         intent.putExtra("contact", contact);
+        contact.newMessages = 0;
         mListener.onStartNewActivity(intent);
+        update();
     }
 
     public void update() {
@@ -84,6 +113,8 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
         public final TextView mName;
         public final TextView mMessage;
         public final TextView mMessageCount;
+        public final ImageView mLastMessageSent;
+        public final FrameLayout mNewMessageCountFrame;
         public ListContact mContact;
 
         public ViewHolder(View view) {
@@ -93,6 +124,8 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
             mName = (TextView) view.findViewById(R.id.profileName);
             mMessage = (TextView) view.findViewById(R.id.message) ;
             mMessageCount = (TextView) view.findViewById(R.id.newMessageCount);
+            mLastMessageSent = (ImageView) view.findViewById(R.id.contact_last_message_sent);
+            mNewMessageCountFrame = (FrameLayout) view.findViewById(R.id.contact_last_message_seen_frame);
         }
 
         @Override

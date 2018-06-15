@@ -2,12 +2,18 @@ package com.ux7.fullhyve.services.Handlers;
 
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.ux7.fullhyve.services.Models.MyTeam;
+import com.ux7.fullhyve.services.Utility.Converter;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
 import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.ux7.fullhyve.services.Utility.ResponseListener;
 import com.github.nkzawa.socketio.client.Ack;
+import com.ux7.fullhyve.ui.data.ListAnnouncement;
+import com.ux7.fullhyve.ui.data.ListMember;
+import com.ux7.fullhyve.ui.data.ListProject;
+import com.ux7.fullhyve.ui.data.ListTeam;
 
 import org.json.JSONObject;
 
@@ -16,7 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class TeamHandler extends Handler {
-    public void getMyTeams(final int offset, final int limit, final Activity activity, final Runnable runnable){
+    public void getMyTeams(final int offset, final int limit, final List<ListTeam> teams, final Activity activity, final Runnable runnable){
+
         final List<MyTeam> myTeams = new ArrayList<>();
         //myTeams=cache.contacts.getMyTeams(offset,limit).toArray();
 
@@ -36,9 +43,20 @@ public class TeamHandler extends Handler {
                         final ResponseFormat.GetTeamsR teamsR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamsR.class);
 
                         if (teamsR != null) {
+                            Log.e("My teams","Fetched");
+                            if(teamsR.data.myTeams.size()>0){
+                                Log.e("Team name",teamsR.data.myTeams.get(0).name);
+                            }
+
                             //cache.contacts.addReceivedMessage(friendId, {message});
                             //cache.teams.myTeams.addTeams(teamsR.data);
                         }
+
+                        Log.e("Got teams ", "Length of " + teamsR.data.myTeams.size());
+
+                        teams.clear();
+                        teams.addAll(Converter.portMyTeamToListTeam(teamsR.data.myTeams));
+
                         activity.runOnUiThread(runnable);
                     }
                 }
@@ -76,7 +94,7 @@ public class TeamHandler extends Handler {
 
 
 
-    public void getTeamMembers(int teamId,final int offset, final int limit, final Activity activity, final Runnable runnable){
+    public void getTeamMembers(int teamId, final int offset, final int limit, final List<ListMember> members, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("teamId",teamId);
         args.put("offset",offset);
@@ -88,12 +106,22 @@ public class TeamHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    final ResponseFormat.GetTeamMemberR teamMembersR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamMemberR.class);
+                    final ResponseFormat.GetTeamMemberR membersR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamMemberR.class);
 
-                    if(teamMembersR!=null){
+                    if(membersR!=null){
+                        Log.e("Members","Fetched");
+                        if(membersR.data.members==null){
+
+                        }
+                        if(membersR.data.members != null && membersR.data.members.size()>0){
+                            Log.e("Member",membersR.data.members.get(0).getFirstName());
+                        }
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
+
+                    members.clear();
+                    members.addAll(Converter.portUsersToListMember(membersR.data.members));
 
                     activity.runOnUiThread(runnable);
                 }
@@ -102,7 +130,7 @@ public class TeamHandler extends Handler {
     }
 
 
-    public void getTeamProjects(int teamId,final int offset, final int limit, final Activity activity, final Runnable runnable){
+    public void getTeamProjects(int teamId, final int offset, final int limit, final List<ListProject> listProjects, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("teamId",teamId);
         args.put("offset",offset);
@@ -110,16 +138,29 @@ public class TeamHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("getTeamProjects",args);
 
+        Log.e("team projecto", "");
+
         socket.emit("getTeamProjects", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     final ResponseFormat.GetTeamProjectR teamProjectsR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamProjectR.class);
 
+                    Log.e("team projecto", teamProjectsR.data.projects.size() + "");
+
                     if(teamProjectsR!=null){
+                        Log.e("Team projects","Fetched");
+                        if(teamProjectsR.data.projects.size()>0){
+                            Log.e("Project",teamProjectsR.data.projects.get(0).name);
+                        }
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
+
+                        listProjects.clear();
+                        listProjects.addAll(Converter.portProjectToListProject(teamProjectsR.data.projects));
+
                     }
+
 
                     activity.runOnUiThread(runnable);
                 }
@@ -128,7 +169,7 @@ public class TeamHandler extends Handler {
     }
 
 
-    public void getTeamAnnouncements(int teamId,final int offset, final int limit, final Activity activity, final Runnable runnable){
+    public void getTeamAnnouncements(int teamId, final int offset, final int limit, final List<ListAnnouncement> listAnnouncements, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("teamId",teamId);
         args.put("offset",offset);
@@ -143,8 +184,15 @@ public class TeamHandler extends Handler {
                     final ResponseFormat.GetTeamAnnouncementR teamAnnouncementsR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamAnnouncementR.class);
 
                     if(teamAnnouncementsR!=null){
+                        if(teamAnnouncementsR.data.announcements!=null && teamAnnouncementsR.data.announcements.size()>0){
+                            Log.e("Annoucement",teamAnnouncementsR.data.announcements.get(0).mainMessage.getMessage());
+                        }
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
+
+                        listAnnouncements.clear();
+                        listAnnouncements.addAll(Converter.portAnnouncementToListAnnouncement(teamAnnouncementsR.data.announcements));
+
                     }
 
                     activity.runOnUiThread(runnable);
@@ -156,7 +204,7 @@ public class TeamHandler extends Handler {
     public void announce(final int teamId, final String announcement, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("teamId",teamId);
-        args.put("announcement", announcement);
+        args.put("message", announcement);
 
         JSONObject req = RequestFormat.createRequestObj("announce",args);
 
@@ -166,7 +214,8 @@ public class TeamHandler extends Handler {
                 if(generalHandler(args)==200){
                     final ResponseFormat.AnnounceR announceR = gson.fromJson(args[0].toString(), ResponseFormat.AnnounceR.class);
 
-                    if(announceR!=null){
+                    if(announceR!=null && announceR.data != null){
+                        Log.e("Announcement id",announceR.data.replyId.toString());
                         //cache.contacts.addReceivedMessage(friendId, {message});
                     }
 
@@ -195,20 +244,22 @@ public class TeamHandler extends Handler {
 
 
 
-    public void reply(final int teamId, final String reply, final Activity activity, final Runnable runnable){
+    public void reply(final int teamId, final String reply, final int mainAnnouncementId, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
-        args.put("reply",reply);
+        args.put("message",reply);
         args.put("teamId",teamId);
+        args.put("mainAnnouncementId", mainAnnouncementId);
 
-        JSONObject req = RequestFormat.createRequestObj("reply",args);
+        JSONObject req = RequestFormat.createRequestObj("replyAnnouncement",args);
 
-        socket.emit("reply", req, new Ack() {
+        socket.emit("replyAnnouncement", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     final ResponseFormat.ReplyR replyR = gson.fromJson(args[0].toString(), ResponseFormat.ReplyR.class);
 
-                    if(replyR!=null){
+                    if(replyR!=null && replyR.data!=null){
+                        Log.e("Reply id",replyR.data.replyId.toString());
                         //cache.contacts.addReceivedMessage(friendId, {message});
                     }
 

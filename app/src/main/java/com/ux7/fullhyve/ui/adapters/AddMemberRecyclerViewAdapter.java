@@ -2,6 +2,7 @@ package com.ux7.fullhyve.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.UserDetail;
 import com.ux7.fullhyve.ui.fragments.MemberFragment.OnListFragmentInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.Images;
+import com.ux7.fullhyve.ui.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +33,7 @@ import java.util.List;
 public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMemberRecyclerViewAdapter.ViewHolder> {
 
     private final List<ListMember> mMembers;
-    public final List<String> mSelectedUsers;
+    public final List<Integer> mSelectedUsers;
 
     public AddMemberRecyclerViewAdapter(List<ListMember> items) {
         mMembers = items;
@@ -48,7 +51,19 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mMember = mMembers.get(position);
         holder.mMemberNameView.setText(mMembers.get(position).name);
-        Picasso.with(holder.itemView.getContext()).load(holder.mMember.image).transform(new CircleTransform()).into(holder.mMemberPictureView);
+        holder.mMemberPictureView.setBackgroundResource(Images.USER);
+
+        if (holder.mMember.image != null) {
+
+            Picasso.with(holder.itemView.getContext())
+                    .load(Util.getImageUrl(holder.mMember.image))
+                    .transform(new CircleTransform())
+                    .into(holder.mMemberPictureView);
+        } else {
+
+            holder.mMemberPictureView.setImageResource(Images.USER);
+
+        }
 
         final Context context = holder.mView.getContext();
 
@@ -80,14 +95,21 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
 
                 if (b)
 
-                    mSelectedUsers.add("" + holder.mMember.id);
+                    mSelectedUsers.add(holder.mMember.id);
 
                 else
 
-                    mSelectedUsers.remove("" + holder.mMember.id);
+                    mSelectedUsers.remove(mSelectedUsers.indexOf(holder.mMember.id));
 
             }
         });
+    }
+
+
+    public void update() {
+
+        notifyDataSetChanged();
+
     }
 
     @Override
@@ -116,9 +138,17 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
         }
     }
 
-    public String[] getSelectedUserIds() {
+    public int[] getSelectedUserIds() {
 
-        return mSelectedUsers.toArray(new String[]{});
+        int[] outids = new int[mSelectedUsers.size()];
+
+        for (int i = 0; i < mSelectedUsers.size(); i++) {
+
+            outids[i] = mSelectedUsers.get(i);
+
+        }
+
+        return outids;
 
     }
 

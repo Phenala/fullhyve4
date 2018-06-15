@@ -83,6 +83,6 @@ public class UserView extends AppCompatActivity {
                 .load(userDetail.image)
                 .transform(new CircleTransform())
                 .resize(64, 64)
-                .into(new ActionBarTarget(getResources(), actionBar));
+                .into(new ActionBarTarget(this, actionBar));
     }
 }

@@ -12,28 +12,17 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ProjectDetail;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.Images;
+import com.ux7.fullhyve.ui.util.Util;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ProjectDetailFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ProjectDetailFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ProjectDetailFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public View rootView;
+
+    ListProject project;
 
     private OnFragmentInteractionListener mListener;
 
@@ -41,20 +30,13 @@ public class ProjectDetailFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProjectDetailFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+    public void setProject(ListProject listProject) {
+        this.project = listProject;
+    }
+
     public static ProjectDetailFragment newInstance(String param1, String param2) {
         ProjectDetailFragment fragment = new ProjectDetailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,10 +44,6 @@ public class ProjectDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -81,16 +59,26 @@ public class ProjectDetailFragment extends Fragment {
 
     public void buildProjectDetail() {
 
-        ProjectDetail projectDetail = new ProjectDetail();
+        ProjectDetail projectDetail = project.detail;
         ((TextView)rootView.findViewById(R.id.project_name)).setText(projectDetail.name);
         ((TextView)rootView.findViewById(R.id.project_focus)).setText(projectDetail.focus);
         ((TextView)rootView.findViewById(R.id.project_description)).setText(projectDetail.description);
         ((TextView)rootView.findViewById(R.id.project_member_count)).setText(projectDetail.contributors + " contributors");
         ImageView projectImageView = ((ImageView)rootView.findViewById(R.id.project_image));
-        Picasso.with(getActivity())
-                .load(projectDetail.image)
-                .transform(new CircleTransform())
-                .into(projectImageView);
+        projectImageView.setBackgroundResource(Images.PROJECT);
+
+        if (projectDetail.image != null) {
+
+            Picasso.with(getActivity())
+                    .load(Util.getImageUrl(projectDetail.image))
+                    .transform(new CircleTransform())
+                    .into(projectImageView);
+
+        } else {
+
+            projectImageView.setImageResource(Images.PROJECT);
+
+        }
 
     }
 

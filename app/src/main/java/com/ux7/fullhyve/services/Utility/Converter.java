@@ -9,17 +9,23 @@ import com.ux7.fullhyve.services.Models.Project;
 import com.ux7.fullhyve.services.Models.Task;
 import com.ux7.fullhyve.services.Models.TaskSet;
 import com.ux7.fullhyve.services.Models.Team;
+import com.ux7.fullhyve.services.Models.User;
 import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.ui.data.ListAnnouncement;
 import com.ux7.fullhyve.ui.data.ListContact;
+import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.ListMessage;
 import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListTask;
 import com.ux7.fullhyve.ui.data.ListTaskSet;
 import com.ux7.fullhyve.ui.data.ListTeam;
+import com.ux7.fullhyve.ui.data.ProjectDetail;
 import com.ux7.fullhyve.ui.data.TaskDetail;
+import com.ux7.fullhyve.ui.data.TaskSetDetail;
+import com.ux7.fullhyve.ui.data.TeamDetail;
 import com.ux7.fullhyve.ui.enums.TaskStatus;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,11 +86,8 @@ public class Converter {
         nContact.image = contact.getImage();
         nContact.name = contact.getFirstName() + " " + contact.getLastName();
         nContact.newMessages = contact.getUnseenMessages();
-        if (contact.getMessages().size() > 0) {
-            nContact.lastMessage = contact.getMessages().get(0).getMessage();
-        } else {
-            nContact.lastMessage = "";
-        }
+        nContact.lastMessage = contact.lastMessage.getMessage();
+        nContact.lastMessageSent = contact.lastMessage.isSent();
 
         return nContact;
 
@@ -152,6 +155,14 @@ public class Converter {
         nProject.image = project.image;
         nProject.contributor = true;
 
+        ProjectDetail projectDetail = new ProjectDetail();
+
+        projectDetail.id = project.id;
+        projectDetail.name = project.name;
+        projectDetail.contributors = project.contributorCount;
+        projectDetail.focus = project.field;
+        projectDetail.image = project.image;
+
         return nProject;
 
     }
@@ -216,6 +227,17 @@ public class Converter {
         nTeam.image = team.image;
         nTeam.member = true;
 
+        TeamDetail teamDetail = new TeamDetail();
+
+        teamDetail.id = team.id;
+        teamDetail.name = team.name;
+        teamDetail.image = team.image;
+        teamDetail.focus = team.focus;
+        teamDetail.description = team.description;
+        teamDetail.members = team.memberCount;
+
+        nTeam.detail = teamDetail;
+
         return nTeam;
 
     }
@@ -250,7 +272,7 @@ public class Converter {
         nAnnouncement.replies = announcement.replies.length;
         nAnnouncement.senderId = announcement.mainMessage.sender.getId();
         nAnnouncement.senderImage = announcement.mainMessage.sender.getImage();
-        nAnnouncement.senderName = announcement.mainMessage.sender.getFirstName() + " " + announcement.mainMessage.sender.getFirstName();
+        nAnnouncement.senderName = announcement.mainMessage.sender.getFirstName() + " " + announcement.mainMessage.sender.getLastName();
         nAnnouncement.sent = announcement.mainMessage.isSent();
         nAnnouncement.sentTime = announcement.mainMessage.getTimestamp();
 
@@ -301,6 +323,20 @@ public class Converter {
         }
         nTaskSet.completion = (int)(100 * completed/(float)taskSet.tasks.length);
         nTaskSet.assigments = assigments;
+
+        TaskSetDetail detail = new TaskSetDetail();
+
+        detail = (TaskSetDetail) (Serializable) nTaskSet;
+
+        detail.id = nTaskSet.id;
+        detail.name = nTaskSet.name;
+        detail.assigments = nTaskSet.assigments;
+        detail.completion = nTaskSet.completion;
+        detail.deadline = taskSet.deadline;
+        detail.description = taskSet.description;
+        detail.number = nTaskSet.number;
+
+        nTaskSet.detail = detail;
 
         return nTaskSet;
 
@@ -374,5 +410,44 @@ public class Converter {
         return taskDetail;
 
     }
+
+
+
+
+
+
+
+
+    public static  List<ListMember> portUsersToListMember (List<User> users) {
+
+        List<ListMember> listMembers = new ArrayList<>();
+
+        for (User user : users) {
+
+            ListMember listMember = portUsersToListMember(user);
+
+            listMembers.add(listMember);
+
+        }
+
+        return listMembers;
+
+    }
+
+
+
+    public static ListMember portUsersToListMember (User user) {
+
+        ListMember listMember = new ListMember();
+
+        listMember.id = user.getId();
+        listMember.image = user.getImage();
+        listMember.leader = false;
+        listMember.name = user.getFirstName() + " " + user.getLastName();
+
+        return listMember;
+
+    }
+
 
 }

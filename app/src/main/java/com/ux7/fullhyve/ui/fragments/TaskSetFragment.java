@@ -1,12 +1,12 @@
 package com.ux7.fullhyve.ui.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,12 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.ui.activities.NewTaskSetView;
 import com.ux7.fullhyve.ui.adapters.TaskSetRecyclerViewAdapter;
+import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListTaskSet;
-import com.ux7.fullhyve.ui.data.ListTeam;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,7 +34,13 @@ import java.util.ArrayList;
 public class TaskSetFragment extends Fragment {
 
     View fragmentView;
-    public ListTeam team;
+    ListProject project;
+    List<ListTaskSet> taskSetList = new ArrayList<>();
+
+
+    FloatingActionButton fab;
+    TaskSetRecyclerViewAdapter adapter;
+    LinearLayoutManager layoutManager;
 
     private OnFragmentInteractionListener mListener;
 
@@ -40,15 +48,7 @@ public class TaskSetFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TaskSetsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static TaskSetFragment newInstance(String param1, String param2) {
         TaskSetFragment fragment = new TaskSetFragment();
         Bundle args = new Bundle();
@@ -56,21 +56,15 @@ public class TaskSetFragment extends Fragment {
         return fragment;
     }
 
-    public void buildTaskSets() {
 
-        RecyclerView recyclerView = (RecyclerView) fragmentView.findViewById(R.id.task_set_list);
-        //DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-        //recyclerView.addItemDecoration(dividerItemDecoration);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        ArrayList<ListTaskSet> nlist = new ArrayList<>();
-        //nlist.add(ListMessage.getSpinnerValue());
-        for (int i = 0; i < 20; i++) {
-            ListTaskSet l = new ListTaskSet();
-            nlist.add(l);
-        }
+    public void setProject(ListProject listProject) {
+        this.project = listProject;
+    }
 
-        final FloatingActionButton fab = (FloatingActionButton)fragmentView.findViewById(R.id.add_task_set_fab);
+    public void buildFloatingActionButton() {
+
+        fab = (FloatingActionButton)fragmentView.findViewById(R.id.add_task_set_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,6 +72,16 @@ public class TaskSetFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+    }
+
+    public void buildRecycler() {
+
+        RecyclerView recyclerView = (RecyclerView) fragmentView.findViewById(R.id.task_set_list);
+        //DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+        //recyclerView.addItemDecoration(dividerItemDecoration);
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -95,8 +99,11 @@ public class TaskSetFragment extends Fragment {
             }
         });
 
-        recyclerView.setAdapter(new TaskSetRecyclerViewAdapter(nlist));
-        recyclerView.getLayoutManager().scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
+        adapter = new TaskSetRecyclerViewAdapter(taskSetList, project);
+        recyclerView.setAdapter(adapter);
+
+        getTaskSets();
+
     }
 
     @Override
@@ -110,7 +117,8 @@ public class TaskSetFragment extends Fragment {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_task_set_list, container, false);
 
-        buildTaskSets();
+        buildFloatingActionButton();
+        buildRecycler();
 
         return fragmentView;
     }
@@ -120,6 +128,23 @@ public class TaskSetFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    public void getTaskSets() {
+
+        Activity activity = getActivity();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                adapter.update();
+
+            }
+        };
+
+        AppHandler.getInstance().projectHandler.getTaskSets(project.id, 0, 500, taskSetList, activity, runnable);
+
     }
 
     @Override

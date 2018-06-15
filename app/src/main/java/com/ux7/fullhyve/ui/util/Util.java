@@ -1,6 +1,7 @@
 package com.ux7.fullhyve.ui.util;
 
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Utility.Realtime;
 import com.ux7.fullhyve.ui.enums.TaskStatus;
 
 /**
@@ -68,6 +69,12 @@ public class Util {
 
                 return "";
         }
+    }
+
+    public static String getImageUrl(String imageUrl) {
+
+        return Realtime.URL + "file/" + imageUrl;
+
     }
 
 }

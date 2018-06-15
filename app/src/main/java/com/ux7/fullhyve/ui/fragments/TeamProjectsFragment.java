@@ -1,5 +1,6 @@
 package com.ux7.fullhyve.ui.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -12,19 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.ui.adapters.ProjectsRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.ListProject;
+import com.ux7.fullhyve.ui.data.ListTeam;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
+
 public class TeamProjectsFragment extends Fragment {
 
     // TODO: Customize parameter argument names
@@ -33,11 +32,19 @@ public class TeamProjectsFragment extends Fragment {
     private int mColumnCount = 1;
     private OnHomeInteractionListener mListener;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
+    ListTeam team;
+    List<ListProject> projects = new ArrayList<>();
+
+    View fragmentView;
+    LinearLayoutManager layoutManager;
+    ProjectsRecyclerViewAdapter adapter;
+
+
     public TeamProjectsFragment() {
+    }
+
+    public void setTeam(ListTeam listTeam) {
+        team = listTeam;
     }
 
     // TODO: Customize parameter initialization
@@ -62,31 +69,43 @@ public class TeamProjectsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_project_list, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_project_list, container, false);
+        buildRecycler();
+        return fragmentView;
+    }
+
+    public void buildRecycler() {
 
         // Set the adapter
         Context context = getActivity();
 
-        RecyclerView recyclerView = (RecyclerView) view;
+        RecyclerView recyclerView = (RecyclerView) fragmentView;
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, DividerItemDecoration.VERTICAL);
-//        Drawable divider = getResources().getDrawable(R.drawable.ic_divider);
-//        divider.setTint();
-//        dividerItemDecoration.setDrawable();
         recyclerView.addItemDecoration(dividerItemDecoration);
-        if (mColumnCount <= 1) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        } else {
-            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-        }
+        layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new ProjectsRecyclerViewAdapter(projects, mListener);
+        recyclerView.setAdapter(adapter);
 
+        getProjects();
 
-        ArrayList<ListProject> items = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            items.add(new ListProject());
-        }
-        recyclerView.setAdapter(new ProjectsRecyclerViewAdapter(items, mListener));
+    }
 
-        return view;
+    public void getProjects() {
+
+        Activity activity = getActivity();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                adapter.update();
+
+            }
+        };
+
+        AppHandler.getInstance().teamHandler.getTeamProjects(team.id, 0, 500, projects, activity, runnable);
+
     }
 
 

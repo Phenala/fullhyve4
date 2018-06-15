@@ -13,6 +13,7 @@ public class ListContact implements Serializable {
     public String image = "http://0.gravatar.com/avatar/c77b7988df1396d40ed4a62be4e55565?s=64&d=mm&r=g";
     public String name = "Rod Rodder";
     public String lastMessage = "Gangsta to the core.";
+    public boolean lastMessageSent = false;
     public int newMessages = 2;
 
 }

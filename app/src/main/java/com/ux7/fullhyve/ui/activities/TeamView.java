@@ -24,6 +24,8 @@ import com.ux7.fullhyve.ui.fragments.TeamDetailFragment;
 import com.ux7.fullhyve.ui.fragments.TeamProjectsFragment;
 import com.ux7.fullhyve.ui.util.ActionBarTarget;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.Images;
+import com.ux7.fullhyve.ui.util.Util;
 
 public class TeamView extends AppCompatActivity {
 
@@ -69,8 +71,7 @@ public class TeamView extends AppCompatActivity {
 
     public void buildTeam() {
 
-        team.name = getIntent().getStringExtra("name");
-        team.image = getIntent().getStringExtra("image");
+        team = (ListTeam) getIntent().getSerializableExtra("team");
 
     }
 
@@ -81,11 +82,20 @@ public class TeamView extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
-        Picasso.with(this)
-                .load(team.image)
-                .transform(new CircleTransform())
-                .resize(64,64)
-                .into(new ActionBarTarget(getResources(), actionBar));
+
+        if (team.image != null) {
+
+            Picasso.with(this)
+                    .load(Util.getImageUrl(team.image))
+                    .transform(new CircleTransform())
+                    .resize(64, 64)
+                    .into(new ActionBarTarget(this, actionBar));
+
+        } else {
+
+            actionBar.setIcon(Images.USER);
+
+        }
     }
 
 
@@ -171,12 +181,16 @@ public class TeamView extends AppCompatActivity {
                     return teamAnnounce;
                 case 1:
                     MemberFragment teamMembers = new MemberFragment();
+                    teamMembers.setMemberType(MemberFragment.MemberOf.TEAM);
+                    teamMembers.setTeam(team);
                     return teamMembers;
                 case 2:
                     TeamProjectsFragment projects = new TeamProjectsFragment();
+                    projects.setTeam(team);
                     return projects;
                 case 3:
                     TeamDetailFragment teamDetails = new TeamDetailFragment();
+                    teamDetails.setTeamDetail(team.detail);
                     return teamDetails;
             }
             return new AnnouncementsFragment();
