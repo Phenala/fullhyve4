@@ -219,8 +219,16 @@ public class AnnouncementView extends AppCompatActivity implements ReplyRecycler
             }
         };
 
-        AppHandler.getInstance().teamHandler.editAnnouncementReply(replyEditingId, replyToSend.getText().toString(), this, runnable);
+        String newReplyMessage = replyToSend.getText().toString();
 
+        for (ListReply reply : replies) {
+            if (reply.id == replyEditingId)
+                reply.reply = newReplyMessage;
+        }
+
+        AppHandler.getInstance().teamHandler.editAnnouncementReply(replyEditingId, newReplyMessage, this, runnable);
+
+        replyEditingId = -1;
         replyButton.setImageResource(R.drawable.ic_send_icon);
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(replyToSend.getWindowToken(), 0);
@@ -229,6 +237,8 @@ public class AnnouncementView extends AppCompatActivity implements ReplyRecycler
     }
 
     public void deleteReply(ListReply reply) {
+
+        replies.remove(reply);
 
         Runnable runnable = new Runnable() {
             @Override

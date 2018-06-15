@@ -263,7 +263,7 @@ public class AnnouncementsFragment extends Fragment implements AnnouncementRecyc
         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(announcementToSend.getWindowToken(), 0);
 
-
+        announcementEditingId = -1;
         announcementToSend.setText("");
 
     }

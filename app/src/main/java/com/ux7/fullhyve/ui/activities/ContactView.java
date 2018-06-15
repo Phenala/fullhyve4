@@ -496,14 +496,14 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
                     }
                 }
 
-                messageEditingId = -1;
-
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(((EditText)findViewById(R.id.messageToSend)).getWindowToken(), 0);
-
                 adapter.update();
             }
         };
+
+        messageEditingId = -1;
+
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(((EditText)findViewById(R.id.messageToSend)).getWindowToken(), 0);
 
         AppHandler.getInstance().contactHandler.editMessage(messageEditingId, messageToSend, this, runnable);
 

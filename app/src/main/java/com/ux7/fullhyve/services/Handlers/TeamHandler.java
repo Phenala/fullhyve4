@@ -234,9 +234,9 @@ public class TeamHandler extends Handler {
         HashMap<String, Object> args = new HashMap<>();
         args.put("announcementId",announcementId);
 
-        JSONObject req = RequestFormat.createRequestObj("announce",args);
+        JSONObject req = RequestFormat.createRequestObj("deleteAnnouncement",args);
 
-        socket.emit("announce", req, new Ack() {
+        socket.emit("deleteAnnouncement", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
