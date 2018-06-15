@@ -66,7 +66,7 @@ public class TeamHandler extends Handler {
     }
 
 
-    public void searchTeams(final int offset, final int limit,String name, final Activity activity, final Runnable runnable){
+    public void searchTeams(final int offset, final int limit, String name, final List<ListTeam> listTeams, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("offset",offset);
         args.put("limit", limit);
@@ -84,6 +84,10 @@ public class TeamHandler extends Handler {
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
+
+
+                    listTeams.clear();
+                    listTeams.addAll(Converter.portMyTeamToListTeam(teamsR.data.myTeams));
 
                     activity.runOnUiThread(runnable);
                 }
@@ -128,7 +132,6 @@ public class TeamHandler extends Handler {
             }
         });
     }
-
 
     public void getTeamProjects(int teamId, final int offset, final int limit, final List<ListProject> listProjects, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();

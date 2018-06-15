@@ -160,8 +160,11 @@ public class Converter {
         projectDetail.id = project.id;
         projectDetail.name = project.name;
         projectDetail.contributors = project.contributorCount;
+        projectDetail.description = project.description;
         projectDetail.focus = project.field;
         projectDetail.image = project.image;
+
+        nProject.detail = projectDetail;
 
         return nProject;
 
@@ -235,6 +238,7 @@ public class Converter {
         teamDetail.focus = team.focus;
         teamDetail.description = team.description;
         teamDetail.members = team.memberCount;
+        teamDetail.leaderId = team.leader.getId();
 
         nTeam.detail = teamDetail;
 
@@ -309,24 +313,10 @@ public class Converter {
         nTaskSet.id = taskSet.id;
         nTaskSet.name = taskSet.name;
         nTaskSet.number = taskSet.number;
-        int completed = 0;
-        int assigments = 0;
-        for (Task task : taskSet.tasks) {
-
-            if (task.assignee.getId() == id) {
-                assigments++;
-            }
-
-            if (task.status == 3) {
-                completed++;
-            }
-        }
-        nTaskSet.completion = (int)(100 * completed/(float)taskSet.tasks.length);
-        nTaskSet.assigments = assigments;
+        nTaskSet.completion = taskSet.completion;
+        nTaskSet.assigments = taskSet.assignment;
 
         TaskSetDetail detail = new TaskSetDetail();
-
-        detail = (TaskSetDetail) (Serializable) nTaskSet;
 
         detail.id = nTaskSet.id;
         detail.name = nTaskSet.name;

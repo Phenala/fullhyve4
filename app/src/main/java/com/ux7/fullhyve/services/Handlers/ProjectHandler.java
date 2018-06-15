@@ -9,6 +9,7 @@ import com.ux7.fullhyve.services.Utility.RequestFormat;
 import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.github.nkzawa.socketio.client.Ack;
 import com.ux7.fullhyve.ui.data.ListMember;
+import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListTask;
 import com.ux7.fullhyve.ui.data.ListTaskSet;
 
@@ -21,7 +22,7 @@ import java.util.List;
 
 
 public class ProjectHandler extends Handler {
-    public void getMyProjects(final int offset, final int limit, final Activity activity, final Runnable runnable){
+    public void getMyProjects(final int offset, final int limit, final List<ListProject> listProjects, final Activity activity, final Runnable runnable){
         final List<MyProject> myProjects = new ArrayList<>();
         //myProjects=cache.contacts.getMyTeams(offset,limit).toArray();
 
@@ -44,6 +45,9 @@ public class ProjectHandler extends Handler {
                             //cache.contacts.addReceivedMessage(friendId, {message});
                             //cache.teams.myTeams.addTeams(teamsR.data);
                         }
+
+                        listProjects.clear();
+                        listProjects.addAll(Converter.portMyProjectToListProject(myProjectsR.data.myProjects));
 
                         activity.runOnUiThread(runnable);
                     }
@@ -140,9 +144,9 @@ public class ProjectHandler extends Handler {
         args.put("offset",offset);
         args.put("limit", limit);
 
-        JSONObject req = RequestFormat.createRequestObj("getTaskSets",args);
+        JSONObject req = RequestFormat.createRequestObj("getTasksets",args);
 
-        socket.emit("getTaskSets", req, new Ack() {
+        socket.emit("getTasksets", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -154,7 +158,7 @@ public class ProjectHandler extends Handler {
                     }
 
                     listTaskSets.clear();
-                    listTaskSets.addAll(Converter.portTaskSetToListTaskSet(taskSetsR.data.taskSets));
+                    listTaskSets.addAll(Converter.portTaskSetToListTaskSet(taskSetsR.data.tasksets));
 
                     activity.runOnUiThread(runnable);
                 }

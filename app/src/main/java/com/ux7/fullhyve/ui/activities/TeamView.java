@@ -88,7 +88,7 @@ public class TeamView extends AppCompatActivity {
             Picasso.with(this)
                     .load(Util.getImageUrl(team.image))
                     .transform(new CircleTransform())
-                    .resize(64, 64)
+                    .resize(CircleTransform.dimen, CircleTransform.dimen)
                     .into(new ActionBarTarget(this, actionBar));
 
         } else {
