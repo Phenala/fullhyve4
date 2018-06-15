@@ -2,10 +2,12 @@ package com.ux7.fullhyve.ui.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,7 +37,7 @@ public class AnnouncementsFragment extends Fragment implements AnnouncementRecyc
     List<ListAnnouncement> announcements = new ArrayList<>();
     int retrieveLimit = 7;
     int size = retrieveLimit;
-    int announcementEditingId;
+    int announcementEditingId = -1;
     boolean fetchAnnouncements = false;
 
     LinearLayoutManager layoutManager;
@@ -103,7 +105,7 @@ public class AnnouncementsFragment extends Fragment implements AnnouncementRecyc
 
         sendButton = (ImageButton) fragmentView.findViewById(R.id.announcement_send_button);
         announcementToSend = (EditText) fragmentView.findViewById(R.id.announcement_to_send);
-        announcementToSend.setOnClickListener(new View.OnClickListener() {
+        sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -206,24 +208,38 @@ public class AnnouncementsFragment extends Fragment implements AnnouncementRecyc
     }
 
     @Override
-    public void onDeleteAnnouncement(ListAnnouncement announcement) {
+    public void onDeleteAnnouncement(final ListAnnouncement announcement) {
 
-        Activity activity = getActivity();
+        AlertDialog.Builder confirmation = new AlertDialog.Builder(getActivity());
+        confirmation.setMessage("Are you sure you want to delete this announcement?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
-        announcements.remove(announcement);
+                        Activity activity = getActivity();
 
-        adapter.update();
+                        announcements.remove(announcement);
+                        adapter.update();
 
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
+                        Runnable runnable = new Runnable() {
+                            @Override
+                            public void run() {
 
-                getAnnouncements();
+                                getAnnouncements();
 
-            }
-        };
+                            }
+                        };
 
-        AppHandler.getInstance().teamHandler.deleteAnnouncement(announcement.id, activity, runnable);
+                        AppHandler.getInstance().teamHandler.deleteAnnouncement(announcement.id, activity, runnable);
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                }).show();
 
     }
 
@@ -246,6 +262,9 @@ public class AnnouncementsFragment extends Fragment implements AnnouncementRecyc
 
         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(announcementToSend.getWindowToken(), 0);
+
+
+        announcementToSend.setText("");
 
     }
 
@@ -277,6 +296,8 @@ public class AnnouncementsFragment extends Fragment implements AnnouncementRecyc
         };
 
         AppHandler.getInstance().teamHandler.announce(team.id, announcement, activity, runnable);
+
+        announcementToSend.setText("");
 
     }
 

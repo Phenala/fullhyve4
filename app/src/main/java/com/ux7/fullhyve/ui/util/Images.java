@@ -9,7 +9,7 @@ import com.ux7.fullhyve.R;
 public class Images {
 
     public static int USER = R.mipmap.user_picture_round;
-    public static int TEAM = R.mipmap.team_profile_round;
+    public static int TEAM = R.mipmap.team_round;
     public static int PROJECT = R.mipmap.user_picture_round;
 
 }

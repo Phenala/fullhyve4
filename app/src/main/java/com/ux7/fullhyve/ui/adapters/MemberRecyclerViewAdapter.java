@@ -17,7 +17,7 @@ import com.ux7.fullhyve.ui.data.UserDetail;
 import com.ux7.fullhyve.ui.fragments.MemberFragment.OnListFragmentInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
 import com.ux7.fullhyve.ui.util.Images;
-import com.ux7.fullhyve.ui.util.Util;
+import com.ux7.fullhyve.ui.util.U;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<MemberRecycl
         if (holder.mMember.image != null) {
 
             Picasso.with(holder.itemView.getContext())
-                    .load(Util.getImageUrl(holder.mMember.image))
+                    .load(U.getImageUrl(holder.mMember.image))
                     .transform(new CircleTransform())
                     .into(holder.mMemberPictureView);
 

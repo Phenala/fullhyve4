@@ -2,7 +2,6 @@ package com.ux7.fullhyve.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,7 +21,7 @@ import com.ux7.fullhyve.ui.data.ListAnnouncement;
 import com.ux7.fullhyve.ui.data.ListTeam;
 import com.ux7.fullhyve.ui.util.CircleTransform;
 import com.ux7.fullhyve.ui.util.Images;
-import com.ux7.fullhyve.ui.util.Util;
+import com.ux7.fullhyve.ui.util.U;
 
 import java.io.Serializable;
 import java.util.List;
@@ -55,14 +54,14 @@ public class AnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<Announ
 
         holder.mAnnouncement = mAnnouncements.get(position);
         holder.mAnnouncementContent.setText(holder.mAnnouncement.message);
-        holder.mAnnouncementTime.setText(holder.mAnnouncement.sentTime + "   " + holder.mAnnouncement.replies + " replies");
+        holder.mAnnouncementTime.setText(holder.mAnnouncement.sentTime);
         holder.mAnnouncerName.setText(holder.mAnnouncement.senderName);
         holder.mAnnouncerImage.setBackgroundResource(Images.USER);
 
         if (holder.mAnnouncement.senderImage != null) {
 
             Picasso.with(holder.mView.getContext())
-                    .load(Util.getImageUrl(holder.mAnnouncement.senderImage))
+                    .load(U.getImageUrl(holder.mAnnouncement.senderImage))
                     .transform(new CircleTransform())
                     .into(holder.mAnnouncerImage);
 
@@ -90,6 +89,18 @@ public class AnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<Announ
             //holder.mView.findViewById(R.id.messages_loading_spinner).setVisibility(View.VISIBLE);
         }
 
+        if (holder.mAnnouncement.replies == 0) {
+            holder.getmAnnouncementReplyCount.setVisibility(View.GONE);
+            holder.getmAnnouncementReplyCount.setText(holder.mAnnouncement.replies + " replies");
+        } else {
+            holder.getmAnnouncementReplyCount.setVisibility(View.VISIBLE);
+            if (holder.mAnnouncement.replies == 1) {
+                holder.getmAnnouncementReplyCount.setText("1 reply");
+            } else {
+                holder.getmAnnouncementReplyCount.setText(holder.mAnnouncement.replies + " replies");
+            }
+        }
+
         LinearLayout body = (LinearLayout) holder.mView.findViewById(R.id.callout_body);
         final ListAnnouncement announcement = holder.mAnnouncement;
 
@@ -107,11 +118,11 @@ public class AnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<Announ
 
                         switch (item.getItemId()) {
 
-                            case R.id.message_option_edit:
+                            case R.id.announcement_option_edit:
                                 mListener.onEditAnnouncement(announcement);
                                 break;
 
-                            case R.id.message_option_delete:
+                            case R.id.announcement_option_delete:
                                 mListener.onDeleteAnnouncement(announcement);
                                 break;
 
@@ -147,7 +158,7 @@ public class AnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<Announ
     public void goToAnnouncement(Context context, ListAnnouncement announcement) {
         Intent intent = new Intent(context, AnnouncementView.class);
         intent.putExtra("announcement", (Serializable) announcement);
-        intent.putExtra("image", team.image);
+        intent.putExtra("team", team);
         context.startActivity(intent);
     }
 
@@ -170,6 +181,7 @@ public class AnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<Announ
         public final TextView mAnnouncementContent;
         public final TextView mAnnouncementTime;
         public final TextView mAnnouncerName;
+        public final TextView getmAnnouncementReplyCount;
         public final LinearLayout mAnnouncementTrigger;
 
         public ListAnnouncement mAnnouncement;
@@ -184,6 +196,7 @@ public class AnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<Announ
             mAnnouncerImage = (ImageView)view.findViewById(R.id.announcer_image);
             mAnnouncerName = (TextView)view.findViewById(R.id.announcer_name);
             mAnnouncementTrigger = (LinearLayout)view.findViewById(R.id.callout_body);
+            getmAnnouncementReplyCount = view.findViewById(R.id.announcement_reply_count);
 
 
         }

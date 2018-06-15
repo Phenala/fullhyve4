@@ -79,6 +79,11 @@ public class ContactsListFragment extends Fragment {
         return fragmentView;
     }
 
+    public void onResume() {
+        adapter.update();
+        super.onResume();
+    }
+
 
     @Override
     public void onAttach(Context context) {

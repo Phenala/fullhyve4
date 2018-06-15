@@ -13,6 +13,7 @@ import com.github.nkzawa.socketio.client.Ack;
 import com.ux7.fullhyve.ui.data.ListAnnouncement;
 import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.ListProject;
+import com.ux7.fullhyve.ui.data.ListReply;
 import com.ux7.fullhyve.ui.data.ListTeam;
 
 import org.json.JSONObject;
@@ -247,7 +248,7 @@ public class TeamHandler extends Handler {
 
 
 
-    public void reply(final int teamId, final String reply, final int mainAnnouncementId, final Activity activity, final Runnable runnable){
+    public void reply(final int teamId, final String reply, final int mainAnnouncementId, final ListReply listReply, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("message",reply);
         args.put("teamId",teamId);
@@ -265,6 +266,8 @@ public class TeamHandler extends Handler {
                         Log.e("Reply id",replyR.data.replyId.toString());
                         //cache.contacts.addReceivedMessage(friendId, {message});
                     }
+
+                    listReply.id = replyR.data.replyId;
 
                     activity.runOnUiThread(runnable);
                 }

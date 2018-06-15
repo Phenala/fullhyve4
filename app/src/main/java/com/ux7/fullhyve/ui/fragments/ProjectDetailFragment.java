@@ -16,7 +16,7 @@ import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ProjectDetail;
 import com.ux7.fullhyve.ui.util.CircleTransform;
 import com.ux7.fullhyve.ui.util.Images;
-import com.ux7.fullhyve.ui.util.Util;
+import com.ux7.fullhyve.ui.util.U;
 
 public class ProjectDetailFragment extends Fragment {
 
@@ -70,7 +70,7 @@ public class ProjectDetailFragment extends Fragment {
         if (projectDetail.image != null) {
 
             Picasso.with(getActivity())
-                    .load(Util.getImageUrl(projectDetail.image))
+                    .load(U.getImageUrl(projectDetail.image))
                     .transform(new CircleTransform())
                     .into(projectImageView);
 

@@ -10,10 +10,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.ui.data.TaskDetail;
-import com.ux7.fullhyve.ui.data.TaskSetDetail;
-import com.ux7.fullhyve.ui.util.ActionBarTarget;
 import com.ux7.fullhyve.ui.util.CircleTransform;
-import com.ux7.fullhyve.ui.util.Util;
+import com.ux7.fullhyve.ui.util.U;
 
 public class TaskView extends AppCompatActivity {
 
@@ -48,8 +46,8 @@ public class TaskView extends AppCompatActivity {
 
         taskDetail = (TaskDetail) getIntent().getSerializableExtra("task");
 
-        taskStatus.setText(Util.getTaskStatusString(taskDetail.status));
-        taskStatusPicture.setImageResource(Util.getTaskStatusIcon(taskDetail.status));
+        taskStatus.setText(U.getTaskStatusString(taskDetail.status));
+        taskStatusPicture.setImageResource(U.getTaskStatusIcon(taskDetail.status));
 
         taskAssignedOn.setText(taskDetail.assignedOn);
         taskDueDate.setText(taskDetail.deadline);

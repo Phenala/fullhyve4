@@ -2,7 +2,6 @@ package com.ux7.fullhyve.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,7 @@ import com.ux7.fullhyve.ui.data.UserDetail;
 import com.ux7.fullhyve.ui.fragments.MemberFragment.OnListFragmentInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
 import com.ux7.fullhyve.ui.util.Images;
-import com.ux7.fullhyve.ui.util.Util;
+import com.ux7.fullhyve.ui.util.U;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +55,7 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
         if (holder.mMember.image != null) {
 
             Picasso.with(holder.itemView.getContext())
-                    .load(Util.getImageUrl(holder.mMember.image))
+                    .load(U.getImageUrl(holder.mMember.image))
                     .transform(new CircleTransform())
                     .into(holder.mMemberPictureView);
         } else {

@@ -1,10 +1,8 @@
 package com.ux7.fullhyve.ui.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.hardware.Sensor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,9 +20,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.github.nkzawa.socketio.client.Socket;
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
@@ -40,7 +36,7 @@ import com.ux7.fullhyve.ui.fragments.ProjectsListFragment;
 import com.ux7.fullhyve.ui.fragments.TeamsListFragment;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
-import com.ux7.fullhyve.ui.util.Util;
+import com.ux7.fullhyve.ui.util.U;
 
 public class HomeView extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnHomeInteractionListener {
@@ -198,7 +194,7 @@ public class HomeView extends AppCompatActivity
                 Log.e("Picture", identity.getImage());
 
                 Picasso.with(getBaseContext())
-                        .load(Util.getImageUrl(identity.getImage()))
+                        .load(U.getImageUrl(identity.getImage()))
                         .transform(new CircleTransform())
                         .into((ImageView)navigationView.findViewById(R.id.userPicture));
 

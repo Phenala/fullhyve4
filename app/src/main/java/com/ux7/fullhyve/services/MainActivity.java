@@ -24,6 +24,7 @@ import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.ListMessage;
 import com.ux7.fullhyve.ui.data.ListProject;
+import com.ux7.fullhyve.ui.data.ListReply;
 import com.ux7.fullhyve.ui.data.ListTeam;
 
 import java.util.ArrayList;
@@ -192,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                 String reply = arg2.getText().toString();
                 Integer mainAnnouncementId = Integer.parseInt(arg3.getText().toString());
 
-                appHandler.teamHandler.reply(teamId4,reply, mainAnnouncementId, this, new Runnable() {
+                appHandler.teamHandler.reply(teamId4,reply, mainAnnouncementId, new ListReply(),this, new Runnable() {
                     @Override
                     public void run() {
                         Log.e("Announcement reply","Posted");
