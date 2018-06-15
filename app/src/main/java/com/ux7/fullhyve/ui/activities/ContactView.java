@@ -265,7 +265,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 
         if (messages.size() > 0)
 
-            AppHandler.getInstance().contactHandler.updateMessageSeen(messages.get(0).id, this, runnable);
+            AppHandler.getInstance().contactHandler.updateMessageSeen(contact.id, messages.get(0).id, this, runnable);
 
     }
 
@@ -474,7 +474,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
             }
         };
 
-        AppHandler.getInstance().contactHandler.deleteMessage(messageId, this, runnable);
+        AppHandler.getInstance().contactHandler.deleteMessage(contact.id, messageId, this, runnable);
 
         //messageDeleteLogic
 
@@ -505,7 +505,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(((EditText)findViewById(R.id.messageToSend)).getWindowToken(), 0);
 
-        AppHandler.getInstance().contactHandler.editMessage(messageEditingId, messageToSend, this, runnable);
+        AppHandler.getInstance().contactHandler.editMessage(contact.id, messageEditingId, messageToSend, this, runnable);
 
         setMessageEditMode(false);
 

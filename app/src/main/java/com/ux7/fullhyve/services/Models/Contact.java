@@ -48,21 +48,51 @@ public class Contact extends User{
         this.messages = messages;
     }
 
-    public boolean removeMessage(int id){
+
+    // custom functions
+
+    public boolean removeMessage(int messageId){
         for (int i = 0; i < messages.size(); i++) {
-            if(messages.get(i).getId() == id){
+            if(messages.get(i).getId() == messageId){
                 return messages.remove(i) != null;
             }
         }
         return false;
     }
 
-    public boolean addMessages(List<Message> messages){
-        return messages.addAll(0,messages);
+    public boolean addMessages(ArrayList<Message> messages){
+        return this.messages.addAll(messages);
     }
 
-    public ArrayList<Message> getMessages(int offset, int limit){
-        return Util.sliceArray((ArrayList<Message>) getMessages(), offset, limit);
+    public void addMessage(Message message){
+        messages.add(0,message);
+    }
+
+    public void addReceivedMessage(ArrayList<Message> messages){
+        this.messages.addAll(0,messages);
+    }
+
+    public List<Message> getMessages(int offset, int limit){
+        if(offset < 0 || limit <= 0 && offset >= messages.size()){
+            return null;
+        }
+        return messages.subList(offset, offset + limit> messages.size()?messages.size():offset+limit);
+    }
+
+    public void editMessage(int messageId, String newMessage){
+        for(int i=0;i<messages.size();i++){
+            if(messages.get(i).getId()==messageId){
+                messages.get(i).setMessage(newMessage);
+            }
+        }
+    }
+
+    public void setMessagesSeen(int messageId){
+        for(int i=0;i<messages.size();i++){
+            if(!messages.get(i).isSent() && messages.get(i).getId()<=messageId){
+                messages.get(i).setSeen(true);
+            }
+        }
     }
 
     public void changeFriendOnlineStatus(boolean onlineStatus, String lastOnline){

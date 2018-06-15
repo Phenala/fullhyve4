@@ -147,6 +147,7 @@ public class ResponseFormat{
     public class StatusR{
         public Boolean data;
     }
+
     public class ReplyR{
         public Announce data;
     }

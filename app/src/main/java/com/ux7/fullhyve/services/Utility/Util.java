@@ -1,17 +1,22 @@
 package com.ux7.fullhyve.services.Utility;
 
+import android.util.Log;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class Util {
-    public static <T> ArrayList<T> sliceArray(ArrayList<T> arrayData, int offset, int limit){
-        if(offset < 0 || limit <= 0 && offset >= arrayData.size()){
+    public static <T> List<T> sliceArray(List<T> arrayData, int offset, int limit){
+        Log.e("Array size",arrayData.size()+"");
+        if(offset < 0 || limit <= 0 || offset >= arrayData.size()){
+            Log.e("Array","Is null");
             return null;
         }
-        return (ArrayList<T>) arrayData.subList(offset, offset + limit);
+        return arrayData.subList(offset, offset + limit>=arrayData.size()?arrayData.size():offset+limit);
     }
 
 

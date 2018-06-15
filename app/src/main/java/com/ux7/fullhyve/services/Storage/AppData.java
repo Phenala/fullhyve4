@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.services.Models.ContactSet;
 import com.ux7.fullhyve.services.Models.Identity;
@@ -12,15 +14,21 @@ import com.ux7.fullhyve.services.Models.NotificationSet;
 import com.ux7.fullhyve.services.Models.ProjectSet;
 import com.ux7.fullhyve.services.Models.TeamSet;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Serializable;
 
 public class AppData extends Application {
-    public static String KEY = "fullhyveCache";
+    private static String CACHE_FILE_NAME = "fullhyveCache.json";
+    private static Gson gson;
 
     private static AppData sInstance;
     private static AppData.Cache cache; // Generic your-application handler
@@ -37,39 +45,74 @@ public class AppData extends Application {
         return cache;
     }
 
+    public static void resetCache(){
+        AppData appData  = AppData.getInstance();
+        appData.initializeInstance();
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+
+        gson = new GsonBuilder().create();
+
         sInstance = this;
         sInstance.initializeInstance();
-        Log.e("Obj",cache.getToken()==null?"No token":cache.getToken());
     }
 
     public void initializeInstance() {
         // do all your initialization here
         cache = new Cache(
-                this.getSharedPreferences( "PREFS_PRIVATE", Context.MODE_PRIVATE ) );
+                /*this.getSharedPreferences( "PREFS_PRIVATE", Context.MODE_PRIVATE )*/ );
     }
 
 
 
-    // read and write to data
+    // read and save cache
     // ================================================================
 
-    public void writeObject(Context context, String key, Object object) throws IOException {
-        FileOutputStream fos = context.openFileOutput(key, Context.MODE_PRIVATE);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(object);
-        oos.close();
-        fos.close();
+    public void saveCache(Context context){
+        String cacheStr = gson.toJson(cache);
+        Log.e("Cache",cacheStr);
+
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(AppData.CACHE_FILE_NAME, Context.MODE_PRIVATE));
+            outputStreamWriter.write(cacheStr);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "Saving cache failed");
+        }
     }
 
-    public Object readObject(Context context, String key) throws IOException, ClassNotFoundException {
-        FileInputStream fis = context.openFileInput(key);
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        Object object = ois.readObject();
-        Log.e("Saved object",object.toString());
-        return object;
+    public void readCache(Context context){
+        String cacheStr = "";
+
+        try {
+            InputStream inputStream = context.openFileInput(AppData.CACHE_FILE_NAME);
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                }
+
+                inputStream.close();
+                cacheStr = stringBuilder.toString().trim();
+            }
+        }
+        catch (FileNotFoundException e) {
+            return;
+        } catch (IOException e) {
+            Log.e("Cache", "Unable to read file");
+            return;
+        }
+        Log.e("Read cache",cacheStr);
+        AppData.cache = gson.fromJson(cacheStr, Cache.class);
     }
 
 
@@ -77,7 +120,7 @@ public class AppData extends Application {
 
 
     /** This is a stand-in for some application-specific session handler. */
-    public class Cache implements Serializable{
+    public class Cache{
         private String token = null;
         private Identity identity = null;
         private final NotificationSet notifications = new NotificationSet();
@@ -85,11 +128,13 @@ public class AppData extends Application {
         private final TeamSet teams = new TeamSet();
         private final ProjectSet projects = new ProjectSet();
 
+        Cache(){
 
-        SharedPreferences sp;
-        Cache(SharedPreferences sp) {
-            this.sp = sp;
         }
+//        SharedPreferences sp;
+//        Cache(/*SharedPreferences sp*/) {
+//            this.sp = sp;
+//        }
 
         public String getToken() {
             return token;

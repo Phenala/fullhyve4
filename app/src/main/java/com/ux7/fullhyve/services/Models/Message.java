@@ -11,13 +11,13 @@ public class Message implements Serializable{
     private boolean sent;
 
 
-//    public Message(int id, String message, Date timestamp, boolean seen, boolean sent) {
-//        this.id = id;
-//        this.message = message;
-//        this.timestamp = timestamp;
-//        this.seen = seen;
-//        this.sent = sent;
-//    }
+    public Message(int id, String message, String timestamp, boolean seen, boolean sent) {
+        this.id = id;
+        this.message = message;
+        this.timestamp = timestamp;
+        this.seen = seen;
+        this.sent = sent;
+    }
 
     public int getId() {
         return id;

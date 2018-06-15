@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import com.ux7.fullhyve.services.Models.Contact;
 import com.ux7.fullhyve.services.Models.Message;
 import com.ux7.fullhyve.services.Utility.Converter;
+import com.ux7.fullhyve.services.Models.SendMessage;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
 import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.ux7.fullhyve.services.Utility.ResponseListener;
@@ -14,9 +15,12 @@ import com.github.nkzawa.socketio.client.Ack;
 import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.data.ListMessage;
 
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,17 +33,21 @@ public class ContactHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("sendMessage",args);
 
+        final int tempId = cache.getContacts().addSendMessage(new SendMessage(friendId,message));
+
         socket.emit("sendMessage", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     final ResponseFormat.MessageR messageR = gson.fromJson(args[0].toString(), ResponseFormat.MessageR.class);
 
+                    // add message to cache
                     if(messageR!=null && messageR.data != null){
-                        Log.e("Message","Sent");
-                        Log.e("Message",messageR.data.msgId+"");
-                        //Message msg = new Message(messageR.data.msgId, message, Calendar.getInstance().getTime());
-                        //cache.getContacts().getContact(friendId).addMessages(new )
+                        Date date = new Date();
+                        Message msg = new Message(messageR.data.msgId,message,date.toString(),false, true);
+
+                        cache.getContacts().getFriend(friendId).addMessage(msg);
+                        cache.getContacts().removeSendMessage(tempId);
                     }
                     activity.runOnUiThread(runnable);
 
@@ -48,7 +56,7 @@ public class ContactHandler extends Handler {
         });
     }
 
-    public void editMessage(final int messageId, final String newMessage, final Activity activity, final Runnable runnable){
+    public void editMessage(final int friendId, final int messageId, final String newMessage, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("messageId", messageId);
         args.put("newMessage", newMessage);
@@ -59,7 +67,7 @@ public class ContactHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-
+                    cache.getContacts().getFriend(friendId).editMessage(messageId,newMessage);
                     activity.runOnUiThread(runnable);
                 }
             }
@@ -76,13 +84,13 @@ public class ContactHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-
+                    // add the messages to the cache
                     activity.runOnUiThread(runnable);
                 }
             }
         });
     }
-    public void deleteMessage(final int messageId, final Activity activity, final Runnable runnable){
+    public void deleteMessage(final int friendId, final int messageId, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("messageId", messageId);
 
@@ -92,13 +100,13 @@ public class ContactHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-
+                    cache.getContacts().getFriend(friendId).removeMessage(messageId);
                     activity.runOnUiThread(runnable);
                 }
             }
         });
     }
-    public void updateMessageSeen(final int lastMessageId, final Activity activity, final Runnable runnable){
+    public void updateMessageSeen(final int friendId, final int lastMessageId, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("lastMessageId", lastMessageId);
 
@@ -108,6 +116,7 @@ public class ContactHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
+                    cache.getContacts().getFriend(friendId).setMessagesSeen(lastMessageId);
                     activity.runOnUiThread(runnable);
                 }
             }
@@ -126,14 +135,12 @@ public class ContactHandler extends Handler {
                     final ResponseFormat.GetLastOnlineR lastOnline = gson.fromJson(args[0].toString(), ResponseFormat.GetLastOnlineR.class);
 
                     if(lastOnline!=null && lastOnline.data!=null){
-                        if(lastOnline.data.online){
-                            Log.e("Online","True");
-                        } else{
-                            Log.e("Seen at",lastOnline.data.timestamp);
-                        }
+                        cache.getContacts().getFriend(friendId).changeFriendOnlineStatus(lastOnline.data.online,lastOnline.data.timestamp);
+                    } else{
+                        Contact friend = cache.getContacts().getFriend(friendId);
 
-                        //cache.contacts.addReceivedMessage(friendId, {message});
-                        //AppData.userToken = messageR.data.message;
+                        lastOnline.data.online = friend.isOnline();
+                        lastOnline.data.timestamp = friend.getLastOnline();
                     }
                     activity.runOnUiThread(runnable);
                 }
@@ -146,26 +153,28 @@ public class ContactHandler extends Handler {
 
 //        final ArrayList<Message> messages = cache.getContacts().getContact(friendId).getMessages(offset, limit);
 
-        Contact contact = cache.getContacts().getContact(friendId);
-        ArrayList<Message> messages = null;
+        Contact contact = cache.getContacts().getFriend(friendId);
+        List<Message> messages = null;
+
         if(contact!=null){
             messages = contact.getMessages(offset, limit);
         }
 
-        if(messages != null){
-            // call semaphore here
-        } else{
+        if(messages != null && messages.size()>0){
+            activity.runOnUiThread(runnable);
+        } else {
             HashMap<String, Object> args = new HashMap<>();
-            args.put("friendId",friendId);
+            args.put("friendId", friendId);
             args.put("offset", offset);
             args.put("limit", limit);
 
-            JSONObject req = RequestFormat.createRequestObj("getMessages",args);
+            JSONObject req = RequestFormat.createRequestObj("getMessages", args);
 
             socket.emit("getMessages", req, new Ack() {
                 @Override
                 public void call(Object... args) {
-                    if(generalHandler(args)==200){
+
+                    if (generalHandler(args) == 200) {
                         ResponseFormat.GetMessagesR messagesR = gson.fromJson(args[0].toString(), ResponseFormat.GetMessagesR.class);
 
 //                        if(messagesR != null && messagesR.data.done){
@@ -177,13 +186,16 @@ public class ContactHandler extends Handler {
                         listMessages.clear();
                         listMessages.addAll(Converter.portMessageToListMessage(messagesR.data.messages));
 
-                        if(messagesR != null && messagesR.data.done){
+                        if (messagesR != null && messagesR.data.done) {
                             Log.e("Messages", "Received");
-                            Log.e("Message",messagesR.data.messages.get(0).getMessage());
+                            Log.e("Message", messagesR.data.messages.get(0).getMessage());
                             //cache.getContacts().getContact(friendId).addMessages(messagesR.data.messages);
-                        }
+                            if (messagesR != null && messagesR.data.messages != null) {
+                                cache.getContacts().getFriend(friendId).addMessages((ArrayList<Message>) messagesR.data.messages);
+                            }
 
-                        activity.runOnUiThread(runnable);
+                            activity.runOnUiThread(runnable);
+                        }
                     }
                 }
             });
@@ -193,13 +205,37 @@ public class ContactHandler extends Handler {
     public void getFriends(int offset, int limit, final Activity activity, final Runnable runnable){
         final ResponseFormat.GetFriends friendsR = new ResponseFormat().new GetFriends();
 
-        ArrayList<Contact> friends = cache.getContacts().getFriends(offset, limit);
+        List<Contact> friends = cache.getContacts().getFriends(offset, limit);
 
-        if(friends==null){
-            friendsR.done = true;
+        if(friends!=null){
+            Log.e("Server","Not called");
+            friendsR.friends = friends;
+
+            activity.runOnUiThread(runnable);
+        } else{
+            HashMap<String, Object> args = new HashMap<>();
+            args.put("offset", offset);
+            args.put("limit", limit);
+
+            JSONObject req = RequestFormat.createRequestObj("getFriends",args);
+
+            socket.emit("getFriends", req, new Ack() {
+                @Override
+                public void call(Object... args) {
+                    if(generalHandler(args)==200){
+                        final ResponseFormat.GetFriendsR friendsR = gson.fromJson(args[0].toString(), ResponseFormat.GetFriendsR.class);
+
+                        if(friendsR!=null && friendsR.data.friends != null){
+                            cache.getContacts().addFriends((ArrayList<Contact>) friendsR.data.friends);
+                        }
+
+                        activity.runOnUiThread(runnable);
+                    }
+                }
+            });
         }
 
-        friendsR.friends = friends;
+
     }
 
     public void getFriendsFromServer(int offset, int limit, final List<ListContact> listContacts, final Activity activity, final Runnable runnable){
@@ -219,13 +255,18 @@ public class ContactHandler extends Handler {
                     if(friendsR!=null){
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = messageR.data.message;
-                        listContacts.clear();
-                        listContacts.addAll(Converter.portContactToListContact(friendsR.data.friends));
 
                         Log.e("Friends number",friendsR.data.friends.size()+"");
+                    if(friendsR!=null && friendsR.data.friends != null){
+                        cache.getContacts().addFriends((ArrayList<Contact>) friendsR.data.friends);
+
+                        listContacts.clear();
+                        listContacts.addAll(Converter.portContactToListContact(friendsR.data.friends));
                     }
 
                     activity.runOnUiThread(runnable);
+
+                    }
                 }
             }
         });
@@ -237,7 +278,6 @@ public class ContactHandler extends Handler {
         args.put("offset", offset);
         args.put("limit", limit);
 
-
         JSONObject req = RequestFormat.createRequestObj("searchUsers",args);
 
         socket.emit("searchUsers", req, new Ack() {
@@ -245,13 +285,11 @@ public class ContactHandler extends Handler {
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     final ResponseFormat.SearchUsersR searchUsersR = gson.fromJson(args[0].toString(), ResponseFormat.SearchUsersR.class);
-                    //ArrayList<Contact> friends = cache.getContacts().searchFriends(name, offset, limit);
+                    List<Contact> friends = cache.getContacts().searchContacts(name, offset, limit);
 
-                    //searchUsersR.data.friends.addAll(friends);
-                    if(searchUsersR!=null && searchUsersR.data.users.size()>0){
-                        Log.e("User",searchUsersR.data.users.get(0).getFirstName());
-                    }
-                    Log.e("Searched","true");
+                    searchUsersR.data.friends = new ArrayList<>();
+                    searchUsersR.data.friends.addAll(friends);
+
                     activity.runOnUiThread(runnable);
                 }
             }

@@ -1,6 +1,7 @@
 package com.ux7.fullhyve.services.Handlers;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.ux7.fullhyve.services.Models.MyProject;
 import com.ux7.fullhyve.services.Models.Task;
@@ -152,7 +153,8 @@ public class ProjectHandler extends Handler {
                 if(generalHandler(args)==200){
                     final ResponseFormat.GetTaskSetsR taskSetsR = gson.fromJson(args[0].toString(), ResponseFormat.GetTaskSetsR.class);
 
-                    if(taskSetsR!=null){
+                    if(taskSetsR!=null && taskSetsR.data.tasksets!=null){
+                        Log.e("",taskSetsR.data.tasksets.size()+"");
                         //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }

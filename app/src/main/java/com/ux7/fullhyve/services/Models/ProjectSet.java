@@ -1,11 +1,24 @@
 package com.ux7.fullhyve.services.Models;
 
-import java.io.Serializable;
+import com.ux7.fullhyve.services.Utility.Util;
 
-/**
- * Created by TOSHIBA on 4/21/2018.
- */ // projects
-public class ProjectSet implements Serializable{
-    public Project[] projects;
-    public MyProject[] myProjects;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+// projects
+public class ProjectSet{
+    private HashMap<Integer, MyProject> myProjects;
+
+    public ProjectSet(){
+        this.myProjects = new HashMap<>();
+    }
+
+    public List<MyProject> getMyProjects(int offset, int limit){
+        return Util.sliceArray((List<MyProject>) myProjects.values(), offset, limit);
+    }
+
+    public MyProject getMyProject(int projectId){
+        return myProjects.get(projectId);
+    }
 }
