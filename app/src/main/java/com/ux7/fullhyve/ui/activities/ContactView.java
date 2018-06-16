@@ -35,7 +35,7 @@ import com.ux7.fullhyve.ui.interfaces.ResponseListener;
 import com.ux7.fullhyve.ui.util.ActionBarTarget;
 import com.ux7.fullhyve.ui.util.CircleTransform;
 import com.ux7.fullhyve.ui.util.Images;
-import com.ux7.fullhyve.ui.util.Util;
+import com.ux7.fullhyve.ui.util.U;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,7 +178,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
         if (contact.image != null)
 
             Picasso.with(this)
-                    .load(Util.getImageUrl(contact.image))
+                    .load(U.getImageUrl(contact.image))
                     .transform(new CircleTransform())
                     .resize(96,96)
                     .into(new ActionBarTarget(this, actionBar));
@@ -276,7 +276,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 
         if (messages.size() > 0)
 
-            AppHandler.getInstance().contactHandler.updateMessageSeen(messages.get(0).id, this, runnable);
+            AppHandler.getInstance().contactHandler.updateMessageSeen(contact.id, messages.get(0).id, this, runnable);
 
     }
 
@@ -485,7 +485,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
             }
         };
 
-        AppHandler.getInstance().contactHandler.deleteMessage(messageId, this, runnable);
+        AppHandler.getInstance().contactHandler.deleteMessage(contact.id, messageId, this, runnable);
 
         //messageDeleteLogic
 
@@ -516,7 +516,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
             }
         };
 
-        AppHandler.getInstance().contactHandler.editMessage(messageEditingId, messageToSend, this, runnable);
+        AppHandler.getInstance().contactHandler.editMessage(contact.id, messageEditingId, messageToSend, this, runnable);
 
         setMessageEditMode(false);
 
