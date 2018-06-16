@@ -63,6 +63,11 @@ public class HomeView extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try{
+          idlingResource.decrement();
+        }catch(Exception e){
+          e.printStackTrace();
+        }
         initApp();
 
         checkRedirect();

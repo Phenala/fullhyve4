@@ -58,7 +58,7 @@ public class TesterUpload extends AppCompatActivity {
 
 
 
-        Uploader.uploadImage(getBaseContext(),picturePath);
+        //Uploader.uploadImage(getBaseContext(),picturePath);
       }
     }
   }
