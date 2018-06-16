@@ -10,9 +10,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Handlers.AppHandler;
+import com.ux7.fullhyve.services.Models.Enclosure;
 import com.ux7.fullhyve.ui.data.UserDetail;
 import com.ux7.fullhyve.ui.util.ActionBarTarget;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.U;
 
 public class UserView extends AppCompatActivity {
 
@@ -23,12 +26,12 @@ public class UserView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_view);
 
-        buildUserDetail();
+        getUserProfile();
         buildActionBar();
     }
 
     public void buildUserDetail() {
-        userDetail = (UserDetail)(getIntent().getSerializableExtra("user"));
+
         ((TextView)findViewById(R.id.user_name)).setText(userDetail.name);
         ((TextView)findViewById(R.id.user_title)).setText(userDetail.title);
         ((TextView)findViewById(R.id.user_bio)).setText(userDetail.bio);
@@ -72,15 +75,32 @@ public class UserView extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void getUserProfile() {
 
+        final Enclosure<UserDetail> userDetailEnclosure = null;
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                userDetail = userDetailEnclosure.value;
+                buildUserDetail();
+
+            }
+        };
+
+        int userId = getIntent().getIntExtra("id", 0);
+        AppHandler.getInstance().loginHandler.getUserProfile(userId, userDetailEnclosure, this, runnable);
+
+    }
 
     public void buildActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        setTitle("   " + userDetail.name);
+        setTitle("   " + getIntent().getStringExtra("name"));
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         Picasso.with(this)
-                .load(userDetail.image)
+                .load(U.getImageUrl(getIntent().getStringExtra("image")))
                 .transform(new CircleTransform())
                 .resize(64, 64)
                 .into(new ActionBarTarget(this, actionBar));

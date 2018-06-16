@@ -10,4 +10,12 @@ public class Team implements Serializable{
     public String focus;
     public String description;
     public int memberCount;
+
+    public Team(int id, String name, String image, String description, int memberCount) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.description = description;
+        this.memberCount = memberCount;
+    }
 }

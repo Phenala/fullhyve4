@@ -17,7 +17,7 @@ import com.ux7.fullhyve.ui.data.ListTeam;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
 import com.ux7.fullhyve.ui.util.Images;
-import com.ux7.fullhyve.ui.util.Util;
+import com.ux7.fullhyve.ui.util.U;
 
 import java.util.List;
 
@@ -54,7 +54,7 @@ public class TeamsRecyclerViewAdapter extends RecyclerView.Adapter<TeamsRecycler
         if (holder.mTeam.image != null) {
 
             Picasso.with(holder.mView.getContext())
-                    .load(Util.getImageUrl(holder.mTeam.image))
+                    .load(U.getImageUrl(holder.mTeam.image))
                     .transform(new CircleTransform())
                     .into(holder.mPicture);
 

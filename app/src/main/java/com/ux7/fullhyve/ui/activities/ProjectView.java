@@ -18,14 +18,13 @@ import android.view.ViewGroup;
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.ui.data.ListProject;
-import com.ux7.fullhyve.ui.fragments.AnnouncementsFragment;
 import com.ux7.fullhyve.ui.fragments.MemberFragment;
 import com.ux7.fullhyve.ui.fragments.ProjectDetailFragment;
 import com.ux7.fullhyve.ui.fragments.TaskSetFragment;
 import com.ux7.fullhyve.ui.util.ActionBarTarget;
 import com.ux7.fullhyve.ui.util.CircleTransform;
 import com.ux7.fullhyve.ui.util.Images;
-import com.ux7.fullhyve.ui.util.Util;
+import com.ux7.fullhyve.ui.util.U;
 
 public class ProjectView extends AppCompatActivity {
 
@@ -86,7 +85,7 @@ public class ProjectView extends AppCompatActivity {
         if (project.image != null) {
 
             Picasso.with(this)
-                    .load(Util.getImageUrl(project.image))
+                    .load(U.getImageUrl(project.image))
                     .transform(new CircleTransform())
                     .resize(CircleTransform.dimen, CircleTransform.dimen)
                     .into(new ActionBarTarget(this, actionBar));
@@ -181,6 +180,7 @@ public class ProjectView extends AppCompatActivity {
                     return taskSetFragment;
                 case 1:
                     MemberFragment projectMembers = new MemberFragment();
+                    projectMembers.setMemberType(MemberFragment.MemberOf.PROJECT);
                     projectMembers.setProject(project);
                     return projectMembers;
                 case 2:

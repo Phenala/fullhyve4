@@ -1,5 +1,6 @@
 package com.ux7.fullhyve.services.Utility;
 
+import com.ux7.fullhyve.services.Handlers.UserSelectHandler;
 import com.ux7.fullhyve.services.Models.Announcement;
 import com.ux7.fullhyve.services.Models.Contact;
 import com.ux7.fullhyve.services.Models.Message;
@@ -9,6 +10,7 @@ import com.ux7.fullhyve.services.Models.Project;
 import com.ux7.fullhyve.services.Models.Task;
 import com.ux7.fullhyve.services.Models.TaskSet;
 import com.ux7.fullhyve.services.Models.Team;
+import com.ux7.fullhyve.services.Models.TeamMessage;
 import com.ux7.fullhyve.services.Models.User;
 import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.ui.data.ListAnnouncement;
@@ -16,6 +18,7 @@ import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.ListMessage;
 import com.ux7.fullhyve.ui.data.ListProject;
+import com.ux7.fullhyve.ui.data.ListReply;
 import com.ux7.fullhyve.ui.data.ListTask;
 import com.ux7.fullhyve.ui.data.ListTaskSet;
 import com.ux7.fullhyve.ui.data.ListTeam;
@@ -23,7 +26,9 @@ import com.ux7.fullhyve.ui.data.ProjectDetail;
 import com.ux7.fullhyve.ui.data.TaskDetail;
 import com.ux7.fullhyve.ui.data.TaskSetDetail;
 import com.ux7.fullhyve.ui.data.TeamDetail;
+import com.ux7.fullhyve.ui.data.UserDetail;
 import com.ux7.fullhyve.ui.enums.TaskStatus;
+import com.ux7.fullhyve.ui.util.U;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -52,7 +57,7 @@ public class Converter {
         lstmsg.id = message.getId();
         lstmsg.message = message.getMessage();
         lstmsg.sent = message.isSent();
-        lstmsg.time = message.getTimestamp();
+        lstmsg.time = U.getTime(message.getTimestamp());
 
         return lstmsg;
 
@@ -160,8 +165,12 @@ public class Converter {
         projectDetail.id = project.id;
         projectDetail.name = project.name;
         projectDetail.contributors = project.contributorCount;
+        projectDetail.description = project.description;
         projectDetail.focus = project.field;
         projectDetail.image = project.image;
+        projectDetail.leaderId = project.leader.getId();
+
+        nProject.detail = projectDetail;
 
         return nProject;
 
@@ -235,6 +244,7 @@ public class Converter {
         teamDetail.focus = team.focus;
         teamDetail.description = team.description;
         teamDetail.members = team.memberCount;
+        teamDetail.leaderId = team.leader.getId();
 
         nTeam.detail = teamDetail;
 
@@ -269,14 +279,45 @@ public class Converter {
 
         nAnnouncement.id = announcement.mainMessage.getId();
         nAnnouncement.message = announcement.mainMessage.getMessage();
-        nAnnouncement.replies = announcement.replies.length;
+        nAnnouncement.replies = announcement.replies.size();
         nAnnouncement.senderId = announcement.mainMessage.sender.getId();
         nAnnouncement.senderImage = announcement.mainMessage.sender.getImage();
         nAnnouncement.senderName = announcement.mainMessage.sender.getFirstName() + " " + announcement.mainMessage.sender.getLastName();
         nAnnouncement.sent = announcement.mainMessage.isSent();
-        nAnnouncement.sentTime = announcement.mainMessage.getTimestamp();
+        nAnnouncement.sentTime = U.getTime(announcement.mainMessage.getTimestamp());
+        nAnnouncement.listReplies = portReplyToListReply(announcement.replies);
 
         return nAnnouncement;
+
+    }
+
+    public static  List<ListReply> portReplyToListReply (List<TeamMessage> messages) {
+
+        List<ListReply> replies = new ArrayList<>();
+
+        for (TeamMessage message : messages) {
+
+            replies.add(portReplyToListReply(message));
+
+        }
+
+        return replies;
+
+    }
+
+
+    public static ListReply portReplyToListReply (TeamMessage message) {
+
+        ListReply reply = new ListReply();
+
+        reply.id = message.getId();
+        reply.reply = message.getMessage();
+        reply.senderImage = message.sender.getImage();
+        reply.senderName = message.sender.getFirstName() + " " + message.sender.getLastName();
+        reply.time = U.getTime(message.getTimestamp());
+        reply.senderId = message.sender.getId();
+
+        return reply;
 
     }
 
@@ -309,24 +350,10 @@ public class Converter {
         nTaskSet.id = taskSet.id;
         nTaskSet.name = taskSet.name;
         nTaskSet.number = taskSet.number;
-        int completed = 0;
-        int assigments = 0;
-        for (Task task : taskSet.tasks) {
-
-            if (task.assignee.getId() == id) {
-                assigments++;
-            }
-
-            if (task.status == 3) {
-                completed++;
-            }
-        }
-        nTaskSet.completion = (int)(100 * completed/(float)taskSet.tasks.length);
-        nTaskSet.assigments = assigments;
+        nTaskSet.completion = taskSet.completion;
+        nTaskSet.assigments = taskSet.assignment;
 
         TaskSetDetail detail = new TaskSetDetail();
-
-        detail = (TaskSetDetail) (Serializable) nTaskSet;
 
         detail.id = nTaskSet.id;
         detail.name = nTaskSet.name;
@@ -448,6 +475,28 @@ public class Converter {
         return listMember;
 
     }
+
+
+
+
+
+
+    public static UserDetail portUserToUserDetail (User user) {
+
+        UserDetail userDetail = new UserDetail();
+
+        userDetail.id = user.getId();
+        userDetail.name = user.getName();
+        userDetail.title = user.getTitle();
+        userDetail.image = user.getImage();
+        userDetail.bio = user.getDescription();
+        userDetail.friends = user.request == 0;
+        userDetail.skills = user.getSkills();
+
+        return userDetail;
+
+    }
+
 
 
 }

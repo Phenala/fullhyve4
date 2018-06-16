@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -63,8 +62,6 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 
     boolean fetchingMessages = false;
 
-    CountingIdlingResource idlingResource=new CountingIdlingResource("chat");
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +70,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
         buildContact();
         buildActionBar();
         buildMessages();
-        idlingResource.increment();
+
     }
 
     //Builder functions
