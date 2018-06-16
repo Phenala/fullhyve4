@@ -11,6 +11,7 @@ import android.widget.Spinner;
 
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
+import com.ux7.fullhyve.services.Handlers.Handler;
 import com.ux7.fullhyve.services.Handlers.LoginHandler;
 import com.ux7.fullhyve.services.Models.Identity;
 import com.ux7.fullhyve.services.Models.Notification;
@@ -53,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
         cache = AppData.getCache();
         loginHandler = new LoginHandler();
         appHandler = AppHandler.getInstance();
+
+//        AppData.resetCache();
+//        AppData.getInstance().readCache(this);
+//        Handler.cache = AppData.getCache();
 
 
 
@@ -105,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
         execute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                testTeams(view);
+                Log.e("Execute","Clicked");
+                testAccount(view);
 
             }
         });
