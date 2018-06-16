@@ -43,10 +43,10 @@ public class ContactHandler extends Handler {
 
                     // add message to cache
                     if(messageR!=null && messageR.data != null){
-                        Date date = new Date();
-                        Message msg = new Message(messageR.data.msgId,message,date.toString(),false, true);
-
-                        cache.getContacts().getFriend(friendId).addMessage(msg);
+                        if(cache.getContacts().getFriend(friendId) != null){
+                            cache.getContacts().getFriend(friendId).addMessage(messageR.data);
+                            cache.getContacts().getFriend(friendId).setLastMessage(messageR.data);
+                        }
                         cache.getContacts().removeSendMessage(tempId);
                     }
                     activity.runOnUiThread(runnable);
@@ -67,7 +67,10 @@ public class ContactHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    cache.getContacts().getFriend(friendId).editMessage(messageId,newMessage);
+                    if(cache.getContacts().getFriend(friendId)!=null){
+                        cache.getContacts().getFriend(friendId).editMessage(messageId,newMessage);
+                    }
+
                     activity.runOnUiThread(runnable);
                 }
             }
@@ -186,11 +189,11 @@ public class ContactHandler extends Handler {
                         listMessages.clear();
                         listMessages.addAll(Converter.portMessageToListMessage(messagesR.data.messages));
 
-                        if (messagesR != null && messagesR.data.done) {
+                        if (messagesR != null && messagesR.data.messages != null) {
                             Log.e("Messages", "Received");
                             Log.e("Message", messagesR.data.messages.get(0).getMessage());
                             //cache.getContacts().getContact(friendId).addMessages(messagesR.data.messages);
-                            if (messagesR != null && messagesR.data.messages != null) {
+                            if (cache.getContacts().getFriend(friendId) != null) {
                                 cache.getContacts().getFriend(friendId).addMessages((ArrayList<Message>) messagesR.data.messages);
                             }
 

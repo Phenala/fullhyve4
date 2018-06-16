@@ -2,11 +2,18 @@ package com.ux7.fullhyve.services.Models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 
-public class ContributorSet implements Serializable{
-    public ArrayList<User> individuals;
-    public ArrayList<Team> teams;
+public class ContributorSet{
+    public List<User> individuals;
+    public List<Team> teams;
+
+    public ContributorSet(){
+        individuals = new ArrayList<>();
+        teams = new ArrayList<>();
+    }
+
 
     public void remove(int id, ContributorType type){
         if(type.equals(ContributorType.Individual)){

@@ -19,6 +19,31 @@ public class ProjectSet{
     }
 
     public MyProject getMyProject(int projectId){
-        return myProjects.get(projectId);
+        if(myProjects.containsKey(projectId)){
+            return myProjects.get(projectId);
+        }
+        return null;
+    }
+
+    public void addProject(MyProject project){
+        myProjects.put(project.id, project);
+    }
+
+    public void addProjects(List<MyProject> projects){
+        for(MyProject project:projects){
+            myProjects.put(project.id,project);
+        }
+    }
+
+    public void editProjectProfile(Project project){
+        if(myProjects.containsKey(project.id)){
+            myProjects.get(project.id).updateProjectProfile(project);
+        }
+    }
+
+    public void removeProject(int projectId){
+        if(myProjects.containsKey(projectId)){
+            myProjects.remove(projectId);
+        }
     }
 }

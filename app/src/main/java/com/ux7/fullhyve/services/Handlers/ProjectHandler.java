@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.ux7.fullhyve.services.Models.MyProject;
+import com.ux7.fullhyve.services.Models.Project;
 import com.ux7.fullhyve.services.Models.Task;
+import com.ux7.fullhyve.services.Storage.ProjectCacheManager;
 import com.ux7.fullhyve.services.Utility.Converter;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
 import com.ux7.fullhyve.services.Utility.ResponseFormat;
@@ -24,10 +26,14 @@ import java.util.List;
 
 public class ProjectHandler extends Handler {
     public void getMyProjects(final int offset, final int limit, final List<ListProject> listProjects, final Activity activity, final Runnable runnable){
-        final List<MyProject> myProjects = new ArrayList<>();
-        //myProjects=cache.contacts.getMyTeams(offset,limit).toArray();
+        List<MyProject> myProjects;
 
-        if(myProjects.size()>0){
+        myProjects = ProjectCacheManager.getMyProjects(offset, limit);
+
+        if(myProjects!=null && myProjects.size() > 0){
+            listProjects.clear();
+            listProjects.addAll(Converter.portMyProjectToListProject(myProjects));
+
             activity.runOnUiThread(runnable);
         }else {
             HashMap<String, Object> args = new HashMap<>();
@@ -42,9 +48,10 @@ public class ProjectHandler extends Handler {
                     if (generalHandler(args) == 200) {
                         final ResponseFormat.GetMyProjectsR myProjectsR = gson.fromJson(args[0].toString(), ResponseFormat.GetMyProjectsR.class);
 
-                        if (myProjectsR != null) {
+                        if (myProjectsR != null && myProjectsR.data.myProjects != null) {
                             //cache.contacts.addReceivedMessage(friendId, {message});
                             //cache.teams.myTeams.addTeams(teamsR.data);
+
                         }
 
                         listProjects.clear();
@@ -61,7 +68,7 @@ public class ProjectHandler extends Handler {
 
 
 
-    public void editProjectDetails(String name, String image, String field, String description, final Activity activity, final Runnable runnable){
+    public void editProjectDetails(final String name, final String image, final String field, final String description, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("name", name);
         args.put("image", image);
@@ -74,8 +81,7 @@ public class ProjectHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    final ResponseFormat.StatusR statusR = gson.fromJson(args[0].toString(), ResponseFormat.StatusR.class);
-
+                    ProjectCacheManager.editProjectDetails(new Project(0, name, image, description, field, 0));
                     activity.runOnUiThread(runnable);
                 }
             }
@@ -233,8 +239,9 @@ public class ProjectHandler extends Handler {
 
 
 
-    public void addContributors(int[] teamIds, int[] individualIds, final Activity activity, final Runnable runnable){
+    public void addContributors(int projectId, int[] teamIds, int[] individualIds, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
+        args.put("projectId",projectId);
         args.put("teamIds",teamIds);
         args.put("individualIds",individualIds);
 
@@ -253,8 +260,9 @@ public class ProjectHandler extends Handler {
 
 
 
-    public void removeContributors(int[] teamIds, int[] individualIds, final Activity activity, final Runnable runnable){
+    public void removeContributors(int projectId, int[] teamIds, int[] individualIds, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
+        args.put("projectId",projectId);
         args.put("teamIds",teamIds);
         args.put("individualIds",individualIds);
 
