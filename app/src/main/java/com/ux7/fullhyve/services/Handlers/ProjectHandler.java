@@ -25,7 +25,7 @@ import java.util.List;
 public class ProjectHandler extends Handler {
     public void getMyProjects(final int offset, final int limit, final List<ListProject> listProjects, final Activity activity, final Runnable runnable){
         final List<MyProject> myProjects = new ArrayList<>();
-        //myProjects=cache.contacts.getMyTeams(offset,limit).toArray();
+        //myProjects=AppData.getCache().contacts.getMyTeams(offset,limit).toArray();
 
         if(myProjects.size()>0){
             activity.runOnUiThread(runnable);
@@ -43,8 +43,8 @@ public class ProjectHandler extends Handler {
                         final ResponseFormat.GetMyProjectsR myProjectsR = gson.fromJson(args[0].toString(), ResponseFormat.GetMyProjectsR.class);
 
                         if (myProjectsR != null) {
-                            //cache.contacts.addReceivedMessage(friendId, {message});
-                            //cache.teams.myTeams.addTeams(teamsR.data);
+                            //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
+                            //AppData.getCache().teams.myTeams.addTeams(teamsR.data);
                         }
 
                         listProjects.clear();
@@ -98,7 +98,7 @@ public class ProjectHandler extends Handler {
                     final ResponseFormat.SearchProjectsR searchProjectsR = gson.fromJson(args[0].toString(), ResponseFormat.SearchProjectsR.class);
 
                     if(searchProjectsR!=null){
-                        //cache.contacts.addReceivedMessage(friendId, {message});
+                        //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
 
@@ -125,12 +125,13 @@ public class ProjectHandler extends Handler {
                     final ResponseFormat.GetProjectContributorsR projectContributorsR = gson.fromJson(args[0].toString(), ResponseFormat.GetProjectContributorsR.class);
 
                     if(projectContributorsR!=null){
-                        //cache.contacts.addReceivedMessage(friendId, {message});
+                        //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
 
                     listMembers.clear();
                     listMembers.addAll(Converter.portUsersToListMember(projectContributorsR.data.individuals));
+                    listMembers.addAll(Converter.portTeamToListMember(projectContributorsR.data.teams));
 
                     activity.runOnUiThread(runnable);
                 }
@@ -155,7 +156,7 @@ public class ProjectHandler extends Handler {
 
                     if(taskSetsR!=null && taskSetsR.data.tasksets!=null){
                         Log.e("",taskSetsR.data.tasksets.size()+"");
-                        //cache.contacts.addReceivedMessage(friendId, {message});
+                        //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
 
@@ -187,7 +188,7 @@ public class ProjectHandler extends Handler {
                     final ResponseFormat.GetTasksR tasksR = gson.fromJson(args[0].toString(), ResponseFormat.GetTasksR.class);
 
                     if(tasksR!=null){
-                        //cache.contacts.addReceivedMessage(friendId, {message});
+                        //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
 
@@ -221,7 +222,7 @@ public class ProjectHandler extends Handler {
                     final ResponseFormat.CreateNewProject newProjectR = gson.fromJson(args[0].toString(), ResponseFormat.CreateNewProject.class);
 
                     if(newProjectR!=null){
-                        //cache.contacts.addReceivedMessage(friendId, {message});
+                        //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
 

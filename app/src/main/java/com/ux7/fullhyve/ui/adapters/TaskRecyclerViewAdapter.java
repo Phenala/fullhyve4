@@ -73,7 +73,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
     public void goToTask(Context context, ListTask taskSet) {
 
         Intent intent = new Intent(context, TaskView.class);
-        intent.putExtra("task", new TaskDetail());
+        intent.putExtra("task", taskSet.detail);
         context.startActivity(intent);
 
     }

@@ -1,6 +1,8 @@
 package com.ux7.fullhyve.services.Handlers;
 
 
+import android.util.Log;
+
 public class AppHandler{
     public LoginHandler loginHandler;
     public RegisterHandler registerHandler;
@@ -29,6 +31,20 @@ public class AppHandler{
         profileHandler = new ProfileHandler();
         userSelectHandler = new UserSelectHandler();
         imageUploadHandler = new ImageUploadHandler();
+    }
+
+    public void updateCache() {
+
+        Handler.updateCache();
+        LoginHandler.updateCache();
+        RegisterHandler.updateCache();
+        ContactHandler.updateCache();
+        TeamHandler.updateCache();
+        ProjectHandler.updateCache();
+        ProfileHandler.updateCache();
+        UserSelectHandler.updateCache();
+        ImageUploadHandler.updateCache();
+
     }
 
 }

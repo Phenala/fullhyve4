@@ -13,7 +13,7 @@
         android:padding="15dp">
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/new_task_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -21,31 +21,44 @@
             android:hint="Task Name"
             android:inputType="textPersonName" />
 
-        <EditText
-            android:id="@+id/editText3"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:ems="10"
-            android:hint="Deadline"
-            android:inputType="textPersonName" />
+            android:layout_margin="10dp"
+            android:orientation="vertical">
 
-        <AutoCompleteTextView
-            android:id="@+id/multiAutoCompleteTextView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:hint="Team(Optional)" />
+            <TextView
+                android:id="@+id/new_task_deadline_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Deadline"
+                android:textAlignment="center"
+                android:textColor="@color/textLight"
+                android:textSize="18dp" />
 
-        <AutoCompleteTextView
-            android:id="@+id/multiAutoCompleteTextView"
+            <DatePicker
+                android:id="@+id/datePicker"
+                android:layout_width="match_parent"
+                android:layout_height="123dp"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner" />
+
+        </LinearLayout>
+
+        <MultiAutoCompleteTextView
+            android:id="@+id/new_task_proxy_team"
             android:layout_width="match_parent"
-            android:layout_margin="5dp"
+            android:hint="Team (Optional)"
+            android:layout_height="wrap_content" />
+
+        <MultiAutoCompleteTextView
+            android:id="@+id/new_task_assignee"
+            android:layout_width="match_parent"
             android:hint="Assignee"
             android:layout_height="wrap_content" />
 
         <EditText
-            android:id="@+id/editText4"
+            android:id="@+id/new_task_description"
             android:layout_width="match_parent"
             android:layout_height="243dp"
             android:layout_margin="5dp"

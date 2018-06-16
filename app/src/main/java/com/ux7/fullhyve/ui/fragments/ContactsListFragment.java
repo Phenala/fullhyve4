@@ -129,7 +129,7 @@ public class ContactsListFragment extends Fragment {
             }
         };
 
-        AppHandler.getInstance().contactHandler.getFriendsFromServer(0, 500, contacts, activity, runnable);
+        AppHandler.getInstance().contactHandler.getFriends(0, 500, contacts, activity, runnable);
 
     }
 

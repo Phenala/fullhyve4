@@ -72,6 +72,8 @@ public class HomeView extends AppCompatActivity
     public void initApp() {
 
         Realtime.getSocket();
+        AppData.getInstance().readCache(this);
+        AppHandler.getInstance().updateCache();
 
     }
 
@@ -93,9 +95,9 @@ public class HomeView extends AppCompatActivity
 
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contactsListFragment).commit();
 
-
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
 
         updateUserImage();
 
@@ -189,14 +191,14 @@ public class HomeView extends AppCompatActivity
             public void run() {
 
                 Identity identity = AppData.getCache().getIdentity();
-                ((TextView)navigationView.findViewById(R.id.profile_identity_name)).setText(identity.getFirstName() + " " + identity.getLastName());
+                ((TextView)navigationView.getHeaderView(0).findViewById(R.id.profile_identity_name)).setText(identity.getFirstName() + " " + identity.getLastName());
 
-                Log.e("Picture", identity.getImage());
+                Log.e("Picture", identity.getImage() + "");
 
                 Picasso.with(getBaseContext())
                         .load(U.getImageUrl(identity.getImage()))
                         .transform(new CircleTransform())
-                        .into((ImageView)navigationView.findViewById(R.id.userPicture));
+                        .into((ImageView)navigationView.getHeaderView(0).findViewById(R.id.userPicture));
 
             }
         };
@@ -271,6 +273,7 @@ public class HomeView extends AppCompatActivity
 
     public boolean isLoggedIn() {
 
+        Log.e("retrieved token", AppData.getCache().getToken() + "");
         return AppData.getCache().getToken() != null;
 
     }
@@ -331,6 +334,30 @@ public class HomeView extends AppCompatActivity
     @Override
     public Context getHomeContext() {
         return this;
+    }
+
+    public void onResume() {
+        super.onResume();
+
+        Log.e("Cache change", "cache read on resume");
+
+        if (LoginView.changedUser)
+            initApp();
+
+    }
+
+    public void onDestroy() {
+
+        super.onDestroy();
+        Log.e("Save cache", "at destroy");
+        AppData.getInstance().saveCache(this);
+
+    }
+
+    public void onPause() {
+        super.onPause();
+        Log.e("Save cache", "at pause");
+        AppData.getInstance().saveCache(this);
     }
 
 

@@ -24,11 +24,7 @@ import com.ux7.fullhyve.ui.util.U;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
+
 public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMemberRecyclerViewAdapter.ViewHolder> {
 
     private final List<ListMember> mMembers;
@@ -74,7 +70,7 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
                 // Notify the active callbacks interface (the activity, if the
                 // fragment is attached to one) that an item has been selected.
 
-                goToUser(context, holder.mMember.id, holder.mMember.name, holder.mMember.image);
+                goToUser(context, holder.mMember.userDetail);
 
                 // mListener.onListFragmentInteraction(holder.mMember);
                 notifyItemChanged(position);
@@ -132,12 +128,10 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
         }
     }
 
-    public void goToUser(Context context, int id, String name, String image) {
+    public void goToUser(Context context, UserDetail userDetail) {
 
         Intent intent = new Intent(context, UserView.class);
-        intent.putExtra("id", id);
-        intent.putExtra("name", name);
-        intent.putExtra("image", image);
+        intent.putExtra("userDetail", userDetail);
         context.startActivity(intent);
 
 

@@ -136,7 +136,7 @@ public class ResponseFormat{
         public TeamAnnouncement data;
     }
     public class CreateNewTeamR{
-        public int data;
+        public Team data;
     }
     public class Announce{
         public Integer replyId;

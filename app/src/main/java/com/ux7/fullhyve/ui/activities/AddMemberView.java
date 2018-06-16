@@ -16,14 +16,21 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.ui.adapters.AddMemberRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListMember;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
-public class AddMember extends AppCompatActivity {
+public class AddMemberView extends AppCompatActivity {
 
+    List<ListMember> users;
+
+
+    LinearLayoutManager layoutManager;
+    AddMemberRecyclerViewAdapter adapter;
     RecyclerView recyclerView;
     SearchView searchView;
     Button sendButton;
@@ -53,15 +60,11 @@ public class AddMember extends AppCompatActivity {
     public void buildRecyclerView() {
 
         recyclerView = (RecyclerView)findViewById(R.id.add_member_list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
 
-        ArrayList<ListMember> users = new ArrayList<>();
-
-        for (int i = 0; i < 40; i++) {
-            users.add(new ListMember());
-        }
-
-        recyclerView.setAdapter(new AddMemberRecyclerViewAdapter(users));
+        adapter = new AddMemberRecyclerViewAdapter(users);
+        recyclerView.setAdapter(adapter);
 
     }
 
@@ -166,7 +169,16 @@ public class AddMember extends AppCompatActivity {
 
     public void searchUsers(String searchTerm) {
 
-        //userSearchLogic
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                adapter.update();
+
+            }
+        };
+
+        AppHandler.getInstance().contactHandler.searchUsers(searchTerm, 0, 500, this, runnable);
 
     }
 

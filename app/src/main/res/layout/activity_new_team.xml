@@ -67,6 +67,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorAccent"
             android:text="Create"
+            android:onClick="createTeam"
             android:textColor="@color/colorPrimary" />
 
     </LinearLayout>
