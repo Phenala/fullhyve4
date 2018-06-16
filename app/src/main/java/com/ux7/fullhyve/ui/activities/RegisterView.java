@@ -1,15 +1,23 @@
 package com.ux7.fullhyve.ui.activities;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Handlers.AppHandler;
+import com.ux7.fullhyve.services.Storage.AppData;
 
 public class RegisterView extends AppCompatActivity {
+
+    EditText username, password, firstname, lastname, confirmPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +39,12 @@ public class RegisterView extends AppCompatActivity {
             }
         });
 
+        username = findViewById(R.id.register_username);
+        password = findViewById(R.id.register_password);
+        firstname = findViewById(R.id.register_first_name);
+        lastname = findViewById(R.id.register_last_name);
+        confirmPassword = findViewById(R.id.register_confirm_password);
+
     }
 
     public void buildActionBar() {
@@ -41,8 +55,34 @@ public class RegisterView extends AppCompatActivity {
 
     public void register() {
 
-        redirectToLogin();
+        String usernameString = username.getText().toString();
+        String passwordString = password.getText().toString();
+        String firstName = firstname.getText().toString();
+        String lastName = lastname.getText().toString();
 
+        if (!password.getText().toString().matches(confirmPassword.getText().toString())) {
+
+            AlertDialog.Builder amb = new AlertDialog.Builder(this);
+            amb.setMessage("Password not confirmed correctly.").setCancelable(true).show();
+            return;
+
+        }
+
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setMessage("Registering ...");
+        pd.show();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                pd.dismiss();
+                redirectToLogin();
+
+            }
+        };
+
+        AppHandler.getInstance().loginHandler.signup(firstName, lastName, "", usernameString, passwordString, this, runnable);
 
         //handleRegisterLogic
 

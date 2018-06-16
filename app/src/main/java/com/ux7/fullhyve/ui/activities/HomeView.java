@@ -334,11 +334,18 @@ public class HomeView extends AppCompatActivity
     }
 
 
-
-
     public void logout() {
 
-        //logoutLogic
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                checkRedirect();
+
+            }
+        };
+
+        AppHandler.getInstance().loginHandler.signout(this, runnable);
 
     }
 

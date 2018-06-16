@@ -5,13 +5,16 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.google.gson.JsonElement;
+import com.ux7.fullhyve.services.Models.Enclosure;
 import com.ux7.fullhyve.services.Models.Identity;
 import com.ux7.fullhyve.services.Storage.AppData;
+import com.ux7.fullhyve.services.Utility.Converter;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
 import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.ux7.fullhyve.services.Utility.ResponseListener;
 import com.github.nkzawa.socketio.client.Ack;
 import com.ux7.fullhyve.ui.activities.LoginView;
+import com.ux7.fullhyve.ui.data.UserDetail;
 
 import org.json.JSONObject;
 
@@ -145,6 +148,31 @@ public class LoginHandler extends Handler {
                     if(generalHandler(args)==200){
                         final ResponseFormat.GetProfileR statusR = gson.fromJson(args[0].toString(), ResponseFormat.GetProfileR.class);
                         cache.setIdentity(statusR.data);
+
+                        activity.runOnUiThread(runnable);
+                    }
+                }
+            });
+        }
+
+    }
+
+    public void getUserProfile(final int userId, final Enclosure<UserDetail> userDetailEnclosure, final Activity activity, final Runnable runnable){
+        HashMap<String, Object> args = new HashMap<>();
+        args.put("userId", userId);
+
+        if(false){
+            activity.runOnUiThread(runnable);
+        } else{
+            JSONObject req = RequestFormat.createRequestObj("getUserProfile", args);
+
+            socket.emit("getUserProfile", req, new Ack() {
+                @Override
+                public void call(Object... args) {
+                    if(generalHandler(args)==200){
+                        final ResponseFormat.GetUserProfileR statusR = gson.fromJson(args[0].toString(), ResponseFormat.GetUserProfileR.class);
+
+                        userDetailEnclosure.value = Converter.portUserToUserDetail(statusR.data);
 
                         activity.runOnUiThread(runnable);
                     }

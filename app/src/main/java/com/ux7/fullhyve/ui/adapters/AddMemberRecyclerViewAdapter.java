@@ -74,12 +74,7 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
                 // Notify the active callbacks interface (the activity, if the
                 // fragment is attached to one) that an item has been selected.
 
-
-                Intent intent = new Intent(context, UserView.class);
-                UserDetail user = new UserDetail();
-                intent.putExtra("user", user);
-                context.startActivity(intent);
-
+                goToUser(context, holder.mMember.id, holder.mMember.name, holder.mMember.image);
 
                 // mListener.onListFragmentInteraction(holder.mMember);
                 notifyItemChanged(position);
@@ -135,6 +130,17 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
         public String toString() {
             return super.toString() + " '" + mMemberNameView.getText() + "'";
         }
+    }
+
+    public void goToUser(Context context, int id, String name, String image) {
+
+        Intent intent = new Intent(context, UserView.class);
+        intent.putExtra("id", id);
+        intent.putExtra("name", name);
+        intent.putExtra("image", image);
+        context.startActivity(intent);
+
+
     }
 
     public int[] getSelectedUserIds() {

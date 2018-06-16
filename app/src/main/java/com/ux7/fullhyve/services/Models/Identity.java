@@ -13,9 +13,6 @@ public class Identity extends User{
         this.userName = userName;
     }
 
-    public String getName() {
-        return getFirstName() + " " + getLastName();
-    }
 
     public String getEmail() {
         return email;

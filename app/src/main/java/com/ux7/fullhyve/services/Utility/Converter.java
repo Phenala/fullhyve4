@@ -1,5 +1,6 @@
 package com.ux7.fullhyve.services.Utility;
 
+import com.ux7.fullhyve.services.Handlers.UserSelectHandler;
 import com.ux7.fullhyve.services.Models.Announcement;
 import com.ux7.fullhyve.services.Models.Contact;
 import com.ux7.fullhyve.services.Models.Message;
@@ -25,6 +26,7 @@ import com.ux7.fullhyve.ui.data.ProjectDetail;
 import com.ux7.fullhyve.ui.data.TaskDetail;
 import com.ux7.fullhyve.ui.data.TaskSetDetail;
 import com.ux7.fullhyve.ui.data.TeamDetail;
+import com.ux7.fullhyve.ui.data.UserDetail;
 import com.ux7.fullhyve.ui.enums.TaskStatus;
 import com.ux7.fullhyve.ui.util.U;
 
@@ -475,6 +477,25 @@ public class Converter {
     }
 
 
+
+
+
+
+    public static UserDetail portUserToUserDetail (User user) {
+
+        UserDetail userDetail = new UserDetail();
+
+        userDetail.id = user.getId();
+        userDetail.name = user.getName();
+        userDetail.title = user.getTitle();
+        userDetail.image = user.getImage();
+        userDetail.bio = user.getDescription();
+        userDetail.friends = user.request == 0;
+        userDetail.skills = user.getSkills();
+
+        return userDetail;
+
+    }
 
 
 

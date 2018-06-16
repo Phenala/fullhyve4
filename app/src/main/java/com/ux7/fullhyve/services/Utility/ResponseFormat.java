@@ -222,6 +222,9 @@ public class ResponseFormat{
     public class GetProfileR{
         public Identity data;
     }
+    public class GetUserProfileR{
+        public User data;
+    }
     public class GetProjectDetailR{
         public Project project;
     }
