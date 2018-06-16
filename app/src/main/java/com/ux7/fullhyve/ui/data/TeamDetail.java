@@ -13,6 +13,7 @@ public class TeamDetail implements Serializable {
     public String image = "http://www.artisticquiltdesign.com/wp-content/uploads/cool-gaming-logos-gruppr-logo-edwin-de-jongh-dribbble.png";
     public String focus = "Cloud Computing";
     public String description = "A highly misunderstood martyr does his best to fight the most of the enemy combatants all the while carrying a pistol in the trunk";
+    public int leaderId = 0;
     public int members = 20;
 
 }

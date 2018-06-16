@@ -25,7 +25,7 @@ import com.ux7.fullhyve.ui.fragments.TeamProjectsFragment;
 import com.ux7.fullhyve.ui.util.ActionBarTarget;
 import com.ux7.fullhyve.ui.util.CircleTransform;
 import com.ux7.fullhyve.ui.util.Images;
-import com.ux7.fullhyve.ui.util.Util;
+import com.ux7.fullhyve.ui.util.U;
 
 public class TeamView extends AppCompatActivity {
 
@@ -49,11 +49,11 @@ public class TeamView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_team_view);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
 
         buildTeam();
+
+        setContentView(R.layout.activity_team_view);
+
         buildActionBar();
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
@@ -86,9 +86,9 @@ public class TeamView extends AppCompatActivity {
         if (team.image != null) {
 
             Picasso.with(this)
-                    .load(Util.getImageUrl(team.image))
+                    .load(U.getImageUrl(team.image))
                     .transform(new CircleTransform())
-                    .resize(64, 64)
+                    .resize(CircleTransform.dimen, CircleTransform.dimen)
                     .into(new ActionBarTarget(this, actionBar));
 
         } else {

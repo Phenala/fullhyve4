@@ -16,7 +16,7 @@ import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
 import com.ux7.fullhyve.ui.util.Images;
-import com.ux7.fullhyve.ui.util.Util;
+import com.ux7.fullhyve.ui.util.U;
 
 import java.util.List;
 
@@ -64,7 +64,7 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
         if (holder.mContact.image != null) {
 
             Picasso.with(holder.itemView.getContext())
-                    .load(Util.getImageUrl(holder.mContact.image))
+                    .load(U.getImageUrl(holder.mContact.image))
                     .transform(new CircleTransform())
                     .into(holder.mPicture);
 
@@ -81,7 +81,6 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     openMessages(holder.mContact);
-                    notifyItemChanged(position);
                 }
             }
         });
@@ -92,7 +91,6 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
         intent.putExtra("contact", contact);
         contact.newMessages = 0;
         mListener.onStartNewActivity(intent);
-        update();
     }
 
     public void update() {

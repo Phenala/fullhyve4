@@ -2,17 +2,26 @@ package com.ux7.fullhyve.ui.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
+import com.ux7.fullhyve.services.Models.Identity;
+import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.ui.adapters.AnnouncementRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListAnnouncement;
 import com.ux7.fullhyve.ui.data.ListTeam;
@@ -21,27 +30,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AnnouncementsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class AnnouncementsFragment extends Fragment implements AnnouncementRecyclerViewAdapter.OnAnnouncmentRecyclerInteractionListener {
 
     View fragmentView;
     public ListTeam team;
     List<ListAnnouncement> announcements = new ArrayList<>();
     int retrieveLimit = 7;
     int size = retrieveLimit;
+    int announcementEditingId = -1;
     boolean fetchAnnouncements = false;
 
     LinearLayoutManager layoutManager;
     AnnouncementRecyclerViewAdapter adapter;
+    ImageButton sendButton;
+    EditText announcementToSend;
 
 
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -61,8 +65,6 @@ public class AnnouncementsFragment extends Fragment {
     public static AnnouncementsFragment newInstance(String param1, String param2) {
         AnnouncementsFragment fragment = new AnnouncementsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,9 +75,8 @@ public class AnnouncementsFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new AnnouncementRecyclerViewAdapter(announcements, team.image);
+        adapter = new AnnouncementRecyclerViewAdapter(announcements, team, this);
         recyclerView.setAdapter(adapter);
-
 
         getAnnouncements();
 
@@ -100,13 +101,24 @@ public class AnnouncementsFragment extends Fragment {
         });
     }
 
+    public void buildViews() {
+
+        sendButton = (ImageButton) fragmentView.findViewById(R.id.announcement_send_button);
+        announcementToSend = (EditText) fragmentView.findViewById(R.id.announcement_to_send);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                enterAnnouncement();
+
+            }
+        });
+
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     public void getAnnouncements() {
@@ -134,6 +146,9 @@ public class AnnouncementsFragment extends Fragment {
 
     }
 
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -141,6 +156,7 @@ public class AnnouncementsFragment extends Fragment {
         fragmentView = inflater.inflate(R.layout.fragment_tab_announcement, container, false);
 
         buildAnnouncements();
+        buildViews();
 
         return fragmentView;
     }
@@ -167,6 +183,122 @@ public class AnnouncementsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onEditAnnouncement(ListAnnouncement announcement) {
+
+        announcementToSend.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        announcementEditingId = announcement.id;
+        announcementToSend.setText(announcement.message);
+        sendButton.setImageResource(R.drawable.ic_tick_icon);
+
+    }
+
+    public void enterAnnouncement() {
+
+        if (announcementEditingId == -1) {
+            sendAnnouncement();
+        } else {
+            editAnnouncement();
+        }
+
+    }
+
+    @Override
+    public void onDeleteAnnouncement(final ListAnnouncement announcement) {
+
+        AlertDialog.Builder confirmation = new AlertDialog.Builder(getActivity());
+        confirmation.setMessage("Are you sure you want to delete this announcement?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        Activity activity = getActivity();
+
+                        announcements.remove(announcement);
+                        adapter.update();
+
+                        Runnable runnable = new Runnable() {
+                            @Override
+                            public void run() {
+
+                                getAnnouncements();
+
+                            }
+                        };
+
+                        AppHandler.getInstance().teamHandler.deleteAnnouncement(announcement.id, activity, runnable);
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                }).show();
+
+    }
+
+    public void editAnnouncement() {
+
+        Activity activity = getActivity();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                getAnnouncements();
+
+            }
+        };
+
+        AppHandler.getInstance().teamHandler.editAnnouncementReply(announcementEditingId, announcementToSend.getText().toString(), activity, runnable);
+
+        sendButton.setImageResource(R.drawable.ic_send_icon);
+
+        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(announcementToSend.getWindowToken(), 0);
+
+        announcementEditingId = -1;
+        announcementToSend.setText("");
+
+    }
+
+    public void sendAnnouncement() {
+
+        String announcement = announcementToSend.getText().toString();
+
+        ListAnnouncement tempAnnouncement = new ListAnnouncement();
+        Identity identity = AppData.getCache().getIdentity();
+        tempAnnouncement.senderId = identity.getId();
+        tempAnnouncement.sent = true;
+        tempAnnouncement.senderName = identity.getName();
+        tempAnnouncement.message = announcement;
+        tempAnnouncement.id = -1;
+
+        announcements.add(0, tempAnnouncement);
+
+        adapter.update();
+
+        Activity activity = getActivity();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                getAnnouncements();
+
+            }
+        };
+
+        AppHandler.getInstance().teamHandler.announce(team.id, announcement, activity, runnable);
+
+        announcementToSend.setText("");
+
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.ux7.fullhyve.ui.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.ui.adapters.ProjectsRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
@@ -50,10 +52,11 @@ public class ProjectsListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_project_list, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_project_list, container, false);
 
+        buildRecycler();
 
-        return view;
+        return fragmentView;
     }
 
     public void buildRecycler() {
@@ -65,6 +68,25 @@ public class ProjectsListFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ProjectsRecyclerViewAdapter(projects, mListener);
         recyclerView.setAdapter(adapter);
+
+        getProjects();
+
+    }
+
+    public void getProjects() {
+
+        Activity activity = getActivity();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                adapter.update();
+
+            }
+        };
+
+        AppHandler.getInstance().projectHandler.getMyProjects(0, 500, projects, activity, runnable);
 
     }
 

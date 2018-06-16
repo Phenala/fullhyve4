@@ -12,10 +12,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
-import com.ux7.fullhyve.services.Models.Team;
 import com.ux7.fullhyve.ui.data.TeamDetail;
 import com.ux7.fullhyve.ui.util.CircleTransform;
-import com.ux7.fullhyve.ui.util.Util;
+import com.ux7.fullhyve.ui.util.U;
 
 
 public class TeamDetailFragment extends Fragment {
@@ -86,7 +85,7 @@ public class TeamDetailFragment extends Fragment {
 
         if (teamDetail.image != null)
             Picasso.with(getActivity())
-                    .load(Util.getImageUrl(teamDetail.image))
+                    .load(U.getImageUrl(teamDetail.image))
                     .transform(new CircleTransform())
                     .into(teamImageView);
 

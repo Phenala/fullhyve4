@@ -1,45 +1,34 @@
 package com.ux7.fullhyve.ui.activities;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-import com.github.nkzawa.socketio.client.Socket;
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
-import com.ux7.fullhyve.services.Utility.Realtime;
 import com.ux7.fullhyve.ui.adapters.MessagesRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.data.ListMessage;
-import com.ux7.fullhyve.ui.interfaces.ResponseListener;
 import com.ux7.fullhyve.ui.util.ActionBarTarget;
 import com.ux7.fullhyve.ui.util.CircleTransform;
 import com.ux7.fullhyve.ui.util.Images;
-import com.ux7.fullhyve.ui.util.Util;
+import com.ux7.fullhyve.ui.util.U;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Semaphore;
 
 public class ContactView extends AppCompatActivity implements MessagesRecyclerViewAdapter.OnMessageRecyclerInteractionListener {
 
@@ -121,9 +110,9 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 
             fetchingMessages = true;
 
-            ListMessage spinnerMessage = new ListMessage();
-            spinnerMessage.spinner = true;
-            messages.add(spinnerMessage);
+//            ListMessage spinnerMessage = new ListMessage();
+//            spinnerMessage.spinner = true;
+//            messages.add(spinnerMessage);
 
             final Runnable runnable = new Runnable() {
                 @Override
@@ -178,7 +167,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
         if (contact.image != null)
 
             Picasso.with(this)
-                    .load(Util.getImageUrl(contact.image))
+                    .load(U.getImageUrl(contact.image))
                     .transform(new CircleTransform())
                     .resize(96,96)
                     .into(new ActionBarTarget(this, actionBar));
@@ -276,7 +265,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 
         if (messages.size() > 0)
 
-            AppHandler.getInstance().contactHandler.updateMessageSeen(messages.get(0).id, this, runnable);
+            AppHandler.getInstance().contactHandler.updateMessageSeen(contact.id, messages.get(0).id, this, runnable);
 
     }
 
@@ -485,7 +474,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
             }
         };
 
-        AppHandler.getInstance().contactHandler.deleteMessage(messageId, this, runnable);
+        AppHandler.getInstance().contactHandler.deleteMessage(contact.id, messageId, this, runnable);
 
         //messageDeleteLogic
 
@@ -507,16 +496,16 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
                     }
                 }
 
-                messageEditingId = -1;
-
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(((EditText)findViewById(R.id.messageToSend)).getWindowToken(), 0);
-
                 adapter.update();
             }
         };
 
-        AppHandler.getInstance().contactHandler.editMessage(messageEditingId, messageToSend, this, runnable);
+        messageEditingId = -1;
+
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(((EditText)findViewById(R.id.messageToSend)).getWindowToken(), 0);
+
+        AppHandler.getInstance().contactHandler.editMessage(contact.id, messageEditingId, messageToSend, this, runnable);
 
         setMessageEditMode(false);
 

@@ -13,6 +13,7 @@ public class Identity extends User{
         this.userName = userName;
     }
 
+
     public String getEmail() {
         return email;
     }

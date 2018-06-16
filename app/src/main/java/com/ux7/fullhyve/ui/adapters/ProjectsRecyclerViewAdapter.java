@@ -16,7 +16,7 @@ import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
 import com.ux7.fullhyve.ui.util.Images;
-import com.ux7.fullhyve.ui.util.Util;
+import com.ux7.fullhyve.ui.util.U;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class ProjectsRecyclerViewAdapter extends RecyclerView.Adapter<ProjectsRe
         if (holder.mProject.image != null) {
 
             Picasso.with(holder.mView.getContext())
-                    .load(Util.getImageUrl(holder.mProject.image))
+                    .load(U.getImageUrl(holder.mProject.image))
                     .transform(new CircleTransform())
                     .into(holder.mPicture);
 

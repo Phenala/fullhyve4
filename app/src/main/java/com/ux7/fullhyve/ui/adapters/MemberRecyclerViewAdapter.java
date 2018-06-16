@@ -17,7 +17,7 @@ import com.ux7.fullhyve.ui.data.UserDetail;
 import com.ux7.fullhyve.ui.fragments.MemberFragment.OnListFragmentInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
 import com.ux7.fullhyve.ui.util.Images;
-import com.ux7.fullhyve.ui.util.Util;
+import com.ux7.fullhyve.ui.util.U;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<MemberRecycl
         if (holder.mMember.image != null) {
 
             Picasso.with(holder.itemView.getContext())
-                    .load(Util.getImageUrl(holder.mMember.image))
+                    .load(U.getImageUrl(holder.mMember.image))
                     .transform(new CircleTransform())
                     .into(holder.mMemberPictureView);
 
@@ -74,10 +74,7 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<MemberRecycl
                 // Notify the active callbacks interface (the activity, if the
                 // fragment is attached to one) that an item has been selected.
 
-                Intent intent = new Intent(context, UserView.class);
-                UserDetail user = new UserDetail();
-                intent.putExtra("user", user);
-                context.startActivity(intent);
+               goToUser(context, holder.mMember.id, holder.mMember.name, holder.mMember.image);
 
                 // mListener.onListFragmentInteraction(holder.mMember);
                 notifyItemChanged(position);
@@ -88,6 +85,19 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<MemberRecycl
 
     public void update() {
         notifyDataSetChanged();
+    }
+
+
+
+    public void goToUser(Context context, int id, String name, String image) {
+
+        Intent intent = new Intent(context, UserView.class);
+        intent.putExtra("id", id);
+        intent.putExtra("name", name);
+        intent.putExtra("image", image);
+        context.startActivity(intent);
+
+
     }
 
     @Override

@@ -44,6 +44,7 @@
                 android:layout_weight="0"
                 android:background="@color/tranparent"
                 android:elevation="0dp"
+                android:onClick="enterReply"
                 android:scaleType="fitCenter"
                 android:tint="@color/colorAccent"
                 app:srcCompat="@drawable/ic_send_icon" />

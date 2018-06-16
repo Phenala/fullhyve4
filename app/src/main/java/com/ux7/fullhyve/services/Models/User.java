@@ -9,6 +9,7 @@ public class User implements Serializable{
     private String lastName;
     private String image;
     private String title;
+    public int request;
     private String[] skills;
     private String description;
 
@@ -32,6 +33,10 @@ public class User implements Serializable{
     public String getLastName() {
 
         return (lastName.charAt(0) + "").toUpperCase() + lastName.substring(1);
+    }
+
+    public String getName() {
+        return getFirstName() + " " + getLastName();
     }
 
     public void setLastName(String lastName) {

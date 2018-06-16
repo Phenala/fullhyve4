@@ -119,7 +119,7 @@ public class Realtime {
             public void call(final Object... args) {
                 if(args.length>0){
                     final ResponseFormat.DisconnectedUserR userR = gson.fromJson(args[0].toString(), ResponseFormat.DisconnectedUserR.class);
-                    cache.getContacts().getContact(userR.data.userId).changeFriendOnlineStatus(false, userR.data.timestamp);
+                    cache.getContacts().getFriend(userR.data.userId).changeFriendOnlineStatus(false, userR.data.timestamp);
                 }
             }
         };
@@ -129,7 +129,7 @@ public class Realtime {
             public void call(final Object... args) {
                 if(args.length>0){
                     final ResponseFormat.DisconnectedUserR userR = gson.fromJson(args[0].toString(), ResponseFormat.DisconnectedUserR.class);
-                    cache.getContacts().getContact(userR.data.userId).changeFriendOnlineStatus(true, userR.data.timestamp);
+                    cache.getContacts().getFriend(userR.data.userId).changeFriendOnlineStatus(true, userR.data.timestamp);
                 }
             }
         };

@@ -127,6 +127,7 @@ public class MemberFragment extends Fragment {
             @Override
             public void run() {
 
+                identifyLeader();
                 adapter.update();
 
             }
@@ -139,6 +140,24 @@ public class MemberFragment extends Fragment {
         else if (type == MemberOf.PROJECT)
 
             AppHandler.getInstance().projectHandler.getContributors(project.id, 0, 500, members, activity, runnable);
+
+    }
+
+    public void identifyLeader() {
+
+        ListMember membero = new ListMember();
+
+        for (ListMember member : members) {
+
+            member.leader = (type == MemberOf.TEAM && member.id == team.detail.leaderId) || (type == MemberOf.PROJECT && member.id == project.detail.leaderId);
+
+            if (member.leader)
+                membero = member;
+
+        }
+
+        members.remove(membero);
+        members.add(0, membero);
 
     }
 
