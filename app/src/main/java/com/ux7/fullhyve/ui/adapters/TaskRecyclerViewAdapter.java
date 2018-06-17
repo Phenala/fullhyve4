@@ -46,7 +46,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.mTask = mTasks.get(position);
+        holder.mTask = getFilteredList(mTasks).get(position);
         holder.mTaskNumberView.setText("Task " + holder.mTask.number);
         holder.mTaskNameView.setText(holder.mTask.name);
         holder.mTaskStatusView.setImageResource(U.getTaskStatusIcon(holder.mTask.status));
@@ -90,11 +90,14 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
 
     public List<ListTask> getFilteredList(List<ListTask> tasks) {
 
+        if (!myTasks)
+            return tasks;
+
         List<ListTask> listTasks = new ArrayList<>();
 
         for (ListTask task : tasks) {
 
-            if (myTasks && task.assigneeId == AppData.getCache().getIdentity().getId()) {
+            if (task.assigneeId == AppData.getCache().getIdentity().getId()) {
                 listTasks.add(task);
             }
 
@@ -113,7 +116,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
 
     @Override
     public int getItemCount() {
-        return mTasks.size();
+        return getFilteredList(mTasks).size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

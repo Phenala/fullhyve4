@@ -41,6 +41,8 @@ public class AddMemberView extends AppCompatActivity {
         FORWARD,
         INVITE_TO_TEAM,
         INVITE_TO_PROJECT,
+        ASSIGN_TASK_TEAM,
+        ASSIGN_TASK_USER
 
     }
 

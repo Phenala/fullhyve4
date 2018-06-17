@@ -409,10 +409,15 @@ public class ProjectHandler extends Handler {
 
 
 
-    public void newTask(Task taskData, int taskSetId, final Activity activity, final Runnable runnable){
+    public void newTask(String title, String description, long deadline, int assignerId, int assigneeId, int assigneeTeamId, int taskSetId, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
-        args.put("taskSetId",taskSetId);
-        args.put("taskData",taskData);
+        args.put("tasksetId",taskSetId);
+        args.put("title", title);
+        args.put("description", description);
+        args.put("deadline", deadline);
+        args.put("assignerId", assignerId);
+        args.put("assigneeId", assigneeId);
+        args.put("assigneeTeamId", assigneeTeamId);
 
         JSONObject req = RequestFormat.createRequestObj("newTask",args);
 
