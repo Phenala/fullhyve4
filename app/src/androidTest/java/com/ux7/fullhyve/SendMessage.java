@@ -10,6 +10,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.ux7.fullhyve.ui.activities.HomeView;
 import com.ux7.fullhyve.ui.activities.LoginView;
 import com.ux7.fullhyve.ui.util.U;
 
@@ -38,22 +39,15 @@ public class SendMessage {
   public String password;
   public String testMessage;
   @Rule
-  public ActivityTestRule<LoginView> loginViewActivityTestRule=new ActivityTestRule<LoginView>(LoginView.class);
+  public ActivityTestRule<HomeView> homeViewActivityTestRule=new ActivityTestRule<HomeView>(HomeView.class);
 
   @Before
   public void initValues(){
-    userName="samwolde";
-    password="1234";
     testMessage="Message test test message";
   }
 
   @Test
   public void sendMessageTest() throws Exception{
-    //Loging in to the app
-    onView(withId(R.id.username)).perform(clearText(),typeText(userName),closeSoftKeyboard());
-    onView(withId(R.id.password)).perform(clearText(),typeText(password),closeSoftKeyboard());
-    onView(withId(R.id.login_button)).perform(click());
-
     CountingIdlingResource idlingResource=new CountingIdlingResource("home");
     Espresso.registerIdlingResources(idlingResource);
     Thread.sleep(2000);

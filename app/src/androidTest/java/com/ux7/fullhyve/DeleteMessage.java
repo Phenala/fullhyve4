@@ -8,6 +8,7 @@ import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.ux7.fullhyve.ui.activities.HomeView;
 import com.ux7.fullhyve.ui.activities.LoginView;
 
 import org.junit.Before;
@@ -33,33 +34,21 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 public class DeleteMessage {
 
-  public  String userName;
-  public String password;
   public String testMessage;
   @Rule
-  public ActivityTestRule<LoginView> loginViewActivityTestRule=new ActivityTestRule<LoginView>(LoginView.class);
+  public ActivityTestRule<HomeView> homeViewActivityTestRule=new ActivityTestRule<HomeView>(HomeView.class);
 
   @Before
   public void initValues(){
-    userName="samwolde";
-    password="1234";
     testMessage="Message test test message";
   }
 
   @Test
   public void testDeleteMessage() throws Exception{
-    onView(withId(R.id.username)).perform(clearText(),typeText(userName),closeSoftKeyboard());
-    onView(withId(R.id.password)).perform(clearText(),typeText(password),closeSoftKeyboard());
-    onView(withId(R.id.login_button)).perform(click());
-
     CountingIdlingResource idlingResource=new CountingIdlingResource("home");
-    try{
-      //idlingResource.decrement();
-    }catch(Exception e){
-      e.printStackTrace();
-    }
+
     Espresso.registerIdlingResources(idlingResource);
-    Thread.sleep(2000);
+    Thread.sleep(1000);
     onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
 
     Espresso.unregisterIdlingResources(idlingResource);

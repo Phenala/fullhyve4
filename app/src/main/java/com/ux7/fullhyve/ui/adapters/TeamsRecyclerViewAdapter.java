@@ -34,6 +34,7 @@ public class TeamsRecyclerViewAdapter extends RecyclerView.Adapter<TeamsRecycler
     public TeamsRecyclerViewAdapter(List<ListTeam> items, OnHomeInteractionListener listener) {
         mTeams = items;
         mListener = listener;
+
     }
 
     @Override

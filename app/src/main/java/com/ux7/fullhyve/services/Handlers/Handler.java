@@ -26,6 +26,10 @@ public class Handler {
         socket = Realtime.getInstance();
     }
 
+    public static void updateCache() {
+        cache = AppData.getCache();
+    }
+
     public int generalHandler(Object... args){
         if(args.length > 0){
             ResponseFormat responseFormat = gson.fromJson(args[0].toString(), ResponseFormat.class);

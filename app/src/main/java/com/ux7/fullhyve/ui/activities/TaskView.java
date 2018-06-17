@@ -56,9 +56,9 @@ public class TaskView extends AppCompatActivity {
         taskAssignedToName.setText(taskDetail.assigneeName);
         taskAssignedViaTeamName.setText(taskDetail.teamName);
 
-        Picasso.with(this).load(taskDetail.assignerImage).transform(new CircleTransform()).into(taskAssignedByPicture);
-        Picasso.with(this).load(taskDetail.assigneeImage).transform(new CircleTransform()).into(taskAssignedToPicture);
-        Picasso.with(this).load(taskDetail.teamImage).transform(new CircleTransform()).into(taskAssignedViaTeamPicture);
+        Picasso.with(this).load(U.getImageUrl(taskDetail.assignerImage)).transform(new CircleTransform()).into(taskAssignedByPicture);
+        Picasso.with(this).load(U.getImageUrl(taskDetail.assigneeImage)).transform(new CircleTransform()).into(taskAssignedToPicture);
+        Picasso.with(this).load(U.getImageUrl(taskDetail.teamImage)).transform(new CircleTransform()).into(taskAssignedViaTeamPicture);
 
         taskInstructions.setText(taskDetail.instructions);
         taskResults.setText(taskDetail.results);

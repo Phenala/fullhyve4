@@ -10,6 +10,7 @@ import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.ux7.fullhyve.ui.activities.HomeView;
 import com.ux7.fullhyve.ui.activities.LoginView;
 import com.ux7.fullhyve.ui.fragments.AnnouncementsFragment;
 
@@ -39,22 +40,12 @@ import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class DisplayTeamAnnouncements {
-  public  String userName;
-  public String password;
   @Rule
-  public ActivityTestRule<LoginView> loginViewActivityTestRule=new ActivityTestRule<LoginView>(LoginView.class);
+  public ActivityTestRule<HomeView> homeViewActivityTestRule=new ActivityTestRule<HomeView>(HomeView.class);
 
-  @Before
-  public void initValues(){
-    userName="samwolde";
-    password="1234";
-  }
+
   @Test
   public void testTeamAnnouncements() throws Exception{
-
-    onView(withId(R.id.username)).perform(clearText(),typeText(userName),closeSoftKeyboard());
-    onView(withId(R.id.password)).perform(clearText(),typeText(password),closeSoftKeyboard());
-    onView(withId(R.id.login_button)).perform(click());
     CountingIdlingResource idlingResource=new CountingIdlingResource("home");
     Espresso.registerIdlingResources(idlingResource);
     //DrawerActions.openDrawer(R.id.drawer_layout);

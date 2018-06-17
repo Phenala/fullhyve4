@@ -7,6 +7,7 @@ import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.ux7.fullhyve.ui.activities.HomeView;
 import com.ux7.fullhyve.ui.activities.LoginView;
 
 import org.junit.Before;
@@ -30,25 +31,16 @@ import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class EditMessage {
-
-  public  String userName;
-  public String password;
   public String editedMessageText;
   @Rule
-  public ActivityTestRule<LoginView> loginViewActivityTestRule=new ActivityTestRule<LoginView>(LoginView.class);
+  public ActivityTestRule<HomeView> homeViewActivityTestRule=new ActivityTestRule<HomeView>(HomeView.class);
 
   @Before
   public void initValues(){
-    userName="samwolde";
-    password="1234";
     editedMessageText="Edited Message";
   }
   @Test
   public void testEditMessage() throws Exception{
-    onView(withId(R.id.username)).perform(clearText(),typeText(userName),closeSoftKeyboard());
-    onView(withId(R.id.password)).perform(clearText(),typeText(password),closeSoftKeyboard());
-    onView(withId(R.id.login_button)).perform(click());
-
     CountingIdlingResource idlingResource=new CountingIdlingResource("home");
     Espresso.registerIdlingResources(idlingResource);
     Thread.sleep(2000);

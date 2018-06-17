@@ -8,6 +8,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
+import com.ux7.fullhyve.services.Handlers.Handler;
 import com.ux7.fullhyve.services.Models.ContactSet;
 import com.ux7.fullhyve.services.Models.Identity;
 import com.ux7.fullhyve.services.Models.NotificationSet;
@@ -73,6 +74,20 @@ public class AppData extends Application {
 
     public void saveCache(Context context){
         String cacheStr = gson.toJson(cache);
+        Log.e("Cache",cacheStr);
+
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(AppData.CACHE_FILE_NAME, Context.MODE_PRIVATE));
+            outputStreamWriter.write(cacheStr);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "Saving cache failed");
+        }
+    }
+
+    public void emptyCache(Context context){
+        String cacheStr = gson.toJson(new Cache());
         Log.e("Cache",cacheStr);
 
         try {

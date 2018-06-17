@@ -27,6 +27,7 @@ public class UserView extends AppCompatActivity {
         setContentView(R.layout.activity_user_view);
 
         getUserProfile();
+        buildUserDetail();
         buildActionBar();
     }
 
@@ -49,10 +50,21 @@ public class UserView extends AppCompatActivity {
 
         Button button = ((Button)findViewById(R.id.user_button));
 
-        if (userDetail.friends) {
-            button.setText("Send Message");
-        } else {
-            button.setText("Request Friendship");
+        switch (userDetail.request) {
+            case ACCEPTED:
+                button.setText("Send Message");
+                break;
+            case REJECTED:
+                button.setText("Request Friendship");
+                break;
+            case UNDECIDED:
+                button.setText("Pending Request");
+                button.setClickable(false);
+                button.setBackgroundResource(R.color.colorBackground);
+                break;
+            case REQUESTED:
+                button.setText("Accept Request");
+                break;
         }
 
     }
@@ -77,32 +89,34 @@ public class UserView extends AppCompatActivity {
 
     public void getUserProfile() {
 
-        final Enclosure<UserDetail> userDetailEnclosure = null;
-
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-
-                userDetail = userDetailEnclosure.value;
-                buildUserDetail();
-
-            }
-        };
-
-        int userId = getIntent().getIntExtra("id", 0);
-        AppHandler.getInstance().loginHandler.getUserProfile(userId, userDetailEnclosure, this, runnable);
+        userDetail = (UserDetail) getIntent().getSerializableExtra("userDetail");
+//
+//        final Enclosure<UserDetail> userDetailEnclosure = null;
+//
+//        Runnable runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                userDetail = userDetailEnclosure.value;
+//                buildUserDetail();
+//
+//            }
+//        };
+//
+//        int userId = getIntent().getIntExtra("id", 0);
+//        AppHandler.getInstance().loginHandler.getUserProfile(userId, userDetailEnclosure, this, runnable);
 
     }
 
     public void buildActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        setTitle("   " + getIntent().getStringExtra("name"));
+        setTitle("   " + userDetail.name);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         Picasso.with(this)
-                .load(U.getImageUrl(getIntent().getStringExtra("image")))
+                .load(U.getImageUrl(userDetail.image))
                 .transform(new CircleTransform())
-                .resize(64, 64)
+                .resize(CircleTransform.dimen, CircleTransform.dimen)
                 .into(new ActionBarTarget(this, actionBar));
     }
 }

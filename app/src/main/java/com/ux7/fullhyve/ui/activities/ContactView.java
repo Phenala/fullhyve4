@@ -149,7 +149,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 //
 //                    }
 
-                    ((MessagesRecyclerViewAdapter)recyclerView.getAdapter()).update();
+                    adapter.update();
 
                     updateSeen();
 
@@ -219,8 +219,8 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
 
         messageForwardingId = message.id;
 
-        Intent intent = new Intent(this, AddMember.class);
-        intent.putExtra("type", AddMember.AddUserType.FORWARD);
+        Intent intent = new Intent(this, AddMemberView.class);
+        intent.putExtra("type", AddMemberView.AddUserType.FORWARD);
         startActivityForResult(intent, 11);
 
     }

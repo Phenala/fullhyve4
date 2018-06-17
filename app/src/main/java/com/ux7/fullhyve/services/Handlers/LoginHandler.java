@@ -51,7 +51,12 @@ public class LoginHandler extends Handler {
                 if(generalHandler(args)==200){
                     Log.e("Responded", "true");
                     final ResponseFormat.SignInR statusR = gson.fromJson(args[0].toString(), ResponseFormat.SignInR.class);
-                    cache.setToken(statusR.data.token);
+
+                    AppData.resetCache();
+                    AppData.getCache().setToken(statusR.data.token);
+                    AppData.getInstance().saveCache(activity);
+
+                    AppHandler.getInstance().updateCache();
 
                     runnable.loginSuccess = true;
 
@@ -79,7 +84,7 @@ public class LoginHandler extends Handler {
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     final ResponseFormat.SignInR statusR = gson.fromJson(args[0].toString(), ResponseFormat.SignInR.class);
-                    cache.setToken(statusR.data.token);
+                    AppData.getCache().setToken(statusR.data.token);
 
                     activity.runOnUiThread(runnable);
                 } else if (generalHandler(args) == 401) {
@@ -121,10 +126,14 @@ public class LoginHandler extends Handler {
                 if(generalHandler(args)==200){
                     // remove the cache
                     AppData.resetCache();
-                    AppData.getInstance().saveCache(activity);
 
-                    // replace the cache instance of the handler with the new one
-                    Handler.cache = AppData.getCache();
+                    // replace the AppData.getCache().instance of the handler with the new one
+//                    Handler.AppData.getCache().= AppData.getCache();
+
+                    AppData.getInstance().saveCache(activity);
+                    AppData.getInstance().readCache(activity);
+
+                    LoginView.changedUser = true;
 
                     activity.runOnUiThread(runnable);
                 }
@@ -135,11 +144,13 @@ public class LoginHandler extends Handler {
 
 
     public void getProfile(final Activity activity, final Runnable runnable){
-        Identity identity = cache.getIdentity();
 
-        if(identity != null){
-            activity.runOnUiThread(runnable);
-        } else{
+        AppHandler.getInstance().updateCache();
+        Identity identity = AppData.getCache().getIdentity();
+
+//        if(identity != null){
+//            activity.runOnUiThread(runnable);
+//        } else{
             JsonElement req = RequestFormat.createRequestObj(null, "getProfile");
 
             socket.emit("getProfile", req, new Ack() {
@@ -147,13 +158,13 @@ public class LoginHandler extends Handler {
                 public void call(Object... args) {
                     if(generalHandler(args)==200){
                         final ResponseFormat.GetProfileR statusR = gson.fromJson(args[0].toString(), ResponseFormat.GetProfileR.class);
-                        cache.setIdentity(statusR.data);
+                        AppData.getCache().setIdentity(statusR.data);
 
                         activity.runOnUiThread(runnable);
                     }
                 }
             });
-        }
+//        }
 
     }
 
@@ -199,8 +210,8 @@ public class LoginHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    identity.setId(cache.getIdentity().getId());
-                    cache.setIdentity(identity);
+                    identity.setId(AppData.getCache().getIdentity().getId());
+                    AppData.getCache().setIdentity(identity);
 
                     activity.runOnUiThread(runnable);
                 }
@@ -251,7 +262,7 @@ public class LoginHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    cache.getContacts().removeFriend(friendId);
+                    AppData.getCache().getContacts().removeFriend(friendId);
                     activity.runOnUiThread(runnable);
                 }
             }
@@ -273,7 +284,7 @@ public class LoginHandler extends Handler {
                     final ResponseFormat.GetNotificationsR notificationsR = gson.fromJson(args[0].toString(), ResponseFormat.GetNotificationsR.class);
 
                     if(notificationsR!=null && notificationsR.data.notifications!=null){
-                        cache.getNotifications().load(notificationsR.data.notifications);
+                        AppData.getCache().getNotifications().load(notificationsR.data.notifications);
                     }
                     activity.runOnUiThread(runnable);
                 }

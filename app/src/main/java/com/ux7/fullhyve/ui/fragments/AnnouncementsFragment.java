@@ -224,7 +224,7 @@ public class AnnouncementsFragment extends Fragment implements AnnouncementRecyc
                             }
                         };
 
-                        AppHandler.getInstance().teamHandler.deleteAnnouncement(announcement.id, activity, runnable);
+                        AppHandler.getInstance().teamHandler.deleteAnnouncement(team.id, announcement.id, activity, runnable);
 
                     }
                 })

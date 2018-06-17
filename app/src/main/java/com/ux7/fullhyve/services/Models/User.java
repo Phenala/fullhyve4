@@ -3,6 +3,7 @@ package com.ux7.fullhyve.services.Models;
 
 import java.io.Serializable;
 
+
 public class User implements Serializable{
     private int id;
     private String firstName;

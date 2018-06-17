@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 
 public class RequestFormat {
-    public static AppData.Cache cache = AppData.getCache();
 
     public static JSONObject createRequestObj(String action, HashMap<String, Object> args){
         JSONObject req = new JSONObject();
@@ -22,8 +21,8 @@ public class RequestFormat {
         try{
             req.put("action", action);
 
-            req.put("token", "Bearer " + (cache.getToken()==null?"":cache.getToken()));
-            Log.e("Token in request", cache.getToken()==null?"No token":cache.getToken());
+            req.put("token", "Bearer " + (AppData.getCache().getToken()==null?"":AppData.getCache().getToken()));
+            Log.e("Token in request", AppData.getCache().getToken()==null?"No token":AppData.getCache().getToken());
             if(args != null){
                 for(String key: args.keySet()){
                     reqData.put(key,args.get(key));
@@ -46,7 +45,7 @@ public class RequestFormat {
         HashMap<String, Object> req = new HashMap<>();
 
         req.put("action", action);
-        req.put("token", "Bearer " + (cache.getToken()==null?"":cache.getToken()));
+        req.put("token", "Bearer " + (AppData.getCache().getToken()==null?"":AppData.getCache().getToken()));
         req.put("reqData", arg==null?new HashMap<String,Object>():arg);
 
         return gson.toJsonTree(req);
