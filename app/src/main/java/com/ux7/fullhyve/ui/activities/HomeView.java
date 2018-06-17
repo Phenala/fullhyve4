@@ -197,14 +197,14 @@ public class HomeView extends AppCompatActivity
             public void run() {
 
                 Identity identity = AppData.getCache().getIdentity();
-                ((TextView)navigationView.findViewById(R.id.profile_identity_name)).setText(identity.getFirstName() + " " + identity.getLastName());
+                ((TextView)navigationView.getHeaderView(0).findViewById(R.id.profile_identity_name)).setText(identity.getFirstName() + " " + identity.getLastName());
 
-                Log.e("Picture", identity.getImage());
+                //Log.e("Picture", identity.getImage());
 
                 Picasso.with(getBaseContext())
                         .load(U.getImageUrl(identity.getImage()))
                         .transform(new CircleTransform())
-                        .into((ImageView)navigationView.findViewById(R.id.userPicture));
+                        .into((ImageView)navigationView.getHeaderView(0).findViewById(R.id.userPicture));
 
             }
         };

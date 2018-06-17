@@ -152,7 +152,7 @@ public class ContactHandler extends Handler {
         final ResponseFormat.GetMessagesR messagesR;
 
 //        final ArrayList<Message> messages = cache.getContacts().getContact(friendId).getMessages(offset, limit);
-
+        /*if
         Contact contact = cache.getContacts().getFriend(friendId);
         List<Message> messages = null;
 
@@ -160,9 +160,9 @@ public class ContactHandler extends Handler {
             messages = contact.getMessages(offset, limit);
         }
 
-        if(messages != null && messages.size()>0){
+        (messages != null && messages.size()>0){
             activity.runOnUiThread(runnable);
-        } else {
+        } else {*/
             HashMap<String, Object> args = new HashMap<>();
             args.put("friendId", friendId);
             args.put("offset", offset);
@@ -185,7 +185,7 @@ public class ContactHandler extends Handler {
 
                         listMessages.clear();
                         listMessages.addAll(Converter.portMessageToListMessage(messagesR.data.messages));
-
+                        activity.runOnUiThread(runnable);
                         if (messagesR != null && messagesR.data.done) {
                             Log.e("Messages", "Received");
                             Log.e("Message", messagesR.data.messages.get(0).getMessage());
@@ -194,13 +194,13 @@ public class ContactHandler extends Handler {
                                 cache.getContacts().getFriend(friendId).addMessages((ArrayList<Message>) messagesR.data.messages);
                             }
 
-                            activity.runOnUiThread(runnable);
+
                         }
                     }
                 }
             });
         }
-    }
+
 
     public void getFriends(int offset, int limit, final Activity activity, final Runnable runnable){
         final ResponseFormat.GetFriends friendsR = new ResponseFormat().new GetFriends();
