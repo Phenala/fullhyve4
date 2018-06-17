@@ -15,6 +15,7 @@ import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.ux7.fullhyve.services.Utility.ResponseListener;
 import com.github.nkzawa.socketio.client.Ack;
 import com.ux7.fullhyve.ui.data.ListContact;
+import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.ListMessage;
 
 
@@ -306,6 +307,34 @@ public class ContactHandler extends Handler {
 
                     listContacts.clear();
                     listContacts.addAll(Converter.portUserToListContact(searchUsersR.data.users));
+
+                    activity.runOnUiThread(runnable);
+                }
+            }
+        });
+    }
+
+    public void searchAddUsers(final String name, final int offset, final int limit, final List<ListMember> listMembers, final Activity activity, final Runnable runnable){
+        HashMap<String, Object> args = new HashMap<>();
+        args.put("name", name);
+        args.put("offset", offset);
+        args.put("limit", limit);
+
+        JSONObject req = RequestFormat.createRequestObj("searchUsers",args);
+
+        Realtime.socket.emit("searchUsers", req, new Ack() {
+            @Override
+            public void call(Object... args) {
+                if(generalHandler(args)==200){
+                    Log.e("Respon searchusers", args[0].toString());
+                    final ResponseFormat.SearchUsersR searchUsersR = gson.fromJson(args[0].toString(), ResponseFormat.SearchUsersR.class);
+                    List<Contact> friends = AppData.getCache().getContacts().searchContacts(name, offset, limit);
+
+                    //searchUsersR.data.friends = new ArrayList<>();
+                    //searchUsersR.data.friends.addAll(friends);
+
+                    listMembers.clear();
+                    listMembers.addAll(Converter.portUsersToListMember(searchUsersR.data.users));
 
                     activity.runOnUiThread(runnable);
                 }

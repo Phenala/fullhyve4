@@ -9,14 +9,21 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.services.Models.Task;
 import com.ux7.fullhyve.services.Storage.AppData;
+import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.ListTaskSet;
 import com.ux7.fullhyve.ui.data.TaskSetDetail;
+import com.ux7.fullhyve.ui.fragments.MemberFragment;
+import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.U;
 
 import java.util.Date;
 
@@ -24,8 +31,9 @@ public class NewTaskView extends AppCompatActivity {
 
     EditText name, description;
     DatePicker deadline;
-    int team, assignee;
-
+    ListMember team, assignee;
+    ImageView newTeamImage, newAssigneeImage;
+    TextView newTeamName, newAssigneeName;
 
     TaskSetDetail taskSetDetail;
 
@@ -51,6 +59,11 @@ public class NewTaskView extends AppCompatActivity {
 
         name = findViewById(R.id.new_task_name);
         description = findViewById(R.id.new_task_description);
+        newTeamImage = findViewById(R.id.new_task_team_image);
+        newTeamName = findViewById(R.id.new_task_team_label);
+        newAssigneeImage = findViewById(R.id.new_task_assignee_image);
+        newAssigneeName = findViewById(R.id.new_task_assignee_label);
+        deadline = findViewById(R.id.new_task_deadline);
 
     }
 
@@ -80,13 +93,25 @@ public class NewTaskView extends AppCompatActivity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data)  {
 
-        if (resultCode == RESULT_OK && requestCode == 2) {
+        if (resultCode == RESULT_OK && requestCode == 3) {
 
-            team = data.getIntExtra("teamId", 0);
+            team = (ListMember) data.getSerializableExtra("team");
+            newTeamName.setText(team.name);
+
+            Picasso.with(this)
+                    .load(U.getImageUrl(team.image))
+                    .transform(new CircleTransform())
+                    .into(newTeamImage);
 
         } else if (resultCode == RESULT_OK && requestCode == 2) {
 
-            assignee = data.getIntExtra("assigneeId", 0);
+            assignee = (ListMember) data.getSerializableExtra("user");
+            newAssigneeName.setText(assignee.name);
+
+            Picasso.with(this)
+                    .load(U.getImageUrl(assignee.image))
+                    .transform(new CircleTransform())
+                    .into(newAssigneeImage);
 
         }
 
@@ -95,12 +120,14 @@ public class NewTaskView extends AppCompatActivity {
     public void selectTeam(View view) {
 
         Intent intent = new Intent(this, AddMemberView.class);
+        intent.putExtra("type", AddMemberView.AddUserType.ASSIGN_TASK_TEAM);
         startActivityForResult(intent, 3);
     }
 
     public void selectAssignee(View view) {
 
         Intent intent = new Intent(this, AddMemberView.class);
+        intent.putExtra("type", AddMemberView.AddUserType.ASSIGN_TASK_USER);
         startActivityForResult(intent, 2);
 
     }
@@ -117,13 +144,17 @@ public class NewTaskView extends AppCompatActivity {
 
         long deadlineTIme = (new Date(deadline.getYear(), deadline.getMonth(), deadline.getDayOfMonth())).getTime();
 
+        int teamId = 0;
+        if (team != null)
+            teamId = team.id;
+
         AppHandler.getInstance().projectHandler
                 .newTask(name.getText().toString(),
                         description.getText().toString(),
                         deadlineTIme,
                         AppData.getCache().getIdentity().getId(),
-                        assignee,
-                        team,
+                        assignee.id,
+                        teamId,
                         taskSetDetail.id,
                         this, runnable);
 

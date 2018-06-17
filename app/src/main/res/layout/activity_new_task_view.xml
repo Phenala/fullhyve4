@@ -84,6 +84,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="selectTeam"
                         android:background="@drawable/ripple_effect_accent"
                         android:text="Select"
                         android:textColor="@color/textdark" />
@@ -126,6 +127,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="selectAssignee"
                         android:background="@drawable/ripple_effect_accent"
                         android:text="Select"
                         android:textColor="@color/textdark" />

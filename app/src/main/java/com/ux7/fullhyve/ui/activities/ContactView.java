@@ -32,6 +32,8 @@ import java.util.List;
 
 public class ContactView extends AppCompatActivity implements MessagesRecyclerViewAdapter.OnMessageRecyclerInteractionListener {
 
+    public static ContactView hoistedActivity;
+
     ListContact contact = new ListContact();
     List<ListMessage> messages = new ArrayList<>();
 
@@ -529,5 +531,16 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
         AppHandler.getInstance().contactHandler.forwardMessage(receiverIds, messageId, this, runnable);
 
 
+    }
+
+
+    public void onPause() {
+        super.onPause();
+        hoistedActivity = null;
+    }
+
+    public void onResume() {
+        super.onResume();
+        hoistedActivity = this;
     }
 }

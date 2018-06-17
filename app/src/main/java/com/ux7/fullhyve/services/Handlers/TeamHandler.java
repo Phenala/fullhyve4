@@ -97,6 +97,35 @@ public class TeamHandler extends Handler {
 
                     listTeams.clear();
                     listTeams.addAll(Converter.portMyTeamToListTeam(teamsR.data.myTeams));
+                    listTeams.addAll(Converter.portTeamToListTeam(teamsR.data.teams));
+
+                    activity.runOnUiThread(runnable);
+                }
+            }
+        });
+    }
+
+    public void searchAddTeams(final int offset, final int limit, String name, final List<ListMember> listMembers, final Activity activity, final Runnable runnable){
+        HashMap<String, Object> args = new HashMap<>();
+        args.put("offset",offset);
+        args.put("limit", limit);
+        args.put("name",name);
+
+        JSONObject req = RequestFormat.createRequestObj("searchTeams",args);
+
+        Realtime.socket.emit("searchTeams", req, new Ack() {
+            @Override
+            public void call(Object... args) {
+                if(generalHandler(args)==200){
+                    final ResponseFormat.SearchTeamsR teamsR = gson.fromJson(args[0].toString(), ResponseFormat.SearchTeamsR.class);
+
+                    if(teamsR!=null){
+                        //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
+                        //AppData.userToken = teamsR.data.message;
+                    }
+
+                    listMembers.clear();
+                    listMembers.addAll(Converter.portTeamToListMember(teamsR.data.teams));
 
                     activity.runOnUiThread(runnable);
                 }
