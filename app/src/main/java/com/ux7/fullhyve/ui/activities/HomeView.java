@@ -41,6 +41,8 @@ import com.ux7.fullhyve.ui.util.U;
 public class HomeView extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnHomeInteractionListener {
 
+
+    OnHomeSearchListener searchTarget;
     ContactsListFragment contactsListFragment = new ContactsListFragment();
     TeamsListFragment teamsListFragment = new TeamsListFragment();
     ProjectsListFragment projectsListFragment = new ProjectsListFragment();
@@ -67,6 +69,8 @@ public class HomeView extends AppCompatActivity
         initializeFloatingActionButton();
         initializeAdders();
 
+        switchToContacts();
+
     }
 
     public void initApp() {
@@ -92,8 +96,6 @@ public class HomeView extends AppCompatActivity
 
         ImageView userPicture = (ImageView)(((NavigationView)findViewById(R.id.nav_view)).getHeaderView(0).findViewById(R.id.userPicture));
         Picasso.with(this).load(R.mipmap.user_picture_round).into(userPicture);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contactsListFragment).commit();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -131,13 +133,14 @@ public class HomeView extends AppCompatActivity
             @Override
             public boolean onQueryTextSubmit(String s) {
 
-                searchUsers();
 
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
+
+                search(s);
                 return false;
             }
         });
@@ -146,10 +149,39 @@ public class HomeView extends AppCompatActivity
         return true;
     }
 
-    public void searchUsers() {
+    public void search(String value) {
 
+        searchTarget.onSearch(value);
 
+    }
 
+    public void switchToContacts() {
+        setTitle("Chat");
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contactsListFragment).commit();
+        searchTarget = contactsListFragment;
+        fab.hide();
+    }
+
+    public void switchToNotifications() {
+        setTitle("Notifications");
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, notificationFragment).commit();
+        fab.hide();
+    }
+
+    public void switchToTeams() {
+        setTitle("Teams");
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, teamsListFragment).commit();
+        searchTarget = teamsListFragment;
+        fab.show();
+        fab.setOnClickListener(addTeam);
+    }
+
+    public void switchToProjects() {
+        setTitle("Projects");
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, projectsListFragment).commit();
+        searchTarget = projectsListFragment;
+        fab.show();
+        fab.setOnClickListener(addProject);
     }
 
     @Override
@@ -214,23 +246,13 @@ public class HomeView extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_notifications) {
-            setTitle("Notifications");
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, notificationFragment).commit();
-            fab.hide();
+            switchToNotifications();
         } else if (id == R.id.nav_chat) {
-            setTitle("Chat");
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contactsListFragment).commit();
-            fab.hide();
+            switchToContacts();
         } else if (id == R.id.nav_teams) {
-            setTitle("Teams");
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, teamsListFragment).commit();
-            fab.show();
-            fab.setOnClickListener(addTeam);
+            switchToTeams();
         } else if (id == R.id.nav_projects) {
-            setTitle("Projects");
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, projectsListFragment).commit();
-            fab.show();
-            fab.setOnClickListener(addProject);
+            switchToProjects();
         } else if (id == R.id.nav_edit_profile) {
 
             editProfile();
@@ -376,5 +398,11 @@ public class HomeView extends AppCompatActivity
 
     }
 
+
+    public interface OnHomeSearchListener {
+
+        public void onSearch(String s);
+
+    }
 
 }

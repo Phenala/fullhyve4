@@ -197,8 +197,7 @@ public class ContactHandler extends Handler {
 
                         if (messagesR != null && messagesR.data.messages != null) {
                             Log.e("Messages", "Received");
-                            Log.e("Message", messagesR.data.messages.get(0).getMessage());
-                            //cache.getContacts().getContact(friendId).addMessages(messagesR.data.messages);
+                            //AppData.getCache().getContacts().getContact(friendId).addMessages(messagesR.data.messages);
                             if (AppData.getCache().getContacts().getFriend(friendId) != null) {
                                 AppData.getCache().getContacts().getFriend(friendId).addMessages((ArrayList<Message>) messagesR.data.messages);
                             }
@@ -285,7 +284,7 @@ public class ContactHandler extends Handler {
         });
     }
 
-    public void searchUsers(final String name, final int offset, final int limit, final Activity activity, final Runnable runnable){
+    public void searchUsers(final String name, final int offset, final int limit, final List<ListContact> listContacts, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("name", name);
         args.put("offset", offset);
@@ -302,6 +301,9 @@ public class ContactHandler extends Handler {
 
                     searchUsersR.data.friends = new ArrayList<>();
                     searchUsersR.data.friends.addAll(friends);
+
+                    listContacts.clear();
+                    listContacts.addAll(Converter.portContactToListContact(friends));
 
                     activity.runOnUiThread(runnable);
                 }

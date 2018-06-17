@@ -386,7 +386,7 @@ public class MainActivity extends AppCompatActivity {
                 int limit = 10;
                 String name = arg1.getText().toString();
 
-                appHandler.contactHandler.searchUsers(name, offset, limit, this, new Runnable() {
+                appHandler.contactHandler.searchUsers(name, offset, limit, new ArrayList<ListContact>(), this, new Runnable() {
                     @Override
                     public void run() {
                         Log.e("Users","Searched");

@@ -15,7 +15,7 @@ public class ProjectSet{
     }
 
     public List<MyProject> getMyProjects(int offset, int limit){
-        return Util.sliceArray((List<MyProject>) myProjects.values(), offset, limit);
+        return Util.sliceArray(Util.castTo(new MyProject(0,"","","","",0), myProjects.values()), offset, limit);
     }
 
     public MyProject getMyProject(int projectId){

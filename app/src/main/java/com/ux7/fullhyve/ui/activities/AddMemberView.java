@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.ui.adapters.AddMemberRecyclerViewAdapter;
+import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.data.ListMember;
 
 import java.io.Serializable;
@@ -178,7 +179,7 @@ public class AddMemberView extends AppCompatActivity {
             }
         };
 
-        AppHandler.getInstance().contactHandler.searchUsers(searchTerm, 0, 500, this, runnable);
+        AppHandler.getInstance().contactHandler.searchUsers(searchTerm, 0, 500, new ArrayList<ListContact>(), this, runnable);
 
     }
 

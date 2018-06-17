@@ -49,8 +49,8 @@ public class ProjectHandler extends Handler {
                         final ResponseFormat.GetMyProjectsR myProjectsR = gson.fromJson(args[0].toString(), ResponseFormat.GetMyProjectsR.class);
 
                         if (myProjectsR != null && myProjectsR.data.myProjects != null) {
-                            //cache.contacts.addReceivedMessage(friendId, {message});
-                            //cache.teams.myTeams.addTeams(teamsR.data);
+                            //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
+                            //AppData.getCache().teams.myTeams.addTeams(teamsR.data);
                         }
 
                         listProjects.clear();
@@ -88,7 +88,7 @@ public class ProjectHandler extends Handler {
     }
 
 
-    public void searchProjects(final int offset, final int limit,String name, final Activity activity, final Runnable runnable){
+    public void searchProjects(final int offset, final int limit,String name, final List<ListProject> listProjects, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("offset",offset);
         args.put("limit", limit);
@@ -106,6 +106,10 @@ public class ProjectHandler extends Handler {
                         //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
+
+                    listProjects.clear();
+                    listProjects.addAll(Converter.portMyProjectToListProject(searchProjectsR.data.myProjects));
+                    listProjects.addAll(Converter.portProjectToListProject(searchProjectsR.data.projects));
 
                     activity.runOnUiThread(runnable);
                 }

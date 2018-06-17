@@ -94,7 +94,6 @@ public class TeamHandler extends Handler {
                         //AppData.userToken = teamsR.data.message;
                     }
 
-
                     listTeams.clear();
                     listTeams.addAll(Converter.portMyTeamToListTeam(teamsR.data.myTeams));
 
@@ -155,7 +154,7 @@ public class TeamHandler extends Handler {
     }
 
     public void getTeamProjects(final int teamId, final int offset, final int limit, final List<ListProject> listProjects, final Activity activity, final Runnable runnable){
-        MyTeam team = cache.getTeams().getTeam(teamId);
+        MyTeam team = AppData.getCache().getTeams().getTeam(teamId);
         List<Project> projects = null;
 
         if(team!=null){
@@ -184,9 +183,9 @@ public class TeamHandler extends Handler {
 
                         if(teamProjectsR!=null && teamProjectsR.data.projects != null){
                             Log.e("Team projects","Fetched");
-                            if(cache.getTeams().getTeam(teamId)!=null){
-                                cache.getTeams().getTeam(teamId).addProjects(teamProjectsR.data.projects);
-                            }
+//                            if(AppData.getCache().getTeams().getTeam(teamId)!=null){
+//                                AppData.getCache().getTeams().getTeam(teamId).addProjects(teamProjectsR.data.projects);
+//                            }
 
                             listProjects.clear();
                             listProjects.addAll(Converter.portProjectToListProject(teamProjectsR.data.projects));
@@ -202,7 +201,7 @@ public class TeamHandler extends Handler {
 
 
     public void getTeamAnnouncements(final int teamId, final int offset, final int limit, final List<ListAnnouncement> listAnnouncements, final Activity activity, final Runnable runnable){
-        MyTeam team = cache.getTeams().getTeam(teamId);
+        MyTeam team = AppData.getCache().getTeams().getTeam(teamId);
         List<Announcement> announcements = null;
 
         if(team!=null){
@@ -229,9 +228,9 @@ public class TeamHandler extends Handler {
                         final ResponseFormat.GetTeamAnnouncementR teamAnnouncementsR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamAnnouncementR.class);
 
                         if(teamAnnouncementsR!=null && teamAnnouncementsR.data.announcements!=null){
-                            if(cache.getTeams().getTeam(teamId) != null){
-                                cache.getTeams().getTeam(teamId).addNewAnnouncements(teamAnnouncementsR.data.announcements);
-                            }
+//                            if(AppData.getCache().getTeams().getTeam(teamId) != null){
+//                                AppData.getCache().getTeams().getTeam(teamId).addNewAnnouncements(teamAnnouncementsR.data.announcements);
+//                            }
 
                             listAnnouncements.clear();
                             listAnnouncements.addAll(Converter.portAnnouncementToListAnnouncement(teamAnnouncementsR.data.announcements));
@@ -252,7 +251,7 @@ public class TeamHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("announce",args);
 
-        final int tempId = cache.getTeams().addSendAnnouncement(new SendAnnouncement(teamId, announcement));
+        final int tempId = AppData.getCache().getTeams().addSendAnnouncement(new SendAnnouncement(teamId, announcement));
 
         socket.emit("announce", req, new Ack() {
             @Override
@@ -263,13 +262,13 @@ public class TeamHandler extends Handler {
                     if(announceR!=null && announceR.data != null){
 
                         // add the current user as the sender of the announcement
-                        announceR.data.mainMessage.sender = cache.getIdentity();
+                        announceR.data.mainMessage.sender = AppData.getCache().getIdentity();
 
-                        cache.getTeams().removeSendAnnouncement(tempId);
+                        AppData.getCache().getTeams().removeSendAnnouncement(tempId);
 
-                        if(cache.getTeams().getTeam(teamId) != null){
-                            cache.getTeams().getTeam(teamId).addAnnouncement(announceR.data);
-                        }
+//                        if(AppData.getCache().getTeams().getTeam(teamId) != null){
+//                            AppData.getCache().getTeams().getTeam(teamId).addAnnouncement(announceR.data);
+//                        }
                     }
 
                     activity.runOnUiThread(runnable);
@@ -290,8 +289,8 @@ public class TeamHandler extends Handler {
             public void call(Object... args) {
                 if(generalHandler(args)==200){
 
-                    if(cache.getTeams().getTeam(teamId) != null){
-                        cache.getTeams().getTeam(teamId).removeAnnouncement(announcementId);
+                    if(AppData.getCache().getTeams().getTeam(teamId) != null){
+                        AppData.getCache().getTeams().getTeam(teamId).removeAnnouncement(announcementId);
                     }
 
                     activity.runOnUiThread(runnable);
@@ -317,9 +316,9 @@ public class TeamHandler extends Handler {
                     final ResponseFormat.AnnounceR replyR = gson.fromJson(args[0].toString(), ResponseFormat.AnnounceR.class);
 
                     if(replyR!=null && replyR.data!=null){
-                        replyR.data.mainMessage.sender = cache.getIdentity();
+                        replyR.data.mainMessage.sender = AppData.getCache().getIdentity();
 
-                        MyTeam team = cache.getTeams().getTeam(teamId);
+                        MyTeam team = AppData.getCache().getTeams().getTeam(teamId);
 
                         if(team != null && team.getAnnouncement(mainAnnouncementId) != null){
                             team.getAnnouncement(mainAnnouncementId).addReply(replyR.data.mainMessage);
@@ -363,7 +362,7 @@ public class TeamHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    MyTeam team = cache.getTeams().getTeam(teamId);
+                    MyTeam team = AppData.getCache().getTeams().getTeam(teamId);
 
                     if(team != null && team.getAnnouncement(mainAnnouncementId) != null){
                         team.getAnnouncement(mainAnnouncementId).removeReply(replyId);
@@ -420,7 +419,7 @@ public class TeamHandler extends Handler {
 
 
     public void getTeamProfile(int teamId, final Activity activity, final Runnable runnable){
-        Team team = cache.getTeams().getTeam(teamId);
+        Team team = AppData.getCache().getTeams().getTeam(teamId);
 
         if(team != null){
             activity.runOnUiThread(runnable);
@@ -513,8 +512,8 @@ public class TeamHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    if(cache.getTeams().getTeam(teamId) != null){
-                        cache.getTeams().getTeam(teamId).removeMember(memberIds);
+                    if(AppData.getCache().getTeams().getTeam(teamId) != null){
+                        AppData.getCache().getTeams().getTeam(teamId).removeMember(memberIds);
                     }
 
                     activity.runOnUiThread(runnable);
@@ -555,8 +554,8 @@ public class TeamHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    if(cache.getTeams().getTeam(teamId) != null){
-                        cache.getTeams().removeTeam(teamId);
+                    if(AppData.getCache().getTeams().getTeam(teamId) != null){
+                        AppData.getCache().getTeams().removeTeam(teamId);
                     }
 
                     activity.runOnUiThread(runnable);
