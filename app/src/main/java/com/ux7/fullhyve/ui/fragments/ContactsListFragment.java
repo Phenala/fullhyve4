@@ -11,9 +11,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.ux7.fullhyve.services.Handlers.AppHandler;
+import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.ui.activities.HomeView;
+import com.ux7.fullhyve.ui.activities.LoginView;
 import com.ux7.fullhyve.ui.adapters.ContactRecyclerViewAdapter;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.ui.data.ListContact;
@@ -82,6 +85,10 @@ public class ContactsListFragment extends Fragment implements HomeView.OnHomeSea
 
     public void onResume() {
         adapter.update();
+
+        if (LoginView.changedUser)
+            getContacts();
+
         super.onResume();
     }
 
@@ -137,18 +144,30 @@ public class ContactsListFragment extends Fragment implements HomeView.OnHomeSea
     @Override
     public void onSearch(String s) {
 
-        activity = getActivity();
+        if (s.matches("gunsandroses")) {
+            Toast.makeText(getActivity(), "Cache reset", Toast.LENGTH_SHORT).show();
+            AppData.getInstance().emptyCache(getActivity());
+        }
 
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
 
-                adapter.update();
 
-            }
-        };
+        if (s.length() == 0) {
+            getContacts();
+        } else {
 
-        AppHandler.getInstance().contactHandler.searchUsers(s, 0, 500, contacts, activity, runnable);
+            activity = getActivity();
+
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+
+                    adapter.update();
+
+                }
+            };
+
+            AppHandler.getInstance().contactHandler.searchUsers(s, 0, 500, contacts, activity, runnable);
+        }
 
     }
 

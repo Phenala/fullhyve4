@@ -15,5 +15,6 @@ public class ListContact implements Serializable {
     public String lastMessage = "Gangsta to the core.";
     public boolean lastMessageSent = false;
     public int newMessages = 2;
+    public UserDetail userDetail;
 
 }

@@ -583,5 +583,36 @@ public class Converter {
     }
 
 
+    public static List<ListContact> portUserToListContact (List<User> users) {
+
+        List<ListContact> listContacts = new ArrayList<>();
+
+        for (User user : users) {
+
+            listContacts.add(portUserToContact(user));
+
+        }
+
+        return listContacts;
+
+    }
+
+
+    public static ListContact portUserToContact (User user) {
+
+        ListContact listContact = new ListContact();
+
+        listContact.id = user.getId();
+        listContact.name = user.getName();
+        listContact.image = user.getImage();
+        listContact.lastMessage = "";
+        listContact.lastMessageSent = false;
+        listContact.newMessages = 0;
+        listContact.userDetail = portUserToUserDetail(user);
+
+        return listContact;
+
+    }
+
 
 }

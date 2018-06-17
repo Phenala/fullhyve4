@@ -1,5 +1,6 @@
 package com.ux7.fullhyve.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,6 +42,8 @@ import com.ux7.fullhyve.ui.util.U;
 public class HomeView extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnHomeInteractionListener {
 
+    public static Boolean updateUserNavigation = false;
+
 
     OnHomeSearchListener searchTarget;
     ContactsListFragment contactsListFragment = new ContactsListFragment();
@@ -75,9 +78,8 @@ public class HomeView extends AppCompatActivity
 
     public void initApp() {
 
-        Realtime.getSocket();
         AppData.getInstance().readCache(this);
-        AppHandler.getInstance().updateCache();
+        Realtime.getSocket();
 
     }
 
@@ -92,10 +94,6 @@ public class HomeView extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-
-        ImageView userPicture = (ImageView)(((NavigationView)findViewById(R.id.nav_view)).getHeaderView(0).findViewById(R.id.userPicture));
-        Picasso.with(this).load(R.mipmap.user_picture_round).into(userPicture);
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -363,8 +361,26 @@ public class HomeView extends AppCompatActivity
 
         Log.e("Cache change", "cache read on resume");
 
-        if (LoginView.changedUser)
+        if (LoginView.changedUser) {
+
             initApp();
+            rebuildView();
+
+        }
+
+        if (updateUserNavigation) {
+
+            updateUserImage();
+            updateUserNavigation = false;
+
+        }
+
+    }
+
+    public void rebuildView() {
+
+        Log.e("Rebuild", "Rebuilding home view");
+        updateUserImage();
 
     }
 

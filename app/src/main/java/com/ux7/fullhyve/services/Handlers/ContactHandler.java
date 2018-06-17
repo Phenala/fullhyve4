@@ -9,6 +9,7 @@ import com.ux7.fullhyve.services.Models.Message;
 import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.services.Utility.Converter;
 import com.ux7.fullhyve.services.Models.SendMessage;
+import com.ux7.fullhyve.services.Utility.Realtime;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
 import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.ux7.fullhyve.services.Utility.ResponseListener;
@@ -36,7 +37,7 @@ public class ContactHandler extends Handler {
 
         final int tempId = AppData.getCache().getContacts().addSendMessage(new SendMessage(friendId,message));
 
-        socket.emit("sendMessage", req, new Ack() {
+        Realtime.socket.emit("sendMessage", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -64,7 +65,7 @@ public class ContactHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("editMessage",args);
 
-        socket.emit("editMessage", req, new Ack() {
+        Realtime.socket.emit("editMessage", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -85,7 +86,7 @@ public class ContactHandler extends Handler {
 
         JsonElement req = RequestFormat.createRequestObj(args,"forwardMessage");
 
-        socket.emit("forwardMessage", req, new Ack() {
+        Realtime.socket.emit("forwardMessage", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -101,7 +102,7 @@ public class ContactHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("deleteMessage",args);
 
-        socket.emit("deleteMessage", req, new Ack() {
+        Realtime.socket.emit("deleteMessage", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -117,7 +118,7 @@ public class ContactHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("updateMessageSeen",args);
 
-        socket.emit("updateMessageSeen", req, new Ack() {
+        Realtime.socket.emit("updateMessageSeen", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -133,7 +134,7 @@ public class ContactHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("getFriendLastSeenTime",args);
 
-        socket.emit("getFriendLastSeenTime", req, new Ack() {
+        Realtime.socket.emit("getFriendLastSeenTime", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -179,7 +180,7 @@ public class ContactHandler extends Handler {
 
             JSONObject req = RequestFormat.createRequestObj("getMessages", args);
 
-            socket.emit("getMessages", req, new Ack() {
+            Realtime.socket.emit("getMessages", req, new Ack() {
                 @Override
                 public void call(Object... args) {
 
@@ -230,7 +231,7 @@ public class ContactHandler extends Handler {
 
             JSONObject req = RequestFormat.createRequestObj("getFriends",args);
 
-            socket.emit("getFriends", req, new Ack() {
+            Realtime.socket.emit("getFriends", req, new Ack() {
                 @Override
                 public void call(Object... args) {
                     if(generalHandler(args)==200){
@@ -258,7 +259,7 @@ public class ContactHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("getFriends",args);
 
-        socket.emit("getFriends", req, new Ack() {
+        Realtime.socket.emit("getFriends", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -292,18 +293,19 @@ public class ContactHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("searchUsers",args);
 
-        socket.emit("searchUsers", req, new Ack() {
+        Realtime.socket.emit("searchUsers", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
+                    Log.e("Respon searchusers", args[0].toString());
                     final ResponseFormat.SearchUsersR searchUsersR = gson.fromJson(args[0].toString(), ResponseFormat.SearchUsersR.class);
                     List<Contact> friends = AppData.getCache().getContacts().searchContacts(name, offset, limit);
 
-                    searchUsersR.data.friends = new ArrayList<>();
-                    searchUsersR.data.friends.addAll(friends);
+                    //searchUsersR.data.friends = new ArrayList<>();
+                    //searchUsersR.data.friends.addAll(friends);
 
                     listContacts.clear();
-                    listContacts.addAll(Converter.portContactToListContact(friends));
+                    listContacts.addAll(Converter.portUserToListContact(searchUsersR.data.users));
 
                     activity.runOnUiThread(runnable);
                 }

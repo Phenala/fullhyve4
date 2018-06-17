@@ -14,7 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
@@ -36,6 +40,7 @@ public class TaskSetView extends AppCompatActivity {
     LinearLayout taskDetailsLayout;
     List<ListTask> tasks = new ArrayList<>();
 
+    Switch switchView;
     LinearLayoutManager layoutManager;
     TaskRecyclerViewAdapter adapter;
 
@@ -108,6 +113,27 @@ public class TaskSetView extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_task_set, menu);
+
+        switchView = (Switch) ((MenuItem) menu.findItem(R.id.app_bar_switch)).getActionView().findViewById(R.id.switchy);
+
+        switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+                adapter.setFilterTasks(b);
+                Toast.makeText(getBaseContext(), "Check", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+        return true;
+    }
+
     public void buildActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Task Set " + taskSetDetail.number);
@@ -129,13 +155,6 @@ public class TaskSetView extends AppCompatActivity {
 
         AppHandler.getInstance().projectHandler.getTasks(project.id, taskSetDetail.id, 0, 500, tasks, this, runnable);
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_task_set, menu);
-        return true;
     }
 
     @Override

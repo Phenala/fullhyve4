@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.ui.activities.TaskView;
 import com.ux7.fullhyve.ui.data.ListTask;
 import com.ux7.fullhyve.ui.data.TaskDetail;
@@ -19,6 +20,7 @@ import com.ux7.fullhyve.ui.util.CircleTransform;
 import com.ux7.fullhyve.ui.util.Images;
 import com.ux7.fullhyve.ui.util.U;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +31,7 @@ import java.util.List;
 public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerViewAdapter.ViewHolder> {
 
     private final List<ListTask> mTasks;
+    public boolean myTasks = false;
 
     public TaskRecyclerViewAdapter(List<ListTask> items) {
         mTasks = items;
@@ -85,6 +88,28 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
 
     }
 
+    public List<ListTask> getFilteredList(List<ListTask> tasks) {
+
+        List<ListTask> listTasks = new ArrayList<>();
+
+        for (ListTask task : tasks) {
+
+            if (myTasks && task.assigneeId == AppData.getCache().getIdentity().getId()) {
+                listTasks.add(task);
+            }
+
+        }
+
+        return listTasks;
+
+    }
+
+    public void setFilterTasks(boolean value) {
+
+        myTasks = value;
+        update();
+
+    }
 
     @Override
     public int getItemCount() {

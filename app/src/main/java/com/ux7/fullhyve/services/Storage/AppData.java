@@ -29,12 +29,15 @@ import java.io.Serializable;
 
 public class AppData extends Application {
     private static String CACHE_FILE_NAME = "fullhyveCache.json";
-    private static Gson gson;
+    public static Gson gson;
 
-    private static AppData sInstance;
-    private static AppData.Cache cache; // Generic your-application handler
+    public static AppData sInstance;
+    public static AppData.Cache cache; // Generic your-application handler
 
     public static AppData getInstance() {
+        if (sInstance == null) {
+            sInstance = new AppData();
+        }
         return sInstance;
     }
 
@@ -63,8 +66,7 @@ public class AppData extends Application {
 
     public void initializeInstance() {
         // do all your initialization here
-        cache = new Cache(
-                /*this.getSharedPreferences( "PREFS_PRIVATE", Context.MODE_PRIVATE )*/ );
+        cache = new Cache();
     }
 
 
@@ -81,13 +83,18 @@ public class AppData extends Application {
             outputStreamWriter.write(cacheStr);
             outputStreamWriter.close();
         }
-        catch (IOException e) {
+        catch (Exception e) {
             Log.e("Exception", "Saving cache failed");
         }
     }
 
+    public void logCache() {
+        Log.e("Log Cache", gson.toJson(cache));
+    }
+
     public void emptyCache(Context context){
         String cacheStr = gson.toJson(new Cache());
+        cache = new Cache();
         Log.e("Cache",cacheStr);
 
         try {
@@ -95,7 +102,7 @@ public class AppData extends Application {
             outputStreamWriter.write(cacheStr);
             outputStreamWriter.close();
         }
-        catch (IOException e) {
+        catch (Exception e) {
             Log.e("Exception", "Saving cache failed");
         }
     }
@@ -122,12 +129,12 @@ public class AppData extends Application {
         }
         catch (FileNotFoundException e) {
             return;
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e("Cache", "Unable to read file");
             return;
         }
         Log.e("Read cache",cacheStr);
-        AppData.cache = gson.fromJson(cacheStr, Cache.class);
+        cache = gson.fromJson(cacheStr, Cache.class);
     }
 
 

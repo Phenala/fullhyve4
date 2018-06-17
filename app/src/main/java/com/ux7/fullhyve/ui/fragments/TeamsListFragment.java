@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.ui.activities.HomeView;
+import com.ux7.fullhyve.ui.activities.LoginView;
 import com.ux7.fullhyve.ui.adapters.TeamsRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListTeam;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
@@ -93,6 +94,14 @@ public class TeamsListFragment extends Fragment implements HomeView.OnHomeSearch
         }
     }
 
+    public void onResume() {
+
+        super.onResume();
+        if (LoginView.changedUser)
+            getTeams();
+
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -119,18 +128,25 @@ public class TeamsListFragment extends Fragment implements HomeView.OnHomeSearch
     @Override
     public void onSearch(String s) {
 
-        Activity activity = getActivity();
+        if (s.length() == 0) {
 
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
+            getTeams();
 
-                adapter.update();
+        } else {
 
-            }
-        };
+            Activity activity = getActivity();
 
-        AppHandler.getInstance().teamHandler.searchTeams(0, 500, s, teams,activity, runnable);
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+
+                    adapter.update();
+
+                }
+            };
+
+            AppHandler.getInstance().teamHandler.searchTeams(0, 500, s, teams, activity, runnable);
+        }
 
     }
 }

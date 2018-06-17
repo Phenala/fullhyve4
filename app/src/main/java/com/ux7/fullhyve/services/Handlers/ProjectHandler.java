@@ -8,6 +8,7 @@ import com.ux7.fullhyve.services.Models.Project;
 import com.ux7.fullhyve.services.Models.Task;
 import com.ux7.fullhyve.services.Storage.ProjectCacheManager;
 import com.ux7.fullhyve.services.Utility.Converter;
+import com.ux7.fullhyve.services.Utility.Realtime;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
 import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.github.nkzawa.socketio.client.Ack;
@@ -42,7 +43,7 @@ public class ProjectHandler extends Handler {
 
             JSONObject req = RequestFormat.createRequestObj("getMyProjects", args);
 
-            socket.emit("getMyProjects", req, new Ack() {
+            Realtime.socket.emit("getMyProjects", req, new Ack() {
                 @Override
                 public void call(Object... args) {
                     if (generalHandler(args) == 200) {
@@ -76,7 +77,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("editProjectDetails",args);
 
-        socket.emit("editProjectDetails", req, new Ack() {
+        Realtime.socket.emit("editProjectDetails", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -96,7 +97,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("searchProjects",args);
 
-        socket.emit("searchProjects", req, new Ack() {
+        Realtime.socket.emit("searchProjects", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -127,7 +128,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("getContributors",args);
 
-        socket.emit("getContributors", req, new Ack() {
+        Realtime.socket.emit("getContributors", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -157,7 +158,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("getTasksets",args);
 
-        socket.emit("getTasksets", req, new Ack() {
+        Realtime.socket.emit("getTasksets", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -190,7 +191,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("getTasks",args);
 
-        socket.emit("getTasks", req, new Ack() {
+        Realtime.socket.emit("getTasks", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -224,7 +225,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("newProject",args);
 
-        socket.emit("newProject", req, new Ack() {
+        Realtime.socket.emit("newProject", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -251,7 +252,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("addContributors",args);
 
-        socket.emit("addContributors", req, new Ack() {
+        Realtime.socket.emit("addContributors", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -272,7 +273,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("removeContributors",args);
 
-        socket.emit("removeContributors", req, new Ack() {
+        Realtime.socket.emit("removeContributors", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -293,7 +294,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("replyIndividualContributorJoinRequest",args);
 
-        socket.emit("replyIndividualContributorJoinRequest", req, new Ack() {
+        Realtime.socket.emit("replyIndividualContributorJoinRequest", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -311,7 +312,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("replyTeamContributorJoinRequest",args);
 
-        socket.emit("replyTeamContributorJoinRequest", req, new Ack() {
+        Realtime.socket.emit("replyTeamContributorJoinRequest", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -331,7 +332,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("getMyProjectDetails",args);
 
-        socket.emit("getMyProjectDetails", req, new Ack() {
+        Realtime.socket.emit("getMyProjectDetails", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -348,7 +349,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("deleteProject",args);
 
-        socket.emit("deleteProject", req, new Ack() {
+        Realtime.socket.emit("deleteProject", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -366,7 +367,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("newTaskset", args);
 
-        socket.emit("newTaskset", req, new Ack() {
+        Realtime.socket.emit("newTaskset", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -387,7 +388,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("deleteTaskset",args);
 
-        socket.emit("deleteTaskset", req, new Ack() {
+        Realtime.socket.emit("deleteTaskset", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -415,7 +416,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("newTask",args);
 
-        socket.emit("newTask", req, new Ack() {
+        Realtime.socket.emit("newTask", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -435,7 +436,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("startTask",args);
 
-        socket.emit("startTask", req, new Ack() {
+        Realtime.socket.emit("startTask", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -456,7 +457,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("completeTask",args);
 
-        socket.emit("completeTask", req, new Ack() {
+        Realtime.socket.emit("completeTask", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -476,7 +477,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("changeTaskStatus",args);
 
-        socket.emit("changeTaskStatus", req, new Ack() {
+        Realtime.socket.emit("changeTaskStatus", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -500,7 +501,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("deleteTask",args);
 
-        socket.emit("deleteTask", req, new Ack() {
+        Realtime.socket.emit("deleteTask", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){

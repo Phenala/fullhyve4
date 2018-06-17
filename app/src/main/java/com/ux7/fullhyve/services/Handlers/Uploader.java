@@ -9,6 +9,7 @@ import com.koushikdutta.ion.Ion;
 
 
 import com.ux7.fullhyve.services.Models.Enclosure;
+import com.ux7.fullhyve.services.Utility.Realtime;
 
 
 import java.io.File;
@@ -18,7 +19,7 @@ public class Uploader {
   public static void uploadImage(Context context, String imagePath, final Enclosure<String> path, final Activity activity, final Runnable runnable){
 
       Ion.with(context)
-         .load("POST","http://192.168.43.186:8000/file/upload")
+         .load("POST", Realtime.URL + "file/upload")
          .setMultipartFile("image","image/jpg",new File(imagePath))
          .asJsonObject().setCallback(new FutureCallback<JsonObject>() {
                 @Override

@@ -114,6 +114,17 @@ public class ResponseFormat{
     public class GetTeamsR{
         public GetTeamsResponse data;
     }
+
+
+    public class SearchTeamsResponse{
+        public boolean done;
+        public List<MyTeam> myTeams;
+        public List<Team> teams;
+    }
+    public class SearchTeamsR{
+        public SearchTeamsResponse data;
+    }
+
     public class TeamMember{
         public boolean done;
         public List<User> members;

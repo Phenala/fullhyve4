@@ -77,6 +77,7 @@ public class EditProfileView extends AppCompatActivity {
             @Override
             public void run() {
 
+                HomeView.updateUserNavigation = true;
                 finish();
 
             }
@@ -118,6 +119,7 @@ public class EditProfileView extends AppCompatActivity {
         if (skillString.length() > 2) {
             skillString = skillString.substring(2);
         }
+        imageUrl = identity.getImage();
         Picasso.with(this)
                 .load(U.getImageUrl(identity.getImage()))
                 .transform(new CircleTransform())

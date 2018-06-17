@@ -4,11 +4,13 @@ package com.ux7.fullhyve.services.Handlers;
 import android.app.Activity;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.ux7.fullhyve.services.Models.Enclosure;
 import com.ux7.fullhyve.services.Models.Identity;
 import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.services.Utility.Converter;
+import com.ux7.fullhyve.services.Utility.Realtime;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
 import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.ux7.fullhyve.services.Utility.ResponseListener;
@@ -25,7 +27,7 @@ public class LoginHandler extends Handler {
     public void userConnected(final Activity activity, final Runnable runnable){
         JsonElement req = RequestFormat.createRequestObj(null, "userConnected");
 
-        socket.emit("userConnected", req, new Ack() {
+        Realtime.socket.emit("userConnected", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -40,11 +42,12 @@ public class LoginHandler extends Handler {
         args.put("userName",userName);
         args.put("password",password);
 
-        JSONObject req = RequestFormat.createRequestObj("signin",args);
+        JSONObject req = RequestFormat.createRequestNoObj("signin",args);
 
+        Log.e("Username", userName);
         Log.e("Sent Request", "true");
 
-        socket.emit("signin", req, new Ack() {
+        Realtime.socket.emit("signin", req, new Ack() {
             @Override
             public void call(Object... args) {
                 Log.e("Responded", "true");
@@ -52,11 +55,16 @@ public class LoginHandler extends Handler {
                     Log.e("Responded", "true");
                     final ResponseFormat.SignInR statusR = gson.fromJson(args[0].toString(), ResponseFormat.SignInR.class);
 
-                    AppData.resetCache();
+                    AppData.cache = null;
+                    AppData.gson = new Gson();
+                    AppData.sInstance = null;
+
+                    Realtime.socket.disconnect();
+                    Realtime.realtime = new Realtime();
+
+                    AppData.getInstance().emptyCache(activity);
                     AppData.getCache().setToken(statusR.data.token);
                     AppData.getInstance().saveCache(activity);
-
-                    AppHandler.getInstance().updateCache();
 
                     runnable.loginSuccess = true;
 
@@ -76,10 +84,11 @@ public class LoginHandler extends Handler {
         HashMap<String, Object> args = new HashMap<>();
         args.put("userName",userName);
         args.put("password",password);
+        Log.e("Login Username",userName);
 
         JSONObject req = RequestFormat.createRequestObj("signin",args);
 
-        socket.emit("signin", req, new Ack() {
+        Realtime.socket.emit("signin", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -106,7 +115,7 @@ public class LoginHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("signup",args);
 
-        socket.emit("signup", req, new Ack() {
+        Realtime.socket.emit("signup", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -120,18 +129,16 @@ public class LoginHandler extends Handler {
     public void signout(final Activity activity, final Runnable runnable){
         JsonElement req = RequestFormat.createRequestObj(null, "signout");
 
-        socket.emit("signout", req, new Ack() {
+        Realtime.socket.emit("signout", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     // remove the cache
                     AppData.resetCache();
+                    AppData.getInstance().saveCache(activity);
 
                     // replace the AppData.getCache().instance of the handler with the new one
 //                    Handler.AppData.getCache().= AppData.getCache();
-
-                    AppData.getInstance().saveCache(activity);
-                    AppData.getInstance().readCache(activity);
 
                     LoginView.changedUser = true;
 
@@ -153,7 +160,7 @@ public class LoginHandler extends Handler {
 //        } else{
             JsonElement req = RequestFormat.createRequestObj(null, "getProfile");
 
-            socket.emit("getProfile", req, new Ack() {
+            Realtime.socket.emit("getProfile", req, new Ack() {
                 @Override
                 public void call(Object... args) {
                     if(generalHandler(args)==200){
@@ -177,7 +184,7 @@ public class LoginHandler extends Handler {
         } else{
             JSONObject req = RequestFormat.createRequestObj("getUserProfile", args);
 
-            socket.emit("getUserProfile", req, new Ack() {
+            Realtime.socket.emit("getUserProfile", req, new Ack() {
                 @Override
                 public void call(Object... args) {
                     if(generalHandler(args)==200){
@@ -206,7 +213,7 @@ public class LoginHandler extends Handler {
 
         JsonElement req = RequestFormat.createRequestObj(args, "editProfile");
 
-        socket.emit("editProfile", req, new Ack() {
+        Realtime.socket.emit("editProfile", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -225,7 +232,7 @@ public class LoginHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("addFriend",args);
 
-        socket.emit("addFriend", req, new Ack() {
+        Realtime.socket.emit("addFriend", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -242,7 +249,7 @@ public class LoginHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("replyFriendRequest",args);
 
-        socket.emit("replyFriendRequest", req, new Ack() {
+        Realtime.socket.emit("replyFriendRequest", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -258,7 +265,7 @@ public class LoginHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("unfriend",args);
 
-        socket.emit("unfriend", req, new Ack() {
+        Realtime.socket.emit("unfriend", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -277,7 +284,7 @@ public class LoginHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("getNotifications",args);
 
-        socket.emit("getNotifications", req, new Ack() {
+        Realtime.socket.emit("getNotifications", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){

@@ -38,6 +38,28 @@ public class RequestFormat {
         return req;
     }
 
+    public static JSONObject createRequestNoObj(String action, HashMap<String, Object> args){
+        JSONObject req = new JSONObject();
+        JSONObject reqData = new JSONObject();
+        try{
+            req.put("action", action);
+
+            Log.e("Token in request", AppData.getCache().getToken()==null?"No token":AppData.getCache().getToken());
+            if(args != null){
+                for(String key: args.keySet()){
+                    reqData.put(key,args.get(key));
+                }
+            }
+
+            req.put("reqData", reqData);
+        } catch (Exception e){
+            Log.e("JSONObject",e.getMessage());
+            return null;
+        }
+
+        return req;
+    }
+
 
     public static JsonElement createRequestObj(Object arg, String action){
         Gson gson = new GsonBuilder().create();

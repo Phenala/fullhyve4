@@ -13,6 +13,7 @@ import com.ux7.fullhyve.services.Models.SendAnnouncement;
 import com.ux7.fullhyve.services.Models.Team;
 import com.ux7.fullhyve.services.Utility.Converter;
 import com.ux7.fullhyve.services.Models.User;
+import com.ux7.fullhyve.services.Utility.Realtime;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
 import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.ux7.fullhyve.services.Utility.ResponseListener;
@@ -50,7 +51,7 @@ public class TeamHandler extends Handler {
 
             JSONObject req = RequestFormat.createRequestObj("getMyTeams", args);
 
-            socket.emit("getMyTeams", req, new Ack() {
+            Realtime.socket.emit("getMyTeams", req, new Ack() {
                 @Override
                 public void call(Object... args) {
                     if (generalHandler(args) == 200) {
@@ -83,11 +84,11 @@ public class TeamHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("searchTeams",args);
 
-        socket.emit("searchTeams", req, new Ack() {
+        Realtime.socket.emit("searchTeams", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    final ResponseFormat.GetTeamsR teamsR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamsR.class);
+                    final ResponseFormat.SearchTeamsR teamsR = gson.fromJson(args[0].toString(), ResponseFormat.SearchTeamsR.class);
 
                     if(teamsR!=null){
                         //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
@@ -125,7 +126,7 @@ public class TeamHandler extends Handler {
 
             JSONObject req = RequestFormat.createRequestObj("getTeamMembers",args);
 
-            socket.emit("getTeamMembers", req, new Ack() {
+            Realtime.socket.emit("getTeamMembers", req, new Ack() {
                 @Override
                 public void call(Object... args) {
                     if(generalHandler(args)==200) {
@@ -174,7 +175,7 @@ public class TeamHandler extends Handler {
 
             JSONObject req = RequestFormat.createRequestObj("getTeamProjects",args);
 
-            socket.emit("getTeamProjects", req, new Ack() {
+            Realtime.socket.emit("getTeamProjects", req, new Ack() {
                 @Override
                 public void call(Object... args) {
                     if(generalHandler(args)==200){
@@ -221,7 +222,7 @@ public class TeamHandler extends Handler {
 
             JSONObject req = RequestFormat.createRequestObj("getTeamAnnouncements",args);
 
-            socket.emit("getTeamAnnouncements", req, new Ack() {
+            Realtime.socket.emit("getTeamAnnouncements", req, new Ack() {
                 @Override
                 public void call(Object... args) {
                     if(generalHandler(args)==200){
@@ -253,7 +254,7 @@ public class TeamHandler extends Handler {
 
         final int tempId = AppData.getCache().getTeams().addSendAnnouncement(new SendAnnouncement(teamId, announcement));
 
-        socket.emit("announce", req, new Ack() {
+        Realtime.socket.emit("announce", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -284,14 +285,14 @@ public class TeamHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("deleteAnnouncement",args);
 
-        socket.emit("deleteAnnouncement", req, new Ack() {
+        Realtime.socket.emit("deleteAnnouncement", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
 
-                    if(AppData.getCache().getTeams().getTeam(teamId) != null){
-                        AppData.getCache().getTeams().getTeam(teamId).removeAnnouncement(announcementId);
-                    }
+//                    if(AppData.getCache().getTeams().getTeam(teamId) != null){
+//                        AppData.getCache().getTeams().getTeam(teamId).removeAnnouncement(announcementId);
+//                    }
 
                     activity.runOnUiThread(runnable);
                 }
@@ -309,7 +310,7 @@ public class TeamHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("replyAnnouncement",args);
 
-        socket.emit("replyAnnouncement", req, new Ack() {
+        Realtime.socket.emit("replyAnnouncement", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -342,7 +343,7 @@ public class TeamHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("editAnnouncementReply",args);
 
-        socket.emit("editAnnouncementReply", req, new Ack() {
+        Realtime.socket.emit("editAnnouncementReply", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -358,15 +359,15 @@ public class TeamHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("deleteReply",args);
 
-        socket.emit("deleteReply", req, new Ack() {
+        Realtime.socket.emit("deleteReply", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     MyTeam team = AppData.getCache().getTeams().getTeam(teamId);
 
-                    if(team != null && team.getAnnouncement(mainAnnouncementId) != null){
-                        team.getAnnouncement(mainAnnouncementId).removeReply(replyId);
-                    }
+//                    if(team != null && team.getAnnouncement(mainAnnouncementId) != null){
+//                        team.getAnnouncement(mainAnnouncementId).removeReply(replyId);
+//                    }
 
                     activity.runOnUiThread(runnable);
                 }
@@ -384,7 +385,7 @@ public class TeamHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("updateAnnouncementSeen",args);
 
-        socket.emit("updateAnnouncementSeen", req, new Ack() {
+        Realtime.socket.emit("updateAnnouncementSeen", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -405,7 +406,7 @@ public class TeamHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("newTeam",args);
 
-        socket.emit("newTeam", req, new Ack() {
+        Realtime.socket.emit("newTeam", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -429,7 +430,7 @@ public class TeamHandler extends Handler {
 
             JSONObject req = RequestFormat.createRequestObj("getMyTeamProfile",args);
 
-            socket.emit("getMyTeamProfile", req, new Ack() {
+            Realtime.socket.emit("getMyTeamProfile", req, new Ack() {
                 @Override
                 public void call(Object... args) {
                     if(generalHandler(args)==200){
@@ -458,7 +459,7 @@ public class TeamHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("editTeamProfile",args);
 
-        socket.emit("editTeamProfile", req, new Ack() {
+        Realtime.socket.emit("editTeamProfile", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -484,7 +485,7 @@ public class TeamHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("addMembers",args);
 
-        socket.emit("addMembers", req, new Ack() {
+        Realtime.socket.emit("addMembers", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -508,7 +509,7 @@ public class TeamHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("addMembers",args);
 
-        socket.emit("removeMembers", req, new Ack() {
+        Realtime.socket.emit("removeMembers", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -531,7 +532,7 @@ public class TeamHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("replyTeamJoinRequest",args);
 
-        socket.emit("replyTeamJoinRequest", req, new Ack() {
+        Realtime.socket.emit("replyTeamJoinRequest", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -550,7 +551,7 @@ public class TeamHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("deleteTeam",args);
 
-        socket.emit("deleteTeam", req, new Ack() {
+        Realtime.socket.emit("deleteTeam", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
