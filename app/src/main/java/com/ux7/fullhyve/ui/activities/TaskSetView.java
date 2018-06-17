@@ -38,7 +38,7 @@ public class TaskSetView extends AppCompatActivity {
     ListProject project;
     TaskSetDetail taskSetDetail;
     LinearLayout taskDetailsLayout;
-    List<ListTask> tasks;
+    List<ListTask> tasks = new ArrayList<>();
 
     Switch switchView;
     LinearLayoutManager layoutManager;
@@ -78,6 +78,7 @@ public class TaskSetView extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getBaseContext(), NewTaskView.class);
+                intent.putExtra("taskSetDetail", taskSetDetail);
                 startActivity(intent);
             }
         });

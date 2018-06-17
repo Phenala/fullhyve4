@@ -91,8 +91,13 @@ public class Converter {
         nContact.image = contact.getImage();
         nContact.name = contact.getFirstName() + " " + contact.getLastName();
         nContact.newMessages = contact.getUnseenMessages();
-        nContact.lastMessage = contact.lastMessage.getMessage();
-        nContact.lastMessageSent = contact.lastMessage.isSent();
+        if (contact.lastMessage != null) {
+            nContact.lastMessage = contact.lastMessage.getMessage();
+            nContact.lastMessageSent = contact.lastMessage.isSent();
+        } else {
+            nContact.lastMessageSent = false;
+            nContact.lastMessage = "";
+        }
 
         return nContact;
 
@@ -146,6 +151,17 @@ public class Converter {
         nProject.name = project.name;
         nProject.image = project.image;
         nProject.contributor = false;
+
+        ProjectDetail projectDetail = new ProjectDetail();
+
+        projectDetail.id = project.id;
+        projectDetail.name = project.name;
+        projectDetail.contributors = project.contributorCount;
+        projectDetail.description = project.description;
+        projectDetail.focus = project.field;
+        projectDetail.image = project.image;
+
+        nProject.detail = projectDetail;
 
         return nProject;
 
@@ -222,6 +238,17 @@ public class Converter {
         nTeam.name = team.name;
         nTeam.image = team.image;
         nTeam.member = false;
+
+        TeamDetail teamDetail = new TeamDetail();
+
+        teamDetail.id = team.id;
+        teamDetail.name = team.name;
+        teamDetail.image = team.image;
+        teamDetail.focus = team.focus;
+        teamDetail.description = team.description;
+        teamDetail.members = team.memberCount;
+
+        nTeam.detail = teamDetail;
 
         return nTeam;
 
@@ -402,6 +429,7 @@ public class Converter {
 
         TaskStatus[] statuses = new TaskStatus[] {TaskStatus.WAITING, TaskStatus.INPROGRESS, TaskStatus.PENDINGEVALUATION, TaskStatus.APPROVED, TaskStatus.PENDINGREVISION};
 
+        listTask.detail = portTaskToTaskDetail(task);
         listTask.status = statuses[task.status];
 
         return listTask;
@@ -430,9 +458,20 @@ public class Converter {
         taskDetail.instructions = task.description;
         taskDetail.deadline = task.deadline;
 
-        taskDetail.teamId = task.proxyTeam.id;
-        taskDetail.teamImage = task.proxyTeam.image;
-        taskDetail.teamName = task.proxyTeam.name;
+
+            taskDetail.assigneeId = task.assignee.getId();
+            taskDetail.assigneeImage = task.assignee.getImage();
+            taskDetail.assigneeName = task.assignee.getName();
+
+
+
+        if (task.proxyTeam != null) {
+
+            taskDetail.teamId = task.proxyTeam.id;
+            taskDetail.teamImage = task.proxyTeam.image;
+            taskDetail.teamName = task.proxyTeam.name;
+
+        }
 
         return taskDetail;
 
@@ -470,12 +509,56 @@ public class Converter {
         listMember.id = user.getId();
         listMember.image = user.getImage();
         listMember.leader = false;
-        listMember.name = user.getFirstName() + " " + user.getLastName();
+        listMember.name = user.getName();
+        listMember.team = false;
+        listMember.userDetail = portUserToUserDetail(user);
 
         return listMember;
 
     }
 
+
+    public static ListMember portTeamToListMember (Team team) {
+
+        ListMember listMember = new ListMember();
+
+        listMember.id = team.id;
+        listMember.image = team.image;
+        listMember.leader = false;
+        listMember.name = team.name;
+        listMember.team = true;
+
+        TeamDetail teamDetail = new TeamDetail();
+
+        teamDetail.id = team.id;
+        teamDetail.name = team.name;
+        teamDetail.image = team.image;
+        teamDetail.focus = team.focus;
+        teamDetail.description = team.description;
+        teamDetail.members = team.memberCount;
+        teamDetail.leaderId = -1;
+
+        listMember.teamDetail = teamDetail;
+
+        return listMember;
+
+    }
+
+    public static  List<ListMember> portTeamToListMember (List<Team> teams) {
+
+        List<ListMember> listMembers = new ArrayList<>();
+
+        for (Team team : teams) {
+
+            ListMember listMember = portTeamToListMember(team);
+
+            listMembers.add(listMember);
+
+        }
+
+        return listMembers;
+
+    }
 
 
 
@@ -490,7 +573,9 @@ public class Converter {
         userDetail.title = user.getTitle();
         userDetail.image = user.getImage();
         userDetail.bio = user.getDescription();
-        userDetail.friends = user.request == 0;
+
+
+
         userDetail.skills = user.getSkills();
 
         return userDetail;

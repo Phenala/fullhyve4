@@ -8,6 +8,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
+import com.ux7.fullhyve.services.Handlers.Handler;
 import com.ux7.fullhyve.services.Models.ContactSet;
 import com.ux7.fullhyve.services.Models.Identity;
 import com.ux7.fullhyve.services.Models.NotificationSet;

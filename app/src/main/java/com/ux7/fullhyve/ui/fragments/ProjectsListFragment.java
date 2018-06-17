@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
+import com.ux7.fullhyve.ui.activities.HomeView;
+import com.ux7.fullhyve.ui.activities.LoginView;
 import com.ux7.fullhyve.ui.adapters.ProjectsRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
@@ -21,7 +23,7 @@ import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectsListFragment extends Fragment {
+public class ProjectsListFragment extends Fragment implements HomeView.OnHomeSearchListener {
 
     List<ListProject> projects = new ArrayList<>();
 
@@ -102,10 +104,44 @@ public class ProjectsListFragment extends Fragment {
         }
     }
 
+    public void onResume() {
+
+        super.onResume();
+        if (LoginView.changedUser)
+            getProjects();
+
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onSearch(String s) {
+
+        if (s.length() == 0) {
+
+            getProjects();
+
+        } else {
+
+            Activity activity = getActivity();
+
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+
+                    adapter.update();
+
+                }
+            };
+
+            AppHandler.getInstance().projectHandler.searchProjects(0, 500, s, projects, activity, runnable);
+
+        }
+
     }
 
     /**

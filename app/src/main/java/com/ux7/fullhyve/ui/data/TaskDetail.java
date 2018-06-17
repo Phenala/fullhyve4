@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Created by hp on 06/08/18.
  */
 
-public class TaskDetail extends ListTask implements Serializable{
+public class TaskDetail extends ListTask implements Serializable {
 
     public int id = 492857;
     public String name = "Rigging";

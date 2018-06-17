@@ -13,6 +13,6 @@ public class ListProject implements Serializable {
     public String image = "https://demo.accesspressthemes.com/wordpress-plugins/smart-logo-showcase/wp-content/uploads/2016/12/spartan-security.jpg";
     public boolean contributor = false;
 
-    public ProjectDetail detail;
+    public ProjectDetail detail = new ProjectDetail();
 
 }

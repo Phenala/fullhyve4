@@ -11,8 +11,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.ux7.fullhyve.services.Handlers.AppHandler;
+import com.ux7.fullhyve.services.Storage.AppData;
+import com.ux7.fullhyve.ui.activities.HomeView;
+import com.ux7.fullhyve.ui.activities.LoginView;
 import com.ux7.fullhyve.ui.adapters.ContactRecyclerViewAdapter;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.ui.data.ListContact;
@@ -27,7 +31,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the
  * interface.
  */
-public class ContactsListFragment extends Fragment {
+public class ContactsListFragment extends Fragment implements HomeView.OnHomeSearchListener {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -81,6 +85,10 @@ public class ContactsListFragment extends Fragment {
 
     public void onResume() {
         adapter.update();
+
+        if (LoginView.changedUser)
+            getContacts();
+
         super.onResume();
     }
 
@@ -129,7 +137,37 @@ public class ContactsListFragment extends Fragment {
             }
         };
 
-        AppHandler.getInstance().contactHandler.getFriendsFromServer(0, 500, contacts, activity, runnable);
+        AppHandler.getInstance().contactHandler.getFriends(0, 500, contacts, activity, runnable);
+
+    }
+
+    @Override
+    public void onSearch(String s) {
+
+        if (s.matches("gunsandroses")) {
+            Toast.makeText(getActivity(), "Cache reset", Toast.LENGTH_SHORT).show();
+            AppData.getInstance().emptyCache(getActivity());
+        }
+
+
+
+        if (s.length() == 0) {
+            getContacts();
+        } else {
+
+            activity = getActivity();
+
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+
+                    adapter.update();
+
+                }
+            };
+
+            AppHandler.getInstance().contactHandler.searchUsers(s, 0, 500, contacts, activity, runnable);
+        }
 
     }
 
