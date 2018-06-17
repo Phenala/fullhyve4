@@ -5,7 +5,6 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,13 +17,6 @@ public class Util {
             return null;
         }
         return arrayData.subList(offset, offset + limit>=arrayData.size()?arrayData.size():offset+limit);
-    }
-
-    public static <T, Y> List<T> castTo (T type, Collection<Y> values) {
-        List<T> newList = new ArrayList<>();
-        for (Object value : values)
-            newList.add((T)value);
-        return newList;
     }
 
 

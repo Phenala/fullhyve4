@@ -30,7 +30,7 @@ public class TeamSet{
 
     public void editTeamProfile(MyTeam team){
         if(myTeams.containsKey(team.id)){
-            myTeams.get(team.id).updateTeamProfile(team);
+            myTeams.put(team.id,team);
         }
     }
 

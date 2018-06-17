@@ -3,7 +3,7 @@ package com.ux7.fullhyve.services.Models;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Message{
+public class Message implements Serializable{
     private int id;
     private String message;
     private String timestamp;

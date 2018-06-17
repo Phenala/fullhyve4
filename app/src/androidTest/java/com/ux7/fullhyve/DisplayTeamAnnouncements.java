@@ -1,5 +1,3 @@
-package com.ux7.fullhyve;
-
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.Root;
@@ -10,6 +8,8 @@ import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.ux7.fullhyve.MenuMatcher;
+import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.ui.activities.HomeView;
 import com.ux7.fullhyve.ui.activities.LoginView;
 import com.ux7.fullhyve.ui.fragments.AnnouncementsFragment;

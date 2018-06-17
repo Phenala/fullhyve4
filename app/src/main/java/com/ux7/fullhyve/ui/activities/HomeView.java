@@ -42,8 +42,6 @@ import com.ux7.fullhyve.ui.util.U;
 public class HomeView extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnHomeInteractionListener {
 
-
-    OnHomeSearchListener searchTarget;
     ContactsListFragment contactsListFragment = new ContactsListFragment();
     TeamsListFragment teamsListFragment = new TeamsListFragment();
     ProjectsListFragment projectsListFragment = new ProjectsListFragment();
@@ -61,11 +59,6 @@ public class HomeView extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try{
-          idlingResource.decrement();
-        }catch(Exception e){
-          e.printStackTrace();
-        }
         initApp();
 
         checkRedirect();
@@ -77,16 +70,11 @@ public class HomeView extends AppCompatActivity
         initializeFloatingActionButton();
         initializeAdders();
         idlingResource.increment();
-
-        switchToContacts();
-
     }
 
     public void initApp() {
 
         Realtime.getSocket();
-        AppData.getInstance().readCache(this);
-        AppHandler.getInstance().updateCache();
 
     }
 
@@ -106,9 +94,11 @@ public class HomeView extends AppCompatActivity
         ImageView userPicture = (ImageView)(((NavigationView)findViewById(R.id.nav_view)).getHeaderView(0).findViewById(R.id.userPicture));
         Picasso.with(this).load(R.mipmap.user_picture_round).into(userPicture);
 
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contactsListFragment).commit();
+
+
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
 
         updateUserImage();
 
@@ -142,14 +132,13 @@ public class HomeView extends AppCompatActivity
             @Override
             public boolean onQueryTextSubmit(String s) {
 
+                searchUsers();
 
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-
-                search(s);
                 return false;
             }
         });
@@ -158,39 +147,10 @@ public class HomeView extends AppCompatActivity
         return true;
     }
 
-    public void search(String value) {
+    public void searchUsers() {
 
-        searchTarget.onSearch(value);
 
-    }
 
-    public void switchToContacts() {
-        setTitle("Chat");
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contactsListFragment).commit();
-        searchTarget = contactsListFragment;
-        fab.hide();
-    }
-
-    public void switchToNotifications() {
-        setTitle("Notifications");
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, notificationFragment).commit();
-        fab.hide();
-    }
-
-    public void switchToTeams() {
-        setTitle("Teams");
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, teamsListFragment).commit();
-        searchTarget = teamsListFragment;
-        fab.show();
-        fab.setOnClickListener(addTeam);
-    }
-
-    public void switchToProjects() {
-        setTitle("Projects");
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, projectsListFragment).commit();
-        searchTarget = projectsListFragment;
-        fab.show();
-        fab.setOnClickListener(addProject);
     }
 
     @Override
@@ -232,14 +192,14 @@ public class HomeView extends AppCompatActivity
             public void run() {
 
                 Identity identity = AppData.getCache().getIdentity();
-                ((TextView)navigationView.getHeaderView(0).findViewById(R.id.profile_identity_name)).setText(identity.getFirstName() + " " + identity.getLastName());
+                ((TextView)navigationView.findViewById(R.id.profile_identity_name)).setText(identity.getFirstName() + " " + identity.getLastName());
 
-                //Log.e("Picture", identity.getImage());
+                Log.e("Picture", identity.getImage());
 
                 Picasso.with(getBaseContext())
                         .load(U.getImageUrl(identity.getImage()))
                         .transform(new CircleTransform())
-                        .into((ImageView)navigationView.getHeaderView(0).findViewById(R.id.userPicture));
+                        .into((ImageView)navigationView.findViewById(R.id.userPicture));
 
             }
         };
@@ -255,13 +215,23 @@ public class HomeView extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_notifications) {
-            switchToNotifications();
+            setTitle("Notifications");
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, notificationFragment).commit();
+            fab.hide();
         } else if (id == R.id.nav_chat) {
-            switchToContacts();
+            setTitle("Chat");
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contactsListFragment).commit();
+            fab.hide();
         } else if (id == R.id.nav_teams) {
-            switchToTeams();
+            setTitle("Teams");
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, teamsListFragment).commit();
+            fab.show();
+            fab.setOnClickListener(addTeam);
         } else if (id == R.id.nav_projects) {
-            switchToProjects();
+            setTitle("Projects");
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, projectsListFragment).commit();
+            fab.show();
+            fab.setOnClickListener(addProject);
         } else if (id == R.id.nav_edit_profile) {
 
             editProfile();
@@ -304,7 +274,6 @@ public class HomeView extends AppCompatActivity
 
     public boolean isLoggedIn() {
 
-        Log.e("retrieved token", AppData.getCache().getToken() + "");
         return AppData.getCache().getToken() != null;
 
     }
@@ -367,30 +336,6 @@ public class HomeView extends AppCompatActivity
         return this;
     }
 
-    public void onResume() {
-        super.onResume();
-
-        Log.e("Cache change", "cache read on resume");
-
-        if (LoginView.changedUser)
-            initApp();
-
-    }
-
-    public void onDestroy() {
-
-        super.onDestroy();
-        Log.e("Save cache", "at destroy");
-        AppData.getInstance().saveCache(this);
-
-    }
-
-    public void onPause() {
-        super.onPause();
-        Log.e("Save cache", "at pause");
-        AppData.getInstance().saveCache(this);
-    }
-
 
     public void logout() {
 
@@ -407,11 +352,5 @@ public class HomeView extends AppCompatActivity
 
     }
 
-
-    public interface OnHomeSearchListener {
-
-        public void onSearch(String s);
-
-    }
 
 }

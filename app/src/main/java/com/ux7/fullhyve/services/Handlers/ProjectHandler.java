@@ -4,10 +4,9 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.ux7.fullhyve.services.Models.MyProject;
-import com.ux7.fullhyve.services.Models.Project;
 import com.ux7.fullhyve.services.Models.Task;
-import com.ux7.fullhyve.services.Storage.ProjectCacheManager;
 import com.ux7.fullhyve.services.Utility.Converter;
+import com.ux7.fullhyve.services.Utility.Realtime;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
 import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.github.nkzawa.socketio.client.Ack;
@@ -26,14 +25,10 @@ import java.util.List;
 
 public class ProjectHandler extends Handler {
     public void getMyProjects(final int offset, final int limit, final List<ListProject> listProjects, final Activity activity, final Runnable runnable){
-        List<MyProject> myProjects;
+        final List<MyProject> myProjects = new ArrayList<>();
+        //myProjects=cache.contacts.getMyTeams(offset,limit).toArray();
 
-        myProjects = ProjectCacheManager.getMyProjects(offset, limit);
-
-        if(myProjects!=null && myProjects.size() > 0){
-            listProjects.clear();
-            listProjects.addAll(Converter.portMyProjectToListProject(myProjects));
-
+        if(myProjects.size()>0){
             activity.runOnUiThread(runnable);
         }else {
             HashMap<String, Object> args = new HashMap<>();
@@ -42,15 +37,15 @@ public class ProjectHandler extends Handler {
 
             JSONObject req = RequestFormat.createRequestObj("getMyProjects", args);
 
-            socket.emit("getMyProjects", req, new Ack() {
+            Realtime.socket.emit("getMyProjects", req, new Ack() {
                 @Override
                 public void call(Object... args) {
                     if (generalHandler(args) == 200) {
                         final ResponseFormat.GetMyProjectsR myProjectsR = gson.fromJson(args[0].toString(), ResponseFormat.GetMyProjectsR.class);
 
-                        if (myProjectsR != null && myProjectsR.data.myProjects != null) {
-                            //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
-                            //AppData.getCache().teams.myTeams.addTeams(teamsR.data);
+                        if (myProjectsR != null) {
+                            //cache.contacts.addReceivedMessage(friendId, {message});
+                            //cache.teams.myTeams.addTeams(teamsR.data);
                         }
 
                         listProjects.clear();
@@ -67,7 +62,7 @@ public class ProjectHandler extends Handler {
 
 
 
-    public void editProjectDetails(final String name, final String image, final String field, final String description, final Activity activity, final Runnable runnable){
+    public void editProjectDetails(String name, String image, String field, String description, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("name", name);
         args.put("image", image);
@@ -76,11 +71,12 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("editProjectDetails",args);
 
-        socket.emit("editProjectDetails", req, new Ack() {
+        Realtime.socket.emit("editProjectDetails", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    ProjectCacheManager.editProjectDetails(new Project(0, name, image, description, field, 0));
+                    final ResponseFormat.StatusR statusR = gson.fromJson(args[0].toString(), ResponseFormat.StatusR.class);
+
                     activity.runOnUiThread(runnable);
                 }
             }
@@ -88,7 +84,7 @@ public class ProjectHandler extends Handler {
     }
 
 
-    public void searchProjects(final int offset, final int limit,String name, final List<ListProject> listProjects, final Activity activity, final Runnable runnable){
+    public void searchProjects(final int offset, final int limit,String name, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("offset",offset);
         args.put("limit", limit);
@@ -96,20 +92,16 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("searchProjects",args);
 
-        socket.emit("searchProjects", req, new Ack() {
+        Realtime.socket.emit("searchProjects", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     final ResponseFormat.SearchProjectsR searchProjectsR = gson.fromJson(args[0].toString(), ResponseFormat.SearchProjectsR.class);
 
                     if(searchProjectsR!=null){
-                        //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
+                        //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
-
-                    listProjects.clear();
-                    listProjects.addAll(Converter.portMyProjectToListProject(searchProjectsR.data.myProjects));
-                    listProjects.addAll(Converter.portProjectToListProject(searchProjectsR.data.projects));
 
                     activity.runOnUiThread(runnable);
                 }
@@ -127,20 +119,19 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("getContributors",args);
 
-        socket.emit("getContributors", req, new Ack() {
+        Realtime.socket.emit("getContributors", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     final ResponseFormat.GetProjectContributorsR projectContributorsR = gson.fromJson(args[0].toString(), ResponseFormat.GetProjectContributorsR.class);
 
                     if(projectContributorsR!=null){
-                        //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
+                        //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
 
                     listMembers.clear();
                     listMembers.addAll(Converter.portUsersToListMember(projectContributorsR.data.individuals));
-                    listMembers.addAll(Converter.portTeamToListMember(projectContributorsR.data.teams));
 
                     activity.runOnUiThread(runnable);
                 }
@@ -157,7 +148,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("getTasksets",args);
 
-        socket.emit("getTasksets", req, new Ack() {
+        Realtime.socket.emit("getTasksets", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -165,7 +156,7 @@ public class ProjectHandler extends Handler {
 
                     if(taskSetsR!=null && taskSetsR.data.tasksets!=null){
                         Log.e("",taskSetsR.data.tasksets.size()+"");
-                        //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
+                        //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
 
@@ -190,14 +181,14 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("getTasks",args);
 
-        socket.emit("getTasks", req, new Ack() {
+        Realtime.socket.emit("getTasks", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     final ResponseFormat.GetTasksR tasksR = gson.fromJson(args[0].toString(), ResponseFormat.GetTasksR.class);
 
                     if(tasksR!=null){
-                        //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
+                        //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
 
@@ -224,14 +215,14 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("newProject",args);
 
-        socket.emit("newProject", req, new Ack() {
+        Realtime.socket.emit("newProject", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     final ResponseFormat.CreateNewProject newProjectR = gson.fromJson(args[0].toString(), ResponseFormat.CreateNewProject.class);
 
                     if(newProjectR!=null){
-                        //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
+                        //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = teamsR.data.message;
                     }
 
@@ -243,15 +234,14 @@ public class ProjectHandler extends Handler {
 
 
 
-    public void addContributors(int projectId, int[] teamIds, int[] individualIds, final Activity activity, final Runnable runnable){
+    public void addContributors(int[] teamIds, int[] individualIds, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
-        args.put("projectId",projectId);
         args.put("teamIds",teamIds);
         args.put("individualIds",individualIds);
 
         JSONObject req = RequestFormat.createRequestObj("addContributors",args);
 
-        socket.emit("addContributors", req, new Ack() {
+        Realtime.socket.emit("addContributors", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -264,15 +254,14 @@ public class ProjectHandler extends Handler {
 
 
 
-    public void removeContributors(int projectId, int[] teamIds, int[] individualIds, final Activity activity, final Runnable runnable){
+    public void removeContributors(int[] teamIds, int[] individualIds, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
-        args.put("projectId",projectId);
         args.put("teamIds",teamIds);
         args.put("individualIds",individualIds);
 
         JSONObject req = RequestFormat.createRequestObj("removeContributors",args);
 
-        socket.emit("removeContributors", req, new Ack() {
+        Realtime.socket.emit("removeContributors", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -293,7 +282,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("replyIndividualContributorJoinRequest",args);
 
-        socket.emit("replyIndividualContributorJoinRequest", req, new Ack() {
+        Realtime.socket.emit("replyIndividualContributorJoinRequest", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -311,7 +300,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("replyTeamContributorJoinRequest",args);
 
-        socket.emit("replyTeamContributorJoinRequest", req, new Ack() {
+        Realtime.socket.emit("replyTeamContributorJoinRequest", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -331,7 +320,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("getMyProjectDetails",args);
 
-        socket.emit("getMyProjectDetails", req, new Ack() {
+        Realtime.socket.emit("getMyProjectDetails", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -348,7 +337,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("deleteProject",args);
 
-        socket.emit("deleteProject", req, new Ack() {
+        Realtime.socket.emit("deleteProject", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -366,7 +355,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("newTaskset", args);
 
-        socket.emit("newTaskset", req, new Ack() {
+        Realtime.socket.emit("newTaskset", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -387,7 +376,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("deleteTaskset",args);
 
-        socket.emit("deleteTaskset", req, new Ack() {
+        Realtime.socket.emit("deleteTaskset", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -408,14 +397,19 @@ public class ProjectHandler extends Handler {
 
 
 
-    public void newTask(Task taskData, int taskSetId, final Activity activity, final Runnable runnable){
+    public void newTask(String title, String description, long deadline, int assignerId, int assigneeId, int assigneeTeamId, int taskSetId, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
-        args.put("taskSetId",taskSetId);
-        args.put("taskData",taskData);
+        args.put("tasksetId",taskSetId);
+        args.put("title", title);
+        args.put("description", description);
+        args.put("deadline", deadline);
+        args.put("assignerId", assignerId);
+        args.put("assigneeId", assigneeId);
+        args.put("assigneeTeamId", assigneeTeamId);
 
         JSONObject req = RequestFormat.createRequestObj("newTask",args);
 
-        socket.emit("newTask", req, new Ack() {
+        Realtime.socket.emit("newTask", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -435,7 +429,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("startTask",args);
 
-        socket.emit("startTask", req, new Ack() {
+        Realtime.socket.emit("startTask", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -456,7 +450,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("completeTask",args);
 
-        socket.emit("completeTask", req, new Ack() {
+        Realtime.socket.emit("completeTask", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -476,7 +470,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("changeTaskStatus",args);
 
-        socket.emit("changeTaskStatus", req, new Ack() {
+        Realtime.socket.emit("changeTaskStatus", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
@@ -500,7 +494,7 @@ public class ProjectHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("deleteTask",args);
 
-        socket.emit("deleteTask", req, new Ack() {
+        Realtime.socket.emit("deleteTask", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){

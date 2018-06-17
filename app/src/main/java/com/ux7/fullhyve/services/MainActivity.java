@@ -11,7 +11,6 @@ import android.widget.Spinner;
 
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
-import com.ux7.fullhyve.services.Handlers.Handler;
 import com.ux7.fullhyve.services.Handlers.LoginHandler;
 import com.ux7.fullhyve.services.Models.Identity;
 import com.ux7.fullhyve.services.Models.Notification;
@@ -54,10 +53,6 @@ public class MainActivity extends AppCompatActivity {
         cache = AppData.getCache();
         loginHandler = new LoginHandler();
         appHandler = AppHandler.getInstance();
-
-//        AppData.resetCache();
-//        AppData.getInstance().readCache(this);
-//        Handler.cache = AppData.getCache();
 
 
 
@@ -110,8 +105,7 @@ public class MainActivity extends AppCompatActivity {
         execute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("Execute","Clicked");
-                testAccount(view);
+                testTeams(view);
 
             }
         });
@@ -386,7 +380,7 @@ public class MainActivity extends AppCompatActivity {
                 int limit = 10;
                 String name = arg1.getText().toString();
 
-                appHandler.contactHandler.searchUsers(name, offset, limit, new ArrayList<ListContact>(), this, new Runnable() {
+                appHandler.contactHandler.searchUsers(name, offset, limit, this, new Runnable() {
                     @Override
                     public void run() {
                         Log.e("Users","Searched");

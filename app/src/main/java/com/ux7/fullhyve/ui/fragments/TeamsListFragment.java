@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
-import com.ux7.fullhyve.ui.activities.HomeView;
 import com.ux7.fullhyve.ui.adapters.TeamsRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListTeam;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
@@ -22,7 +21,7 @@ import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeamsListFragment extends Fragment implements HomeView.OnHomeSearchListener {
+public class TeamsListFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -113,24 +112,6 @@ public class TeamsListFragment extends Fragment implements HomeView.OnHomeSearch
         };
 
         AppHandler.getInstance().teamHandler.getMyTeams(0, 500, teams,activity, runnable);
-
-    }
-
-    @Override
-    public void onSearch(String s) {
-
-        Activity activity = getActivity();
-
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-
-                adapter.update();
-
-            }
-        };
-
-        AppHandler.getInstance().teamHandler.searchTeams(0, 500, s, teams,activity, runnable);
 
     }
 }

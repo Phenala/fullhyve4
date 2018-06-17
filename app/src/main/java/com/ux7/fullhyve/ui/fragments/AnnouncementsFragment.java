@@ -171,6 +171,12 @@ public class AnnouncementsFragment extends Fragment implements AnnouncementRecyc
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
@@ -224,7 +230,7 @@ public class AnnouncementsFragment extends Fragment implements AnnouncementRecyc
                             }
                         };
 
-                        AppHandler.getInstance().teamHandler.deleteAnnouncement(team.id, announcement.id, activity, runnable);
+                        AppHandler.getInstance().teamHandler.deleteAnnouncement(announcement.id, activity, runnable);
 
                     }
                 })

@@ -11,7 +11,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/logo"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -45,7 +45,7 @@
         <activity android:name=".ui.activities.NewProject" />
         <activity android:name=".ui.activities.AnnouncementView" />
         <activity android:name=".ui.activities.UserView" />
-        <activity android:name=".ui.activities.AddMemberView" />
+        <activity android:name=".ui.activities.AddMember" />
         <activity android:name=".ui.activities.TaskSetView" />
         <activity android:name=".ui.activities.TaskView" />
         <activity android:name=".ui.activities.NewTaskSetView" />

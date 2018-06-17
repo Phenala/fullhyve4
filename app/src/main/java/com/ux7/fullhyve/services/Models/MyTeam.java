@@ -21,25 +21,11 @@ public class MyTeam extends Team{
         projects = new HashMap<>();
     }
 
-    public void updateTeamProfile(Team team){
-        this.name = team.name;
-        this.focus = team.focus;
-        this.description = team.description;
-        this.image = team.image;
-    }
-
     public Announcement getAnnouncement(int annId){
         for(int i=0;i<announcements.size();i++){
             if(announcements.get(i).mainMessage.getId()==annId){
                 return announcements.remove(i);
             }
-        }
-        return null;
-    }
-
-    public List<Announcement> getAnnouncements(int offset, int limit){
-        if(announcements != null){
-            return Util.sliceArray(announcements, offset, limit);
         }
         return null;
     }
@@ -60,7 +46,7 @@ public class MyTeam extends Team{
         for(int i=0;i<announcements.size();i++){
             if(announcements.get(i).mainMessage.getId()==annId){
                 announcements.remove(i);
-                return;
+                break;
             }
         }
     }
@@ -69,22 +55,15 @@ public class MyTeam extends Team{
         for(Announcement announcement:announcements){
             if(announcement.mainMessage.getId()==annId){
                 announcement.mainMessage.setMessage(newAnnouncement);
-                return;
+                break;
             }
         }
     }
 
-    public void addProjects(List<Project> projects){
-        for(Project project:projects){
+    public void addProjects(List<MyProject> projects){
+        for(MyProject project:projects){
             this.projects.put(project.id, project);
         }
-    }
-
-    public List<Project> getProjects(int offset, int limit){
-        if(projects != null){
-            return Util.sliceArray(new ArrayList<>(projects.values()), offset, limit);
-        }
-        return null;
     }
 
     public void addMembers(List<User> users){
@@ -97,13 +76,10 @@ public class MyTeam extends Team{
         }
     }
 
-    public void removeMember(int[] memberIds){
-        for(int memberId:memberIds){
-            if(this.members !=null && this.members.containsKey(memberId)){
-                this.members.remove(memberId);
-            }
+    public void removeMember(int memberId){
+        if(this.members !=null && this.members.containsKey(memberId)){
+            this.members.remove(memberId);
         }
-
     }
 
     public List<User> getMembers(int offset, int limit){

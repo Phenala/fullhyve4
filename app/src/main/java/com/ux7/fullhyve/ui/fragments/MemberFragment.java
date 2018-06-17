@@ -9,14 +9,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
-import com.ux7.fullhyve.ui.activities.AddMemberView;
+import com.ux7.fullhyve.services.Models.User;
+import com.ux7.fullhyve.ui.activities.AddMember;
 import com.ux7.fullhyve.ui.adapters.MemberRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.ListProject;
@@ -145,17 +145,19 @@ public class MemberFragment extends Fragment {
 
     public void identifyLeader() {
 
-        Log.e("Memberfragemnt", project + "");
+        ListMember membero = new ListMember();
 
         for (ListMember member : members) {
 
-            if (type == MemberOf.TEAM && member.id == team.detail.leaderId) {
-                member.leader = true;
-            } else if (type == MemberOf.PROJECT && !member.team && member.id == project.detail.leaderId) {
-                member.leader = true;
-            }
+            member.leader = (type == MemberOf.TEAM && member.id == team.detail.leaderId) || (type == MemberOf.PROJECT && member.id == project.detail.leaderId);
+
+            if (member.leader)
+                membero = member;
 
         }
+
+        members.remove(membero);
+        members.add(0, membero);
 
     }
 
@@ -173,14 +175,14 @@ public class MemberFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(context, AddMemberView.class);
+                Intent intent = new Intent(context, AddMember.class);
                 if (type == MemberOf.TEAM) {
 
-                    intent.putExtra("type", AddMemberView.AddUserType.INVITE_TO_TEAM);
+                    intent.putExtra("type", AddMember.AddUserType.INVITE_TO_TEAM);
 
                 } else if (type == MemberOf.PROJECT) {
 
-                    intent.putExtra("type", AddMemberView.AddUserType.INVITE_TO_PROJECT);
+                    intent.putExtra("type", AddMember.AddUserType.INVITE_TO_PROJECT);
 
                 }
                 startActivity(intent);

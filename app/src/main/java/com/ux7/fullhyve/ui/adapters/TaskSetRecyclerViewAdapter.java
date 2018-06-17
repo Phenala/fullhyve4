@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ux7.fullhyve.R;
@@ -46,6 +47,7 @@ public class TaskSetRecyclerViewAdapter extends RecyclerView.Adapter<TaskSetRecy
         holder.mTaskSetNameView.setText(holder.mTaskSet.name);
         holder.mTaskSetCompletionView.setText(holder.mTaskSet.completion + "%");
         holder.mTaskSetAssignmentsView.setText("" + holder.mTaskSet.assigments);
+        holder.mTaskSetCompletionPercentView.setProgress(holder.mTaskSet.completion);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +86,7 @@ public class TaskSetRecyclerViewAdapter extends RecyclerView.Adapter<TaskSetRecy
         public final TextView mTaskSetNameView;
         public final TextView mTaskSetCompletionView;
         public final TextView mTaskSetAssignmentsView;
+        public final ProgressBar mTaskSetCompletionPercentView;
         public ListTaskSet mTaskSet;
 
         public ViewHolder(View view) {
@@ -93,6 +96,7 @@ public class TaskSetRecyclerViewAdapter extends RecyclerView.Adapter<TaskSetRecy
             mTaskSetCompletionView = (TextView)view.findViewById(R.id.task_set_completion);
             mTaskSetNameView = (TextView)view.findViewById(R.id.task_set_name);
             mTaskSetNumberView = (TextView)view.findViewById(R.id.task_set_number);
+            mTaskSetCompletionPercentView = (ProgressBar) view.findViewById(R.id.task_set_completion_percent);
         }
 
         @Override

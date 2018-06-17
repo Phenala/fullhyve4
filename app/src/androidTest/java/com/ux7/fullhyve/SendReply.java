@@ -80,7 +80,7 @@ public class SendReply {
     onView(withId(R.id.reply_list)).check(matches(new TypeSafeMatcher<View>() {
       @Override
       public boolean matchesSafely(View view) {
-       RecyclerView listView = (RecyclerView) view;
+        RecyclerView listView = (RecyclerView) view;
 
         //here we assume the adapter has been fully loaded already
         numberOfAdapterItems[0] = listView.getAdapter().getItemCount();

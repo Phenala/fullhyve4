@@ -6,7 +6,6 @@ import android.util.Log;
 import com.google.gson.JsonElement;
 import com.ux7.fullhyve.services.Models.Contact;
 import com.ux7.fullhyve.services.Models.Message;
-import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.services.Utility.Converter;
 import com.ux7.fullhyve.services.Models.SendMessage;
 import com.ux7.fullhyve.services.Utility.RequestFormat;
@@ -34,7 +33,7 @@ public class ContactHandler extends Handler {
 
         JSONObject req = RequestFormat.createRequestObj("sendMessage",args);
 
-        final int tempId = AppData.getCache().getContacts().addSendMessage(new SendMessage(friendId,message));
+        final int tempId = cache.getContacts().addSendMessage(new SendMessage(friendId,message));
 
         socket.emit("sendMessage", req, new Ack() {
             @Override
@@ -44,11 +43,11 @@ public class ContactHandler extends Handler {
 
                     // add message to cache
                     if(messageR!=null && messageR.data != null){
-                        if(AppData.getCache().getContacts().getFriend(friendId) != null){
-                            AppData.getCache().getContacts().getFriend(friendId).addMessage(messageR.data);
-                            AppData.getCache().getContacts().getFriend(friendId).setLastMessage(messageR.data);
-                        }
-                        AppData.getCache().getContacts().removeSendMessage(tempId);
+                        Date date = new Date();
+                        Message msg = new Message(messageR.data.msgId,message,date.toString(),false, true);
+
+                        cache.getContacts().getFriend(friendId).addMessage(msg);
+                        cache.getContacts().removeSendMessage(tempId);
                     }
                     activity.runOnUiThread(runnable);
 
@@ -68,11 +67,7 @@ public class ContactHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-
-                    if(AppData.getCache().getContacts().getFriend(friendId)!=null){
-                        AppData.getCache().getContacts().getFriend(friendId).editMessage(messageId,newMessage);
-                    }
-
+                    cache.getContacts().getFriend(friendId).editMessage(messageId,newMessage);
                     activity.runOnUiThread(runnable);
                 }
             }
@@ -105,7 +100,7 @@ public class ContactHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    AppData.getCache().getContacts().getFriend(friendId).removeMessage(messageId);
+                    cache.getContacts().getFriend(friendId).removeMessage(messageId);
                     activity.runOnUiThread(runnable);
                 }
             }
@@ -121,7 +116,7 @@ public class ContactHandler extends Handler {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
-                    AppData.getCache().getContacts().getFriend(friendId).setMessagesSeen(lastMessageId);
+                    cache.getContacts().getFriend(friendId).setMessagesSeen(lastMessageId);
                     activity.runOnUiThread(runnable);
                 }
             }
@@ -140,9 +135,9 @@ public class ContactHandler extends Handler {
                     final ResponseFormat.GetLastOnlineR lastOnline = gson.fromJson(args[0].toString(), ResponseFormat.GetLastOnlineR.class);
 
                     if(lastOnline!=null && lastOnline.data!=null){
-                        AppData.getCache().getContacts().getFriend(friendId).changeFriendOnlineStatus(lastOnline.data.online,lastOnline.data.timestamp);
+                        cache.getContacts().getFriend(friendId).changeFriendOnlineStatus(lastOnline.data.online,lastOnline.data.timestamp);
                     } else{
-                        Contact friend = AppData.getCache().getContacts().getFriend(friendId);
+                        Contact friend = cache.getContacts().getFriend(friendId);
 
                         lastOnline.data.online = friend.isOnline();
                         lastOnline.data.timestamp = friend.getLastOnline();
@@ -157,18 +152,17 @@ public class ContactHandler extends Handler {
         final ResponseFormat.GetMessagesR messagesR;
 
 //        final ArrayList<Message> messages = cache.getContacts().getContact(friendId).getMessages(offset, limit);
-        /*if
+
         Contact contact = cache.getContacts().getFriend(friendId);
         List<Message> messages = null;
-        Log.e("messages", "Requested");
 
         if(contact!=null){
             messages = contact.getMessages(offset, limit);
         }
 
-        (messages != null && messages.size()>0){
+        if(messages != null && messages.size()>0){
             activity.runOnUiThread(runnable);
-        } else {*/
+        } else {
             HashMap<String, Object> args = new HashMap<>();
             args.put("friendId", friendId);
             args.put("offset", offset);
@@ -185,13 +179,13 @@ public class ContactHandler extends Handler {
 
 //                        if(messagesR != null && messagesR.data.done){
 //
-//                            AppData.getCache().getContacts().getContact(friendId).addMessages(messagesR.data.messages);
+//                            cache.getContacts().getContact(friendId).addMessages(messagesR.data.messages);
 //
 //                        }
 
                         listMessages.clear();
                         listMessages.addAll(Converter.portMessageToListMessage(messagesR.data.messages));
-                        activity.runOnUiThread(runnable);
+
                         if (messagesR != null && messagesR.data.done) {
                             Log.e("Messages", "Received");
                             Log.e("Message", messagesR.data.messages.get(0).getMessage());
@@ -200,27 +194,23 @@ public class ContactHandler extends Handler {
                                 cache.getContacts().getFriend(friendId).addMessages((ArrayList<Message>) messagesR.data.messages);
                             }
 
-                        }
-
-
+                            activity.runOnUiThread(runnable);
                         }
                     }
-
+                }
             });
-}
+        }
+    }
 
-
-    public void getFriends(int offset, int limit, final List<ListContact> listContacts, final Activity activity, final Runnable runnable){
+    public void getFriends(int offset, int limit, final Activity activity, final Runnable runnable){
         final ResponseFormat.GetFriends friendsR = new ResponseFormat().new GetFriends();
 
-        List<Contact> friends = AppData.getCache().getContacts().getFriends(offset, limit);
+        List<Contact> friends = cache.getContacts().getFriends(offset, limit);
 
-        if(friends != null && friends.size() > 0){
+        if(friends!=null){
             Log.e("Server","Not called");
             friendsR.friends = friends;
 
-            listContacts.clear();
-            listContacts.addAll(Converter.portContactToListContact(friends));
             activity.runOnUiThread(runnable);
         } else{
             HashMap<String, Object> args = new HashMap<>();
@@ -236,10 +226,8 @@ public class ContactHandler extends Handler {
                         final ResponseFormat.GetFriendsR friendsR = gson.fromJson(args[0].toString(), ResponseFormat.GetFriendsR.class);
 
                         if(friendsR!=null && friendsR.data.friends != null){
-                            AppData.getCache().getContacts().addFriends((ArrayList<Contact>) friendsR.data.friends);
+                            cache.getContacts().addFriends((ArrayList<Contact>) friendsR.data.friends);
                         }
-                        listContacts.clear();
-                        listContacts.addAll(Converter.portContactToListContact(friendsR.data.friends));
 
                         activity.runOnUiThread(runnable);
                     }
@@ -255,6 +243,7 @@ public class ContactHandler extends Handler {
         args.put("offset", offset);
         args.put("limit", limit);
 
+
         JSONObject req = RequestFormat.createRequestObj("getFriends",args);
 
         socket.emit("getFriends", req, new Ack() {
@@ -264,12 +253,12 @@ public class ContactHandler extends Handler {
                     final ResponseFormat.GetFriendsR friendsR = gson.fromJson(args[0].toString(), ResponseFormat.GetFriendsR.class);
 
                     if(friendsR!=null){
-                        //AppData.getCache().contacts.addReceivedMessage(friendId, {message});
+                        //cache.contacts.addReceivedMessage(friendId, {message});
                         //AppData.userToken = messageR.data.message;
 
                         Log.e("Friends number",friendsR.data.friends.size()+"");
                     if(friendsR!=null && friendsR.data.friends != null){
-                        AppData.getCache().getContacts().addFriends((ArrayList<Contact>) friendsR.data.friends);
+                        cache.getContacts().addFriends((ArrayList<Contact>) friendsR.data.friends);
 
                         listContacts.clear();
                         listContacts.addAll(Converter.portContactToListContact(friendsR.data.friends));
@@ -283,7 +272,7 @@ public class ContactHandler extends Handler {
         });
     }
 
-    public void searchUsers(final String name, final int offset, final int limit, final List<ListContact> listContacts, final Activity activity, final Runnable runnable){
+    public void searchUsers(final String name, final int offset, final int limit, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("name", name);
         args.put("offset", offset);
@@ -296,13 +285,10 @@ public class ContactHandler extends Handler {
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     final ResponseFormat.SearchUsersR searchUsersR = gson.fromJson(args[0].toString(), ResponseFormat.SearchUsersR.class);
-                    List<Contact> friends = AppData.getCache().getContacts().searchContacts(name, offset, limit);
+                    List<Contact> friends = cache.getContacts().searchContacts(name, offset, limit);
 
                     searchUsersR.data.friends = new ArrayList<>();
                     searchUsersR.data.friends.addAll(friends);
-
-                    listContacts.clear();
-                    listContacts.addAll(Converter.portContactToListContact(friends));
 
                     activity.runOnUiThread(runnable);
                 }

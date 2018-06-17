@@ -20,8 +20,6 @@ public class LoginView extends AppCompatActivity {
     String username;
     String password;
 
-    public static boolean changedUser = false;
-
     public static boolean loggedIn = false;
 
     @Override

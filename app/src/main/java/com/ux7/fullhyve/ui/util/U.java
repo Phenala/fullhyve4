@@ -2,7 +2,6 @@ package com.ux7.fullhyve.ui.util;
 
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Utility.Realtime;
-import com.ux7.fullhyve.ui.data.UserDetail;
 import com.ux7.fullhyve.ui.enums.TaskStatus;
 
 import java.sql.Time;
@@ -139,30 +138,5 @@ public class U {
         return time.substring(hour);
 
     }
-
-
-    public static UserDetail.RequestStatus getRequestStatus (int request) {
-
-        switch (request) {
-
-            case 0:
-                return UserDetail.RequestStatus.ACCEPTED;
-
-            case 1:
-                return UserDetail.RequestStatus.REQUESTED;
-
-            case 2:
-                return UserDetail.RequestStatus.UNDECIDED;
-
-            case 3:
-                return UserDetail.RequestStatus.REJECTED;
-
-            default:
-                return UserDetail.RequestStatus.REJECTED;
-
-        }
-
-    }
-
 
 }

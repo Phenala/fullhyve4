@@ -4,7 +4,6 @@ package com.ux7.fullhyve.ui.activities;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.design.widget.TabLayout;
-import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
@@ -46,7 +45,6 @@ public class TeamView extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    public CountingIdlingResource idlingResource= new CountingIdlingResource("team");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +66,7 @@ public class TeamView extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-        idlingResource.increment();
+
     }
 
     public void buildTeam() {

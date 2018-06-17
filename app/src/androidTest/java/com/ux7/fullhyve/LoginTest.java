@@ -11,14 +11,12 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.ux7.fullhyve.ui.activities.LoginView;
-import com.ux7.fullhyve.ui.fragments.AnnouncementsFragment;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.clearText;
@@ -28,12 +26,9 @@ import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class LoginTest {
@@ -62,9 +57,7 @@ public class LoginTest {
       //onView(withId(R.id.))
 
         //openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
-      DrawerActions.openDrawer(R.id.drawer_layout);
-      //onView(isRoot()).perform(swipeRight());
-      Thread.sleep(2000);
+      onView(isRoot()).perform(swipeRight());
       //onView(withId(R.id.drawer_layout)).perform(DrawerActions.open(R.id.drawer_layout));
 
       //onView(withId(R.id.drawer_layout)).check(matches(isOpen()));

@@ -6,86 +6,50 @@
     android:layout_height="match_parent"
     tools:context="com.ux7.fullhyve.ui.activities.NewTaskSetView">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        android:padding="15dp"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="15dp">
+            android:ems="10"
+            android:hint="Task Set Name"
+            android:layout_margin="5dp"
+            android:inputType="textPersonName" />
 
-            <EditText
-                android:id="@+id/new_task_set_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:ems="10"
-                android:hint="Task Set Name"
-                android:inputType="textPersonName" />
+        <EditText
+            android:id="@+id/editText3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:ems="10"
+            android:hint="Deadline"
+            android:inputType="textPersonName" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
-                android:orientation="vertical">
+        <EditText
+            android:id="@+id/editText4"
+            android:layout_width="match_parent"
+            android:layout_height="243dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="Description"
+            android:padding="5dp"
+            android:background="@color/colorPrimaryDark"
+            android:inputType="textMultiLine" />
 
-                <TextView
-                    android:id="@+id/new_task_set_deadline_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:paddingVertical="10dp"
-                    android:text="Deadline"
-                    android:textAlignment="center"
-                    android:textColor="@color/textLight"
-                    android:textSize="18dp" />
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textdark"
+            android:background="@drawable/ripple_effect_accent"
+            android:text="Create" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:orientation="vertical">
-
-                    <DatePicker
-                        android:id="@+id/new_task_set_deadline"
-                        android:layout_width="match_parent"
-                        android:layout_height="123dp"
-                        android:calendarViewShown="false"
-                        android:datePickerMode="spinner"
-                        android:isScrollContainer="true"
-                        android:spinnersShown="true" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/new_task_set_description"
-                android:layout_width="match_parent"
-                android:layout_height="243dp"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@color/colorPrimaryDark"
-                android:ems="10"
-                android:gravity="top"
-                android:hint="Description"
-                android:inputType="textMultiLine"
-                android:padding="5dp" />
-
-            <Button
-                android:id="@+id/new_task_set_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ripple_effect_accent"
-                android:onClick="createTaskSet"
-                android:text="Create"
-                android:textColor="@color/textdark" />
-
-        </LinearLayout>
-
-    </ScrollView>
-
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

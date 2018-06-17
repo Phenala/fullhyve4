@@ -22,8 +22,7 @@
             android:layout_width="65dp"
             android:layout_height="65dp"
             android:layout_weight="0"
-            android:background="@mipmap/user_picture_round"
-            android:paddingTop="@dimen/nav_header_vertical_spacing" />
+            android:background="@mipmap/user_picture_round" />
 
         <LinearLayout
             android:layout_width="match_parent"

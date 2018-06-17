@@ -69,7 +69,6 @@ public class TaskSetFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), NewTaskSetView.class);
-                intent.putExtra("project", project);
                 startActivity(intent);
             }
         });

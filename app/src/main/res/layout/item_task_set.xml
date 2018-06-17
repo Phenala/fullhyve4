@@ -73,13 +73,13 @@
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/task_set_completion_percent"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="3dp"
+        android:layout_marginVertical="5dp"
         android:layout_weight="1"
         android:max="100"
-        android:layout_marginVertical="5dp"
         android:progress="20" />
 
 </LinearLayout>

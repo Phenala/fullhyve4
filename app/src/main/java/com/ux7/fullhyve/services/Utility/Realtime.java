@@ -14,7 +14,7 @@ import com.google.gson.GsonBuilder;
 import java.net.URISyntaxException;
 
 public class Realtime {
-    private static final Realtime realtime = new Realtime();
+    public static Realtime realtime = new Realtime();
 
     private static Emitter.Listener onFriendDisconnected;
     private static Emitter.Listener onFriendConnected;
@@ -26,25 +26,21 @@ public class Realtime {
     private static Emitter.Listener onAuthenticationError;
 
 
-    private static Socket socket = null;
-    private static AppData.Cache cache;
+    public static Socket socket = null;
     private static AppHandler appHandler = AppHandler.getInstance();
 
     private static GsonBuilder gsonBuilder;
     private static Gson gson;
 
-    public static final String URL="http://192.168.43.186:8000/";
-    //public static final String URL = "http://192.168.43.117:8000/";
+    public static final String URL = "http://192.168.43.117:8000/";
 
 
-    private Realtime(){
+    public Realtime(){
         // initialize json parsers
         gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         gson = gsonBuilder.create();
 
-
-        cache = AppData.getCache();
         getSocket();
         Log.e("App handler", "Created"+appHandler);
     }
@@ -54,20 +50,22 @@ public class Realtime {
     }
 
     public static String getBearerToken(){
-        return "token=Bearer "+ cache.getToken();
+        return "token=Bearer "+ AppData.getCache().getToken();
     }
 
     public static Socket getSocket() {
         // create socket if not created already, then return instance
-        Log.e("Realtime token",cache.getToken()==null?"No token":cache.getToken());
+        Log.e("Realtime token",AppData.getCache().getToken()==null?"No token":AppData.getCache().getToken());
         try {
-//            if(cache.getToken() != null){
+//            if(AppData.getCache().getToken() != null){
 //                IO.Options options = new IO.Options();
 //                options.query = getBearerToken();
 //                socket = IO.socket(URL, options);
 //            } else{
 //
 //            }
+
+
             socket = IO.socket(URL + "chat");
 
 
@@ -85,7 +83,9 @@ public class Realtime {
 
     public static void connectSocket(){
         socket.connect();
-        if(cache.getToken() != null){
+
+        Log.e("Socket Connect", "attempt to connect");
+        if(AppData.getCache().getToken() != null){
             LoginHandler loginHandler = new LoginHandler();
 
 //            loginHandler.userConnected(new ResponseListener() {
@@ -120,7 +120,7 @@ public class Realtime {
             public void call(final Object... args) {
                 if(args.length>0){
                     final ResponseFormat.DisconnectedUserR userR = gson.fromJson(args[0].toString(), ResponseFormat.DisconnectedUserR.class);
-                    cache.getContacts().getFriend(userR.data.userId).changeFriendOnlineStatus(false, userR.data.timestamp);
+                    AppData.getCache().getContacts().getFriend(userR.data.userId).changeFriendOnlineStatus(false, userR.data.timestamp);
                 }
             }
         };
@@ -130,7 +130,7 @@ public class Realtime {
             public void call(final Object... args) {
                 if(args.length>0){
                     final ResponseFormat.DisconnectedUserR userR = gson.fromJson(args[0].toString(), ResponseFormat.DisconnectedUserR.class);
-                    cache.getContacts().getFriend(userR.data.userId).changeFriendOnlineStatus(true, userR.data.timestamp);
+                    AppData.getCache().getContacts().getFriend(userR.data.userId).changeFriendOnlineStatus(true, userR.data.timestamp);
                 }
             }
         };
@@ -143,11 +143,11 @@ public class Realtime {
 
                     if(messages!=null && messages.data.size() > 0){
                         for(ResponseFormat.ReceivedMessages message:messages.data){
-                            //Contact friend = cache.contacts.getContact(message.senderId);
+                            //Contact friend = AppData.getCache().contacts.getContact(message.senderId);
 //                            if(friend != null){
 //                                friend.addMessages(message.messages);
 //                            }
-                            cache.setToken(message.messages.get(0).getMessage());
+                            AppData.getCache().setToken(message.messages.get(0).getMessage());
                         }
                     }
                 }

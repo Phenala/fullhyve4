@@ -249,7 +249,7 @@ public class AnnouncementView extends AppCompatActivity implements ReplyRecycler
             }
         };
 
-        AppHandler.getInstance().teamHandler.deleteReply(team.id, announcement.id, reply.id, this, runnable);
+        AppHandler.getInstance().teamHandler.deleteReply(reply.id, this, runnable);
 
     }
 }

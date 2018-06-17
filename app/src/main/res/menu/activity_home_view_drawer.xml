@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single" android:id="@+id/nav_options">
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_notifications"
             android:icon="@drawable/ic_notification_bell_icon"

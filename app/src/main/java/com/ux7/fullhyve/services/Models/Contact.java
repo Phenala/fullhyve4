@@ -48,10 +48,6 @@ public class Contact extends User{
         this.messages = messages;
     }
 
-    public void setLastMessage(Message message){
-        lastMessage = message;
-    }
-
 
     // custom functions
 

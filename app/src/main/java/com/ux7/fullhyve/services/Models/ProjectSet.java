@@ -15,35 +15,10 @@ public class ProjectSet{
     }
 
     public List<MyProject> getMyProjects(int offset, int limit){
-        return Util.sliceArray(Util.castTo(new MyProject(0,"","","","",0), myProjects.values()), offset, limit);
+        return Util.sliceArray((List<MyProject>) myProjects.values(), offset, limit);
     }
 
     public MyProject getMyProject(int projectId){
-        if(myProjects.containsKey(projectId)){
-            return myProjects.get(projectId);
-        }
-        return null;
-    }
-
-    public void addProject(MyProject project){
-        myProjects.put(project.id, project);
-    }
-
-    public void addProjects(List<MyProject> projects){
-        for(MyProject project:projects){
-            myProjects.put(project.id,project);
-        }
-    }
-
-    public void editProjectProfile(Project project){
-        if(myProjects.containsKey(project.id)){
-            myProjects.get(project.id).updateProjectProfile(project);
-        }
-    }
-
-    public void removeProject(int projectId){
-        if(myProjects.containsKey(projectId)){
-            myProjects.remove(projectId);
-        }
+        return myProjects.get(projectId);
     }
 }

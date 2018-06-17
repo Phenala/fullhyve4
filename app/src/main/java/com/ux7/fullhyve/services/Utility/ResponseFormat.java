@@ -46,7 +46,7 @@ public class ResponseFormat{
     }
 
     public class MessageR{
-        public Message data;
+        public SendMessage data;
     }
 
     // received message listener
@@ -114,6 +114,17 @@ public class ResponseFormat{
     public class GetTeamsR{
         public GetTeamsResponse data;
     }
+
+
+    public class SearchTeamsResponse{
+        public boolean done;
+        public List<MyTeam> myTeams;
+        public List<Team> teams;
+    }
+    public class SearchTeamsR{
+        public SearchTeamsResponse data;
+    }
+
     public class TeamMember{
         public boolean done;
         public List<User> members;
@@ -136,20 +147,20 @@ public class ResponseFormat{
         public TeamAnnouncement data;
     }
     public class CreateNewTeamR{
-        public Team data;
+        public int data;
     }
     public class Announce{
-        public Announcement mainMessage;
+        public Integer replyId;
     }
     public class AnnounceR{
-        public Announcement data;
+        public Announce data;
     }
     public class StatusR{
         public Boolean data;
     }
 
     public class ReplyR{
-        public Announcement data;
+        public Announce data;
     }
     public class GetTeamProfileR{
         public Team data;
