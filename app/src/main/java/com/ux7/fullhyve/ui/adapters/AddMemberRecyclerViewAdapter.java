@@ -9,10 +9,12 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.ui.activities.AddMemberView;
 import com.ux7.fullhyve.ui.activities.UserView;
 import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.UserDetail;
@@ -24,15 +26,26 @@ import com.ux7.fullhyve.ui.util.U;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.System.in;
+
 
 public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMemberRecyclerViewAdapter.ViewHolder> {
 
     private final List<ListMember> mMembers;
-    public final List<Integer> mSelectedUsers;
+    public final List<ListMember> mSelectedUsers;
+    public final List<ListMember> mSelectedTeams;
+    public ListMember selectedUser;
+    public ListMember selectedTeam;
+    public AddMemberView.AddUserType type;
+    public RadioButton lastRadioButton;
+    public OnAddMemberInteractionListener mListener;
 
-    public AddMemberRecyclerViewAdapter(List<ListMember> items) {
+    public AddMemberRecyclerViewAdapter(List<ListMember> items, AddMemberView.AddUserType type, OnAddMemberInteractionListener listener) {
         mMembers = items;
+        this.type = type;
+        mListener = listener;
         mSelectedUsers = new ArrayList<>();
+        mSelectedTeams = new ArrayList<>();
     }
 
     @Override
@@ -47,6 +60,30 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
         holder.mMember = mMembers.get(position);
         holder.mMemberNameView.setText(mMembers.get(position).name);
         holder.mMemberPictureView.setBackgroundResource(Images.USER);
+
+        if (type == AddMemberView.AddUserType.ASSIGN_TASK_TEAM || type == AddMemberView.AddUserType.ASSIGN_TASK_USER) {
+
+            holder.mAddMemberRadio.setVisibility(View.VISIBLE);
+            holder.mAddMember.setVisibility(View.GONE);
+
+        } else {
+
+            holder.mAddMemberRadio.setVisibility(View.GONE);
+            holder.mAddMember.setVisibility(View.VISIBLE);
+
+        }
+
+        if (selectedTeam != null && holder.mMember.team && holder.mMember.id != selectedTeam.id)
+            holder.mAddMemberRadio.setChecked(false);
+
+        if (selectedUser != null && !holder.mMember.team && holder.mMember.id != selectedUser.id)
+            holder.mAddMemberRadio.setChecked(false);
+
+        if (!holder.mMember.team && !mSelectedUsers.contains(holder.mMember.id))
+            holder.mAddMember.setChecked(false);
+
+        if (holder.mMember.team && !mSelectedTeams.contains(holder.mMember.id))
+            holder.mAddMember.setChecked(false);
 
         if (holder.mMember.image != null) {
 
@@ -79,17 +116,43 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
 
         });
 
+        holder.mAddMemberRadio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+                if (holder.mMember.team) {
+                    selectedTeam = holder.mMember;
+                    selectedUser = null;
+                } else {
+                    selectedUser = holder.mMember;
+                    selectedTeam = null;
+                }
+
+
+                if (lastRadioButton != null && lastRadioButton != holder.mAddMemberRadio) {
+                    lastRadioButton.setChecked(false);
+                }
+
+                lastRadioButton = holder.mAddMemberRadio;
+
+            }
+        });
+
         holder.mAddMember.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-                if (b)
+                List<ListMember> ids;
 
-                    mSelectedUsers.add(holder.mMember.id);
-
+                if (holder.mMember.team)
+                    ids = mSelectedTeams;
                 else
+                    ids = mSelectedUsers;
 
-                    mSelectedUsers.remove(mSelectedUsers.indexOf(holder.mMember.id));
+                if (b)
+                    ids.add(holder.mMember);
+                else
+                    ids.remove(holder.mMember);
 
             }
         });
@@ -102,6 +165,20 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
 
     }
 
+    public void resetSelections() {
+
+
+
+    }
+
+    public ListMember getSelectedUser() {
+        return selectedUser;
+    }
+
+    public ListMember getSelectedTeam() {
+        return selectedTeam;
+    }
+
     @Override
     public int getItemCount() {
         return mMembers.size();
@@ -112,6 +189,7 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
         public final ImageView mMemberPictureView;
         public final TextView mMemberNameView;
         public final CheckBox mAddMember;
+        public final RadioButton mAddMemberRadio;
         public ListMember mMember;
 
         public ViewHolder(View view) {
@@ -120,6 +198,7 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
             mMemberPictureView = (ImageView) view.findViewById(R.id.member_picture);
             mMemberNameView = (TextView) view.findViewById(R.id.member_name);
             mAddMember = (CheckBox) view.findViewById(R.id.add_member_check);
+            mAddMemberRadio = (RadioButton) view.findViewById(R.id.add_member_radio);
         }
 
         @Override
@@ -137,19 +216,22 @@ public class AddMemberRecyclerViewAdapter extends RecyclerView.Adapter<AddMember
 
     }
 
-    public int[] getSelectedUserIds() {
+    public List<ListMember> getSelectedUsers() {
 
-        int[] outids = new int[mSelectedUsers.size()];
-
-        for (int i = 0; i < mSelectedUsers.size(); i++) {
-
-            outids[i] = mSelectedUsers.get(i);
-
-        }
-
-        return outids;
+        return mSelectedUsers;
 
     }
 
+    public List<ListMember> getSelectedTeams() {
+
+        return mSelectedTeams;
+
+    }
+
+    public interface OnAddMemberInteractionListener {
+
+        public void onUnselectOthers(Runnable runnable);
+
+    }
 
 }

@@ -4,12 +4,14 @@ import android.util.Log;
 
 import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.services.Handlers.LoginHandler;
+import com.ux7.fullhyve.services.Models.Contact;
 import com.ux7.fullhyve.services.Storage.AppData;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.ux7.fullhyve.ui.activities.ContactView;
 
 import java.net.URISyntaxException;
 
@@ -148,8 +150,8 @@ public class Realtime {
 //                            if(friend != null){
 //                                friend.addMessages(message.messages);
 //                            }
-                            AppData.getCache().setToken(message.messages.get(0).getMessage());
                         }
+                        ContactView.hoistedActivity.getMessages();
                     }
                 }
             }

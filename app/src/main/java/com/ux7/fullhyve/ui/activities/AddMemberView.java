@@ -25,9 +25,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddMemberView extends AppCompatActivity {
+public class AddMemberView extends AppCompatActivity implements AddMemberRecyclerViewAdapter.OnAddMemberInteractionListener{
 
-    List<ListMember> users;
+    List<ListMember> users = new ArrayList<>();
+
 
 
     LinearLayoutManager layoutManager;
@@ -35,6 +36,13 @@ public class AddMemberView extends AppCompatActivity {
     RecyclerView recyclerView;
     SearchView searchView;
     Button sendButton;
+
+    @Override
+    public void onUnselectOthers(Runnable runnable) {
+
+        recyclerView.post(runnable);
+
+    }
 
     public enum AddUserType implements Serializable {
 
@@ -66,7 +74,7 @@ public class AddMemberView extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new AddMemberRecyclerViewAdapter(users);
+        adapter = new AddMemberRecyclerViewAdapter(users, addUserType, this);
         recyclerView.setAdapter(adapter);
 
     }
@@ -79,6 +87,14 @@ public class AddMemberView extends AppCompatActivity {
 
             case FORWARD:
                 sendButton.setText("Forward");
+                break;
+
+            case ASSIGN_TASK_TEAM:
+                sendButton.setText("Assign");
+                break;
+
+            case ASSIGN_TASK_USER:
+                sendButton.setText("Assign");
                 break;
 
             default:
@@ -123,13 +139,14 @@ public class AddMemberView extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String s) {
 
-                searchUsers(s);
 
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
+
+                searchUsers(s);
                 return false;
             }
         });
@@ -140,15 +157,12 @@ public class AddMemberView extends AppCompatActivity {
     public void addUsers(View view) {
 
         Intent intent = new Intent();
-        intent.putExtra("users", getSelectedUserIds());
+        intent.putExtra("users", adapter.getSelectedUsers().toArray());
+        intent.putExtra("teams", adapter.getSelectedTeams().toArray());
+        intent.putExtra("user", adapter.getSelectedUser());
+        intent.putExtra("team", adapter.getSelectedTeam());
         setResult(RESULT_OK, intent);
         finish();
-
-    }
-
-    public int[] getSelectedUserIds() {
-
-        return ((AddMemberRecyclerViewAdapter)recyclerView.getAdapter()).getSelectedUserIds();
 
     }
 
@@ -159,6 +173,14 @@ public class AddMemberView extends AppCompatActivity {
 
             case FORWARD:
                 setTitle("Forward to");
+                break;
+
+            case ASSIGN_TASK_TEAM:
+                setTitle("Select team");
+                break;
+
+            case ASSIGN_TASK_USER:
+                setTitle("Select User");
                 break;
 
             default:
@@ -181,7 +203,17 @@ public class AddMemberView extends AppCompatActivity {
             }
         };
 
-        AppHandler.getInstance().contactHandler.searchUsers(searchTerm, 0, 500, new ArrayList<ListContact>(), this, runnable);
+        if (addUserType == AddUserType.ASSIGN_TASK_USER) {
+
+            AppHandler.getInstance().contactHandler.searchAddUsers(searchTerm, 0, 500, users, this, runnable);
+
+        } else if (addUserType == AddUserType.ASSIGN_TASK_TEAM) {
+
+            AppHandler.getInstance().teamHandler.searchAddTeams(0,500, searchTerm, users, this, runnable);
+
+        } else {
+            AppHandler.getInstance().contactHandler.searchAddUsers(searchTerm, 0, 500, users, this, runnable);
+        }
 
     }
 
