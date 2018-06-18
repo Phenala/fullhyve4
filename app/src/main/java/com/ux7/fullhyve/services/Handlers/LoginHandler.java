@@ -16,11 +16,13 @@ import com.ux7.fullhyve.services.Utility.ResponseFormat;
 import com.ux7.fullhyve.services.Utility.ResponseListener;
 import com.github.nkzawa.socketio.client.Ack;
 import com.ux7.fullhyve.ui.activities.LoginView;
+import com.ux7.fullhyve.ui.data.ListNotification;
 import com.ux7.fullhyve.ui.data.UserDetail;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class LoginHandler extends Handler {
 
@@ -275,7 +277,7 @@ public class LoginHandler extends Handler {
             }
         });
     }
-    public void getNotifications(final String lastNotificationTimestamp, final int offset, final int limit, final Activity activity, final Runnable runnable){
+    public void getNotifications(final int offset, final int limit, final List<ListNotification> notificationList, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         //args.put("lastNotificationTimestamp", lastNotificationTimestamp);
         args.put("offset", offset);
@@ -293,6 +295,10 @@ public class LoginHandler extends Handler {
                     if(notificationsR!=null && notificationsR.data.notifications!=null){
                         AppData.getCache().getNotifications().load(notificationsR.data.notifications);
                     }
+
+                    notificationList.clear();
+                    notificationList.addAll(Converter.portNotificationToListNotification(notificationsR.data.notifications));
+
                     activity.runOnUiThread(runnable);
                 }
             }

@@ -49,8 +49,8 @@ public class TaskSetView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_set_view);
 
-        buildViews();
         buildTaskSet();
+        buildViews();
         buildActionBar();
         buildRecyclerView();
     }
@@ -67,7 +67,7 @@ public class TaskSetView extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new TaskRecyclerViewAdapter(tasks);
+        adapter = new TaskRecyclerViewAdapter(tasks, project);
         recyclerView.setAdapter(adapter);
 
         getTasks();
@@ -79,6 +79,7 @@ public class TaskSetView extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getBaseContext(), NewTaskView.class);
                 intent.putExtra("taskSetDetail", taskSetDetail);
+                intent.putExtra("project", project);
                 startActivity(intent);
             }
         });

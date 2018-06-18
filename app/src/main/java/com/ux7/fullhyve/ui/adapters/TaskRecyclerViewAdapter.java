@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.ui.activities.TaskView;
+import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListTask;
 import com.ux7.fullhyve.ui.data.TaskDetail;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
@@ -31,10 +32,12 @@ import java.util.List;
 public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerViewAdapter.ViewHolder> {
 
     private final List<ListTask> mTasks;
+    public ListProject project;
     public boolean myTasks = false;
 
-    public TaskRecyclerViewAdapter(List<ListTask> items) {
+    public TaskRecyclerViewAdapter(List<ListTask> items, ListProject project) {
         mTasks = items;
+        this.project = project;
     }
 
     @Override
@@ -77,6 +80,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
 
         Intent intent = new Intent(context, TaskView.class);
         intent.putExtra("task", taskSet.detail);
+        intent.putExtra("project", project);
         context.startActivity(intent);
 
     }

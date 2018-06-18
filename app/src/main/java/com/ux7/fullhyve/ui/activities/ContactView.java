@@ -33,6 +33,7 @@ import java.util.List;
 public class ContactView extends AppCompatActivity implements MessagesRecyclerViewAdapter.OnMessageRecyclerInteractionListener {
 
     public static ContactView hoistedActivity;
+    public Runnable update;
 
     ListContact contact = new ListContact();
     List<ListMessage> messages = new ArrayList<>();
@@ -41,7 +42,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
     int messageEditingId;
     String messageToSend = "";
     int messageForwardingId;
-    int retrieveLimit = 10;
+    int retrieveLimit = 500;
     int size = retrieveLimit;
 
     Activity activity = this;
@@ -61,6 +62,13 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
         buildContact();
         buildActionBar();
         buildMessages();
+
+        update = new Runnable() {
+            @Override
+            public void run() {
+                getMessages();
+            }
+        };
 
     }
 
@@ -86,18 +94,18 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if (layoutManager.findLastVisibleItemPosition() == messages.size() - 1 && dy != 0) {
-
-                    size += retrieveLimit;
-
-                    recyclerView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            getMessages();
-                        }
-                    });
-
-                }
+//                if (layoutManager.findLastVisibleItemPosition() == messages.size() - 1 && dy != 0) {
+//
+//                    size += retrieveLimit;
+//
+//                    recyclerView.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            getMessages();
+//                        }
+//                    });
+//
+//                }
             }
         });
 

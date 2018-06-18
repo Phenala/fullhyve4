@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
+import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.ui.activities.AddMemberView;
 import com.ux7.fullhyve.ui.adapters.MemberRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListMember;
@@ -32,6 +33,7 @@ public class MemberFragment extends Fragment {
     Context context;
     ListTeam team;
     ListProject project;
+    boolean seeInviteButton;
 
     MemberOf type;
     List<ListMember> members = new ArrayList<>();
@@ -82,6 +84,7 @@ public class MemberFragment extends Fragment {
         context = getActivity();
 
         initializeRecyclerView();
+
         initializeFloatingActionButton();
 
         getMembers();
@@ -110,7 +113,9 @@ public class MemberFragment extends Fragment {
                     int itemPosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
                     if (itemPosition == (0)) {
                         // here you can fetch new data from server.
-                        fab.show();
+                        if (!seeInviteButton) {
+                            fab.show();
+                        }
                     } else {
                         fab.hide();
                     }
@@ -128,6 +133,18 @@ public class MemberFragment extends Fragment {
             public void run() {
 
                 identifyLeader();
+                if (type == MemberOf.PROJECT) {
+                    AddMemberView.intersectionTeams = new ArrayList<>();
+                    AddMemberView.intersectionUsers = new ArrayList<>();
+
+                    for (ListMember member : members) {
+                        if (member.team)
+                            AddMemberView.intersectionTeams.add(member);
+                        else
+                            AddMemberView.intersectionUsers.add(member);
+                    }
+
+                }
                 adapter.update();
 
             }
@@ -188,6 +205,12 @@ public class MemberFragment extends Fragment {
             }
 
         });
+
+         seeInviteButton = !((type == MemberOf.TEAM && team.detail.leaderId == AppData.getCache().getIdentity().getId())
+                || (type == MemberOf.PROJECT && project.detail.leaderId == AppData.getCache().getIdentity().getId()));
+
+         if (seeInviteButton)
+             fab.setVisibility(View.GONE);
 
     }
 

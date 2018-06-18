@@ -69,6 +69,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorAccent"
                 android:text="Upload"
+                android:onClick="getImage"
                 android:textColor="@color/colorPrimary" />
         </LinearLayout>
 

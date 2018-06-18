@@ -142,15 +142,16 @@ public class Realtime {
             public void call(final Object... args) {
                 if(args.length>0){
                     ResponseFormat.ReceivedMessagesR messages = gson.fromJson(args[0].toString(), ResponseFormat.ReceivedMessagesR.class);
+                    Log.e("Recieve Emission", messages.toString());
 
-                    if(messages!=null && messages.data.size() > 0){
-                        for(ResponseFormat.ReceivedMessages message:messages.data){
+                    Log.e("Recieve Emission", "recieve message emit");
+                    if(messages!=null){
                             //Contact friend = AppData.getCache().contacts.getContact(message.senderId);
 //                            if(friend != null){
 //                                friend.addMessages(message.messages);
 //                            }
-                        }
-                        ContactView.hoistedActivity.getMessages();
+                        if (ContactView.hoistedActivity != null)
+                            ContactView.hoistedActivity.runOnUiThread(ContactView.hoistedActivity.update);
                     }
                 }
             }
