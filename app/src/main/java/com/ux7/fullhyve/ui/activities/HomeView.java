@@ -72,7 +72,13 @@ public class HomeView extends AppCompatActivity
         initializeFloatingActionButton();
         initializeAdders();
 
-        switchToContacts();
+        String x = getIntent().getStringExtra("target");
+
+        if (x == "notification") {
+            switchToNotifications();
+        } else {
+            switchToContacts();
+        }
 
     }
 
