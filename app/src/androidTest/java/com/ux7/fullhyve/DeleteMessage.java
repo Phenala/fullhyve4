@@ -62,11 +62,6 @@ public class DeleteMessage {
     Espresso.registerIdlingResources(idlingResource1);
     onView(withId(R.id.messages_view)).perform(RecyclerViewActions.scrollToPosition(0)).check(matches(RecylerMatcher.atPosition(0, not(hasDescendant(withText("message test"))))));
 
-
-
-
-
-
   }
 
 }
