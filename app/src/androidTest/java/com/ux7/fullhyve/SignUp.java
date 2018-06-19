@@ -40,12 +40,12 @@ public class SignUp {
   public void initValues(){
     firstName="FirstName";
     lastName="LastName";
-    userName="someusername";
+    userName="someusername1";
     password="1234";
   }
 
   @Test
-  public void testSignUp(){
+  public void testSignUp() throws Exception{
     onView(withId(R.id.login_sign_up)).perform(click());
     onView(withId(R.id.register_first_name)).perform(clearText(),typeText(firstName),closeSoftKeyboard());
     onView(withId(R.id.register_last_name)).perform(clearText(),typeText(lastName),closeSoftKeyboard());
@@ -54,6 +54,17 @@ public class SignUp {
     onView(withId(R.id.register_confirm_password)).perform(clearText(),typeText(password),closeSoftKeyboard());
     onView(withId(R.id.register_button)).perform(click());
 
+
+    onView(withText("You have successfully been registered.")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+
+
+
+    onView(withId(R.id.username)).perform(clearText(),typeText(userName),closeSoftKeyboard());
+    onView(withId(R.id.password)).perform(clearText(),typeText(password),closeSoftKeyboard());
+    onView(withId(R.id.login_button)).perform(click());
+
+
+    Thread.sleep(2000);
     onView(
       allOf(withContentDescription("Open navigation drawer"),
         childAtPosition(
@@ -64,9 +75,6 @@ public class SignUp {
           1),
         isDisplayed())).perform(click());
 
-
-
-    onView(withText("You have successfully been registered.")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
     onView(withId(R.id.profile_identity_name)).check(matches(withText(firstName+" "+lastName)));
 
 

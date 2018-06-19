@@ -47,14 +47,14 @@ public class CreateNewTeam {
 
   @Before
   public void initValues(){
-    teamName="New Team";
+    teamName="New Team 2";
     teamFocus="Team Focus";
     teamDescription="Describe Team Here";
 
   }
 
   @Test
-  public void testDisplayTeams() throws Exception{
+  public void testCreateNewTeam() throws Exception{
 
     CountingIdlingResource idlingResource=new CountingIdlingResource("home");
     Espresso.registerIdlingResources(idlingResource);
@@ -74,7 +74,7 @@ public class CreateNewTeam {
         isDisplayed()));
 
     ViewInteraction perform = navigationMenuItemView.perform(click());
-    onView(MenuMatcher.getNavigationItemWithString("Teams")).perform(click());
+    //onView(MenuMatcher.getNavigationItemWithString("Teams")).perform(click());
 
     onView(withId(R.id.fab)).perform(click());
 
