@@ -13,8 +13,11 @@ import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.ui.activities.TaskView;
+import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListTask;
+import com.ux7.fullhyve.ui.data.ListTaskSet;
 import com.ux7.fullhyve.ui.data.TaskDetail;
+import com.ux7.fullhyve.ui.data.TaskSetDetail;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
 import com.ux7.fullhyve.ui.util.Images;
@@ -31,10 +34,14 @@ import java.util.List;
 public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerViewAdapter.ViewHolder> {
 
     private final List<ListTask> mTasks;
+    public ListProject project;
+    public TaskSetDetail taskSet;
     public boolean myTasks = false;
 
-    public TaskRecyclerViewAdapter(List<ListTask> items) {
+    public TaskRecyclerViewAdapter(List<ListTask> items, ListProject project, TaskSetDetail taskSet) {
         mTasks = items;
+        this.project = project;
+        this.taskSet = taskSet;
     }
 
     @Override
@@ -73,10 +80,12 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         });
     }
 
-    public void goToTask(Context context, ListTask taskSet) {
+    public void goToTask(Context context, ListTask task) {
 
         Intent intent = new Intent(context, TaskView.class);
-        intent.putExtra("task", taskSet.detail);
+        intent.putExtra("task", task.detail);
+        intent.putExtra("project", project);
+        intent.putExtra("taskset", taskSet);
         context.startActivity(intent);
 
     }

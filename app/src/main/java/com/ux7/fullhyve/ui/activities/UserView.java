@@ -1,9 +1,12 @@
 package com.ux7.fullhyve.ui.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +36,8 @@ public class UserView extends AppCompatActivity {
 
     public void buildUserDetail() {
 
+        final Activity activity = this;
+
         ((TextView)findViewById(R.id.user_name)).setText(userDetail.name);
         ((TextView)findViewById(R.id.user_title)).setText(userDetail.title);
         ((TextView)findViewById(R.id.user_bio)).setText(userDetail.bio);
@@ -48,22 +53,60 @@ public class UserView extends AppCompatActivity {
                 .transform(new CircleTransform())
                 .into((ImageView)findViewById(R.id.user_picture));
 
-        Button button = ((Button)findViewById(R.id.user_button));
+        final Button button = ((Button)findViewById(R.id.user_button));
 
         switch (userDetail.request) {
             case ACCEPTED:
                 button.setText("Send Message");
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getBaseContext(), ContactView.class);
+                        intent.putExtra("contact", userDetail);
+                        startActivity(intent);
+                    }
+                });
                 break;
             case REJECTED:
                 button.setText("Request Friendship");
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Runnable runnable = new Runnable() {
+                            @Override
+                            public void run() {
+
+                                userDetail.request = UserDetail.RequestStatus.UNDECIDED;
+                                button.setText("Pending Request");
+                                button.setClickable(false);
+                                button.setBackgroundResource(R.color.colorBackground);
+
+                            }
+                        };
+
+                        AppHandler.getInstance().loginHandler.addFriend(userDetail.id, activity, runnable);
+
+                    }
+                });
                 break;
-            case UNDECIDED:
+            case REQUESTED:
                 button.setText("Pending Request");
                 button.setClickable(false);
                 button.setBackgroundResource(R.color.colorBackground);
                 break;
-            case REQUESTED:
+            case UNDECIDED:
                 button.setText("Accept Request");
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Intent intent = new Intent(getBaseContext(), HomeView.class);
+                        intent.putExtra("target", "notification");
+                        startActivity(intent);
+
+                    }
+                });
                 break;
         }
 

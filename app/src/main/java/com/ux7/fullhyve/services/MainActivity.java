@@ -24,6 +24,7 @@ import com.ux7.fullhyve.ui.data.ListAnnouncement;
 import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.ListMessage;
+import com.ux7.fullhyve.ui.data.ListNotification;
 import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListReply;
 import com.ux7.fullhyve.ui.data.ListTaskSet;
@@ -242,7 +243,12 @@ public class MainActivity extends AppCompatActivity {
                 loginHandler.signup(fName, lName, email, userName, password, this, new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("Status","New account created");
+                        Log.e("Status", "New account created");
+                    }
+                }, new Runnable() {
+                    @Override
+                    public void run() {
+
                     }
                 });
 
@@ -302,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case "Get notifications":
-                loginHandler.getNotifications("", 0, 10, this, new Runnable() {
+                loginHandler.getNotifications( 0, 10, new ArrayList<ListNotification>(), this, new Runnable() {
                     @Override
                     public void run() {
                         Log.e("Status","Notification retrieved");

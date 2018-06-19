@@ -23,7 +23,7 @@ public class TaskDetail extends ListTask implements Serializable {
     public String assignerImage = "http://0.gravatar.com/avatar/c77b7988df1396d40ed4a62be4e55565?s=64&d=mm&r=g";
     public String assignerName = "Tokyo Drift";
     public boolean team = true;
-    public int teamId = 142342;
+    public int teamId = -1;
     public String teamImage = "http://0.gravatar.com/avatar/c77b7988df1396d40ed4a62be4e55565?s=64&d=mm&r=g";
     public String teamName = "Tokyo Drift";
     public TaskStatus status = TaskStatus.WAITING;

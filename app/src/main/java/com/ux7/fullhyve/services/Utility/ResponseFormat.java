@@ -56,7 +56,15 @@ public class ResponseFormat{
     }
 
     public class ReceivedMessagesR{
-        public List<ReceivedMessages> data;
+        public Message data;
+    }
+
+    public class IORecieveMessage extends Message {
+        public int friendId;
+
+        public IORecieveMessage(int id, String message, String timestamp, boolean seen, boolean sent) {
+            super(id, message, timestamp, seen, sent);
+        }
     }
 
     // getMessages listener
@@ -175,13 +183,13 @@ public class ResponseFormat{
         public List<MyProject> myProjects;
     }
     public class CreateNewProject{
-        public int data;
+        public Project data;
     }
     public class CreateNewTaskR{
-        public int data;
+        public Task data;
     }
     public class CreateNewTasksetR{
-        public int data;
+        public TaskSet data;
     }
     public class GetMyProjectsR{
         public MyProjects data;

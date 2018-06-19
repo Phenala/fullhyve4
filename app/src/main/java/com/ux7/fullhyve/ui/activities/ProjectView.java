@@ -67,6 +67,11 @@ public class ProjectView extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
+        if (!project.contributor) {
+            tabLayout.setVisibility(View.GONE);
+        }
+
         idlingResource.increment();
     }
 
@@ -175,6 +180,13 @@ public class ProjectView extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+
+            if (!project.contributor) {
+                ProjectDetailFragment projectDetails = new ProjectDetailFragment();
+                projectDetails.setProject(project);
+                return projectDetails;
+            }
+
             switch (position) {
                 case 0:
                     TaskSetFragment taskSetFragment = new TaskSetFragment();
@@ -196,7 +208,7 @@ public class ProjectView extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return project.contributor ? 3 : 1;
         }
 
         @Override

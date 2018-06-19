@@ -10,4 +10,16 @@ public class Link implements Serializable{
     public int id;
 //    public String link;
 //    public String feedback;
+
+
+    public enum LinkType {
+
+        FRIEND_REQUEST,
+        TEAM_REQUEST,
+        PROJECT_TEAM_REQUEST,
+        PROJECT_INDIVIDUAL_REQUEST,
+        ASSIGNMENT
+
+    }
 }
+

@@ -1,5 +1,6 @@
 package com.ux7.fullhyve.ui.activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
@@ -68,6 +69,30 @@ public class RegisterView extends AppCompatActivity {
 
         }
 
+        if (password.getText().toString().length() < 4) {
+
+            AlertDialog.Builder amb = new AlertDialog.Builder(this);
+            amb.setMessage("Password length should be greater than 3").setCancelable(true).show();
+            return;
+
+        }
+
+        if (username.getText().toString().length() < 6) {
+
+            AlertDialog.Builder amb = new AlertDialog.Builder(this);
+            amb.setMessage("Username length should be greater than 5").setCancelable(true).show();
+            return;
+
+        }
+
+        if (password.getText().toString().length() > 30) {
+
+            AlertDialog.Builder amb = new AlertDialog.Builder(this);
+            amb.setMessage("Password length should be less than 30").setCancelable(true).show();
+            return;
+
+        }
+
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setMessage("Registering ...");
         pd.show();
@@ -82,7 +107,18 @@ public class RegisterView extends AppCompatActivity {
             }
         };
 
-        AppHandler.getInstance().loginHandler.signup(firstName, lastName, "", usernameString, passwordString, this, runnable);
+        Activity activity = this;
+
+        Runnable noUserrname = new Runnable() {
+            @Override
+            public void run() {
+                pd.dismiss();
+                AlertDialog.Builder amb = new AlertDialog.Builder(activity);
+                amb.setMessage("Username is already taken.").setCancelable(true).show();
+            }
+        };
+
+        AppHandler.getInstance().loginHandler.signup(firstName, lastName, "", usernameString, passwordString, this, runnable, noUserrname);
 
         //handleRegisterLogic
 

@@ -31,7 +31,7 @@ public class ProjectHandler extends Handler {
 
         myProjects = ProjectCacheManager.getMyProjects(offset, limit);
 
-        if(myProjects!=null && myProjects.size() > 0){
+        if(!Realtime.socket.connected()){
             listProjects.clear();
             listProjects.addAll(Converter.portMyProjectToListProject(myProjects));
 
@@ -364,6 +364,8 @@ public class ProjectHandler extends Handler {
         HashMap<String, Object> args = new HashMap<>();
         args.put("name",name);
         args.put("projectId",projectId);
+        args.put("deadline", deadline.getTime());
+        args.put("description", description);
 
         JSONObject req = RequestFormat.createRequestObj("newTaskset", args);
 
@@ -409,7 +411,7 @@ public class ProjectHandler extends Handler {
 
 
 
-    public void newTask(String title, String description, long deadline, int assignerId, int assigneeId, int assigneeTeamId, int taskSetId, final Activity activity, final Runnable runnable){
+    public void newTask(String title, String description, long deadline, int projectId, int assignerId, int assigneeId, int assigneeTeamId, int taskSetId, final Activity activity, final Runnable runnable){
         HashMap<String, Object> args = new HashMap<>();
         args.put("tasksetId",taskSetId);
         args.put("title", title);
@@ -417,6 +419,7 @@ public class ProjectHandler extends Handler {
         args.put("deadline", deadline);
         args.put("assignerId", assignerId);
         args.put("assigneeId", assigneeId);
+        args.put("projectId", projectId);
         args.put("assigneeTeamId", assigneeTeamId);
 
         JSONObject req = RequestFormat.createRequestObj("newTask",args);

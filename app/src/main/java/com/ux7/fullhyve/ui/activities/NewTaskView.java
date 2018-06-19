@@ -17,8 +17,10 @@ import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.services.Models.Task;
+import com.ux7.fullhyve.services.Models.TaskSet;
 import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.ui.data.ListMember;
+import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListTaskSet;
 import com.ux7.fullhyve.ui.data.TaskSetDetail;
 import com.ux7.fullhyve.ui.fragments.MemberFragment;
@@ -32,6 +34,7 @@ public class NewTaskView extends AppCompatActivity {
     EditText name, description;
     DatePicker deadline;
     ListMember team, assignee;
+    ListProject project;
     ImageView newTeamImage, newAssigneeImage;
     TextView newTeamName, newAssigneeName;
 
@@ -70,6 +73,7 @@ public class NewTaskView extends AppCompatActivity {
     public void buildTaskSet() {
 
         taskSetDetail = (TaskSetDetail) getIntent().getSerializableExtra("taskSetDetail");
+        project = (ListProject) getIntent().getSerializableExtra("project");
 
     }
 
@@ -138,6 +142,7 @@ public class NewTaskView extends AppCompatActivity {
             @Override
             public void run() {
 
+                TaskSetView.get = true;
                 finish();
             }
         };
@@ -152,6 +157,7 @@ public class NewTaskView extends AppCompatActivity {
                 .newTask(name.getText().toString(),
                         description.getText().toString(),
                         deadlineTIme,
+                        project.id,
                         AppData.getCache().getIdentity().getId(),
                         assignee.id,
                         teamId,

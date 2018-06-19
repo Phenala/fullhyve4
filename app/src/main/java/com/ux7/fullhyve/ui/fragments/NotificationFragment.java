@@ -1,6 +1,7 @@
 package com.ux7.fullhyve.ui.fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,16 +12,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.picasso.Cache;
+import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
+import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.ui.adapters.NotificationRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListNotification;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class NotificationFragment extends Fragment {
+public class NotificationFragment extends Fragment implements NotificationRecyclerViewAdapter.OnNotificationRecyclerInteractionListener {
+
+
+    List<ListNotification> notificationList = new ArrayList<>();
 
     View fragmentView;
+    RecyclerView recyclerView;
+    LinearLayoutManager layoutManager;
+    NotificationRecyclerViewAdapter adapter;
 
     private OnHomeInteractionListener mListener;
 
@@ -58,18 +69,14 @@ public class NotificationFragment extends Fragment {
 
     public void buildRecyclerView() {
 
-        RecyclerView recyclerView = (RecyclerView) fragmentView.findViewById(R.id.notification_list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView = (RecyclerView) fragmentView.findViewById(R.id.notification_list);
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new NotificationRecyclerViewAdapter(notificationList, getActivity(), this);
+        recyclerView.setAdapter(adapter);
 
-        ArrayList<ListNotification> nlist = new ArrayList<>();
-        //nlist.add(ListMessage.getSpinnerValue());
-        for (int i = 0; i < 20; i++) {
-            ListNotification l = new ListNotification();
-            nlist.add(l);
-        }
+        getNotifications();
 
-        recyclerView.setAdapter(new NotificationRecyclerViewAdapter(nlist));
-        recyclerView.getLayoutManager().scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
     }
 
 
@@ -77,6 +84,28 @@ public class NotificationFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void getNotifications() {
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                adapter.update();
+
+            }
+        };
+
+        AppHandler.getInstance().loginHandler.getNotifications(0, 500, notificationList, getActivity(), runnable);
+
+    }
+
+    @Override
+    public void onInteractNotification(ListNotification notification) {
+
+        getNotifications();
+
     }
 
     /**

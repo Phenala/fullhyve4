@@ -28,8 +28,8 @@ import java.util.List;
 public class AddMemberView extends AppCompatActivity implements AddMemberRecyclerViewAdapter.OnAddMemberInteractionListener{
 
     List<ListMember> users = new ArrayList<>();
-
-
+    public static List<ListMember> intersectionUsers = new ArrayList<>();
+    public static List<ListMember> intersectionTeams = new ArrayList<>();
 
     LinearLayoutManager layoutManager;
     AddMemberRecyclerViewAdapter adapter;
@@ -76,6 +76,14 @@ public class AddMemberView extends AppCompatActivity implements AddMemberRecycle
 
         adapter = new AddMemberRecyclerViewAdapter(users, addUserType, this);
         recyclerView.setAdapter(adapter);
+
+        if (addUserType == AddUserType.ASSIGN_TASK_TEAM) {
+            users.addAll(intersectionTeams);
+        }
+
+        if (addUserType == AddUserType.ASSIGN_TASK_USER) {
+            users.addAll(intersectionUsers);
+        }
 
     }
 
@@ -198,6 +206,30 @@ public class AddMemberView extends AppCompatActivity implements AddMemberRecycle
             @Override
             public void run() {
 
+                List<ListMember> intersection = new ArrayList<>();
+
+                switch (addUserType) {
+                    case ASSIGN_TASK_USER:
+                        intersection = intersectionUsers;
+                        break;
+                    case ASSIGN_TASK_TEAM:
+                        intersection = intersectionTeams;
+                        break;
+                }
+
+                if (addUserType == AddUserType.ASSIGN_TASK_TEAM || addUserType == AddUserType.ASSIGN_TASK_USER) {
+
+                    List<ListMember> toRemove = new ArrayList<>();
+                    for (ListMember member : users) {
+                        if (!intersection.contains(member)) {
+                            toRemove.add(member);
+                        }
+                    }
+                    for (ListMember member : toRemove) {
+                        users.remove(member);
+                    }
+
+                }
                 adapter.update();
 
             }

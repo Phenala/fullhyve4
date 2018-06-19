@@ -3,9 +3,11 @@ package com.ux7.fullhyve.services.Utility;
 import com.ux7.fullhyve.services.Handlers.UserSelectHandler;
 import com.ux7.fullhyve.services.Models.Announcement;
 import com.ux7.fullhyve.services.Models.Contact;
+import com.ux7.fullhyve.services.Models.Link;
 import com.ux7.fullhyve.services.Models.Message;
 import com.ux7.fullhyve.services.Models.MyProject;
 import com.ux7.fullhyve.services.Models.MyTeam;
+import com.ux7.fullhyve.services.Models.Notification;
 import com.ux7.fullhyve.services.Models.Project;
 import com.ux7.fullhyve.services.Models.Task;
 import com.ux7.fullhyve.services.Models.TaskSet;
@@ -17,6 +19,7 @@ import com.ux7.fullhyve.ui.data.ListAnnouncement;
 import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.ListMessage;
+import com.ux7.fullhyve.ui.data.ListNotification;
 import com.ux7.fullhyve.ui.data.ListProject;
 import com.ux7.fullhyve.ui.data.ListReply;
 import com.ux7.fullhyve.ui.data.ListTask;
@@ -71,6 +74,10 @@ public class Converter {
     public static List<ListContact> portContactToListContact(List<Contact> contacts) {
 
         List<ListContact> uiContacts = new ArrayList<>();
+
+        if (contacts == null) {
+            return new ArrayList<>();
+        }
 
         for (Contact contact: contacts) {
 
@@ -130,6 +137,10 @@ public class Converter {
 
 
         List<ListProject> uiProjects = new ArrayList<>();
+
+        if (projects == null) {
+            return uiProjects;
+        }
 
         for (MyProject project : projects) {
 
@@ -573,8 +584,8 @@ public class Converter {
         userDetail.title = user.getTitle();
         userDetail.image = user.getImage();
         userDetail.bio = user.getDescription();
-
-
+        UserDetail.RequestStatus[] rs = new UserDetail.RequestStatus[] {UserDetail.RequestStatus.ACCEPTED, UserDetail.RequestStatus.REQUESTED, UserDetail.RequestStatus.UNDECIDED, UserDetail.RequestStatus.REJECTED};
+        userDetail.request = rs[user.request];
 
         userDetail.skills = user.getSkills();
 
@@ -608,10 +619,38 @@ public class Converter {
         listContact.lastMessage = "";
         listContact.lastMessageSent = false;
         listContact.newMessages = 0;
+        listContact.searchResult = true;
         listContact.userDetail = portUserToUserDetail(user);
 
         return listContact;
 
+    }
+
+    public static List<ListNotification> portNotificationToListNotification (List<Notification> notifications) {
+
+        List<ListNotification> notificationList = new ArrayList<>();
+
+        for (Notification notification : notifications) {
+
+            notificationList.add(portNotificationToListNotification(notification));
+
+        }
+
+        return notificationList;
+    }
+
+
+    public static ListNotification portNotificationToListNotification (Notification notification) {
+
+        ListNotification listNotification = new ListNotification();
+
+        listNotification.id = notification.id;
+        listNotification.message = notification.comment;
+        listNotification.image = notification.image;
+        Link.LinkType[] types = new Link.LinkType[] {Link.LinkType.FRIEND_REQUEST, Link.LinkType.TEAM_REQUEST, Link.LinkType.PROJECT_TEAM_REQUEST, Link.LinkType.PROJECT_INDIVIDUAL_REQUEST, Link.LinkType.ASSIGNMENT};
+        listNotification.type = types[notification.options[0].type];
+
+        return listNotification;
     }
 
 

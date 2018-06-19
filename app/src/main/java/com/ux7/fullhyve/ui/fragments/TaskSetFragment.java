@@ -33,6 +33,8 @@ import java.util.List;
  */
 public class TaskSetFragment extends Fragment {
 
+    public static boolean get = false;
+
     View fragmentView;
     ListProject project;
     List<ListTaskSet> taskSetList = new ArrayList<>();
@@ -144,7 +146,8 @@ public class TaskSetFragment extends Fragment {
             }
         };
 
-        AppHandler.getInstance().projectHandler.getTaskSets(project.id, 0, 500, taskSetList, activity, runnable);
+        if (project != null)
+            AppHandler.getInstance().projectHandler.getTaskSets(project.id, 0, 500, taskSetList, activity, runnable);
 
     }
 
@@ -173,5 +176,14 @@ public class TaskSetFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+
+    public void onResume() {
+        if (get) {
+            getTaskSets();
+            get = false;
+        }
+        super.onResume();
     }
 }

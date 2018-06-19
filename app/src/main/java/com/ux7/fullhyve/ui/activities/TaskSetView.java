@@ -35,6 +35,8 @@ import java.util.List;
 
 public class TaskSetView extends AppCompatActivity {
 
+    public static boolean get = false;
+
     ListProject project;
     TaskSetDetail taskSetDetail;
     LinearLayout taskDetailsLayout;
@@ -49,8 +51,8 @@ public class TaskSetView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_set_view);
 
-        buildViews();
         buildTaskSet();
+        buildViews();
         buildActionBar();
         buildRecyclerView();
     }
@@ -67,7 +69,7 @@ public class TaskSetView extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new TaskRecyclerViewAdapter(tasks);
+        adapter = new TaskRecyclerViewAdapter(tasks, project, taskSetDetail);
         recyclerView.setAdapter(adapter);
 
         getTasks();
@@ -79,6 +81,7 @@ public class TaskSetView extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getBaseContext(), NewTaskView.class);
                 intent.putExtra("taskSetDetail", taskSetDetail);
+                intent.putExtra("project", project);
                 startActivity(intent);
             }
         });
@@ -173,5 +176,13 @@ public class TaskSetView extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onResume() {
+        if (get) {
+            getTasks();
+            get = false;
+        }
+        super.onResume();
     }
 }

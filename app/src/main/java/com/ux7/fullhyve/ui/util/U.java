@@ -164,5 +164,42 @@ public class U {
 
     }
 
+    public static String getButtonText (TaskStatus taskStatus) {
+
+        switch (taskStatus) {
+
+            case PENDINGEVALUATION:
+                return "Approve";
+
+            case WAITING:
+                return "Begin";
+
+            case PENDINGREVISION:
+                return "Approve";
+
+            case INPROGRESS:
+                return "Complete";
+
+                default:
+                    return "";
+
+        }
+
+    }
+
+    public static int getTaskButtonViewer (TaskStatus taskStatus, int assigner, int assignee) {
+
+        switch (taskStatus) {
+
+            case PENDINGEVALUATION:
+                return assigner;
+
+                default:
+                    return assignee;
+
+        }
+
+    }
+
 
 }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.ui.activities.ContactView;
+import com.ux7.fullhyve.ui.activities.UserView;
 import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.interfaces.OnHomeInteractionListener;
 import com.ux7.fullhyve.ui.util.CircleTransform;
@@ -87,10 +88,17 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
     }
 
     public void openMessages(ListContact contact) {
-        Intent intent = new Intent(mListener.getHomeContext(), ContactView.class);
-        intent.putExtra("contact", contact);
-        contact.newMessages = 0;
-        mListener.onStartNewActivity(intent);
+        if (contact.searchResult) {
+            Intent intent = new Intent(mListener.getHomeContext(), UserView.class);
+            intent.putExtra("userDetail", contact.userDetail);
+            mListener.onStartNewActivity(intent);
+
+        }else {
+            Intent intent = new Intent(mListener.getHomeContext(), ContactView.class);
+            intent.putExtra("contact", contact);
+            contact.newMessages = 0;
+            mListener.onStartNewActivity(intent);
+        }
     }
 
     public void update() {

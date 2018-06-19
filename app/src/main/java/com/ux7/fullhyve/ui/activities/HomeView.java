@@ -44,6 +44,7 @@ public class HomeView extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnHomeInteractionListener {
 
     public static Boolean updateUserNavigation = false;
+    public static Activity hoistedActivity;
 
 
     OnHomeSearchListener searchTarget;
@@ -76,7 +77,15 @@ public class HomeView extends AppCompatActivity
         initializeAdders();
         idlingResource.increment();
 
-        switchToContacts();
+        hoistedActivity = this;
+
+        String x = getIntent().getStringExtra("target");
+
+        if (x == "notification") {
+            switchToNotifications();
+        } else {
+            switchToContacts();
+        }
 
     }
 
