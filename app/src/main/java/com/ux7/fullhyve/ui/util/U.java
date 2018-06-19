@@ -175,7 +175,7 @@ public class U {
                 return "Begin";
 
             case PENDINGREVISION:
-                return "Approve";
+                return "Complete";
 
             case INPROGRESS:
                 return "Complete";

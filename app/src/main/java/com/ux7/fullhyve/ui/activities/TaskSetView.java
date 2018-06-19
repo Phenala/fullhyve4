@@ -128,7 +128,6 @@ public class TaskSetView extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
                 adapter.setFilterTasks(b);
-                Toast.makeText(getBaseContext(), "Check", Toast.LENGTH_SHORT).show();
 
             }
         });

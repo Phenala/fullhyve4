@@ -3,6 +3,7 @@ package com.ux7.fullhyve.services.Handlers;
 import android.app.Activity;
 import android.util.Log;
 
+import com.google.gson.JsonElement;
 import com.ux7.fullhyve.services.Models.MyProject;
 import com.ux7.fullhyve.services.Models.Project;
 import com.ux7.fullhyve.services.Models.Task;
@@ -156,7 +157,7 @@ public class ProjectHandler extends Handler {
         args.put("offset",offset);
         args.put("limit", limit);
 
-        JSONObject req = RequestFormat.createRequestObj("getTasksets",args);
+        JsonElement req = RequestFormat.createRequestObj(args, "getTasksets");
 
         Realtime.socket.emit("getTasksets", req, new Ack() {
             @Override
@@ -250,7 +251,7 @@ public class ProjectHandler extends Handler {
         args.put("teamIds",teamIds);
         args.put("individualIds",individualIds);
 
-        JSONObject req = RequestFormat.createRequestObj("addContributors",args);
+        JsonElement req = RequestFormat.createRequestObj(args, "addContributors");
 
         Realtime.socket.emit("addContributors", req, new Ack() {
             @Override

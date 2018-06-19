@@ -93,7 +93,7 @@ public class TaskView extends AppCompatActivity {
 
         taskInstructions.setText(taskDetail.instructions);
         taskStateChange.setText(U.getButtonText(taskDetail.status));
-        if (taskDetail.status == TaskStatus.PENDINGEVALUATION) {
+        if (taskDetail.status == TaskStatus.PENDINGEVALUATION && taskDetail.assignerId == AppData.getCache().getIdentity().getId()) {
             taskRevise.setVisibility(View.VISIBLE);
         } else {
             taskRevise.setVisibility(View.GONE);
@@ -159,11 +159,12 @@ public class TaskView extends AppCompatActivity {
                             }
                         }
                         buildViewSet();
+                        TaskSetView.get = true;
 
                     }
                 };
 
-                AppHandler.getInstance().projectHandler.getTasks(project.id, taskSet.id, 0, 500, listTasks, activity, runnable2);
+                AppHandler.getInstance().projectHandler.getTasks(project.id, taskSet.id,0, 500, listTasks, activity, runnable2);
 
             }
         };
@@ -179,7 +180,7 @@ public class TaskView extends AppCompatActivity {
                 break;
 
             case PENDINGREVISION:
-                AppHandler.getInstance().projectHandler.changeTaskStatus(taskDetail.id, project.id, "approve", this, runnable);
+                AppHandler.getInstance().projectHandler.completeTask(taskDetail.id, project.id, this, runnable);
                 break;
 
             case PENDINGEVALUATION:
@@ -195,11 +196,29 @@ public class TaskView extends AppCompatActivity {
 
     public void setTaskRevise(View view) {
 
+        final Activity activity = this;
+
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
 
+                List<ListTask> listTasks = new ArrayList<>();
 
+                Runnable runnable2 = new Runnable() {
+                    @Override
+                    public void run() {
+                        for (ListTask listTask : listTasks) {
+                            if (listTask.id == taskDetail.id) {
+                                taskDetail = listTask.detail;
+                            }
+                        }
+                        buildViewSet();
+                        TaskSetView.get = true;
+
+                    }
+                };
+
+                AppHandler.getInstance().projectHandler.getTasks(project.id, taskSet.id,0, 500, listTasks, activity, runnable2);
 
             }
         };

@@ -4,6 +4,8 @@ package com.ux7.fullhyve.services.Handlers;
 import android.app.Activity;
 import android.util.Log;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.ux7.fullhyve.services.Models.Announcement;
 import com.ux7.fullhyve.services.Models.MyProject;
 import com.ux7.fullhyve.services.Models.MyTeam;
@@ -512,7 +514,7 @@ public class TeamHandler extends Handler {
         args.put("teamId",teamId);
         args.put("memberIds",memberIds);
 
-        JSONObject req = RequestFormat.createRequestObj("addMembers",args);
+        JsonElement req = RequestFormat.createRequestObj(args, "addMembers");
 
         Realtime.socket.emit("addMembers", req, new Ack() {
             @Override

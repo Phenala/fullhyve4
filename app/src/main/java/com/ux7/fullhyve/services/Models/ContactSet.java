@@ -1,5 +1,7 @@
 package com.ux7.fullhyve.services.Models;
 
+import android.util.Log;
+
 import com.ux7.fullhyve.services.Utility.Util;
 
 import java.io.Serializable;
@@ -49,7 +51,9 @@ public class ContactSet implements Serializable{
             return null;
         } else {
             String[] searchName = name.split(" ");
+            Log.e("Search Investigation", "split " + searchName.length);
             Collection<Contact> friends = contacts.values();
+            Log.e("Search Investigation", "contacts" + contacts.values().size());
 
             for (Contact friend : friends) {
                 if (searchName.length == 1) {
@@ -64,7 +68,7 @@ public class ContactSet implements Serializable{
             }
         }
 
-        return Util.sliceArray(friendsR,offset,limit);
+        return friendsR;
     }
 
     public void resetContacts(){

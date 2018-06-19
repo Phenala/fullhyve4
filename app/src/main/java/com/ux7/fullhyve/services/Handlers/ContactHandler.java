@@ -301,8 +301,7 @@ public class ContactHandler extends Handler {
                     final ResponseFormat.SearchUsersR searchUsersR = gson.fromJson(args[0].toString(), ResponseFormat.SearchUsersR.class);
                     List<Contact> friends = AppData.getCache().getContacts().searchContacts(name, offset, limit);
 
-                    //searchUsersR.data.friends = new ArrayList<>();
-                    //searchUsersR.data.friends.addAll(friends);
+                    searchUsersR.data.users.addAll(friends);
 
                     listContacts.clear();
                     listContacts.addAll(Converter.portUserToListContact(searchUsersR.data.users));

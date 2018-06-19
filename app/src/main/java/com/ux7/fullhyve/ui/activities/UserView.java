@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.services.Models.Enclosure;
+import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.ui.data.UserDetail;
 import com.ux7.fullhyve.ui.util.ActionBarTarget;
 import com.ux7.fullhyve.ui.util.CircleTransform;
@@ -54,6 +55,9 @@ public class UserView extends AppCompatActivity {
                 .into((ImageView)findViewById(R.id.user_picture));
 
         final Button button = ((Button)findViewById(R.id.user_button));
+
+        if (userDetail.id == AppData.getCache().getIdentity().getId())
+            button.setVisibility(View.GONE);
 
         switch (userDetail.request) {
             case ACCEPTED:

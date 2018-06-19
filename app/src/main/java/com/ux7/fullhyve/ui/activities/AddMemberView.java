@@ -20,6 +20,7 @@ import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.ui.adapters.AddMemberRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.data.ListMember;
+import com.ux7.fullhyve.ui.fragments.MemberFragment;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -165,12 +166,41 @@ public class AddMemberView extends AppCompatActivity implements AddMemberRecycle
     public void addUsers(View view) {
 
         Intent intent = new Intent();
-        intent.putExtra("users", adapter.getSelectedUsers().toArray());
-        intent.putExtra("teams", adapter.getSelectedTeams().toArray());
         intent.putExtra("user", adapter.getSelectedUser());
         intent.putExtra("team", adapter.getSelectedTeam());
         setResult(RESULT_OK, intent);
-        finish();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                MemberFragment.get = true;
+                finish();
+            }
+        };
+
+        if (addUserType == AddUserType.INVITE_TO_PROJECT) {
+            int[] users = new int[adapter.getSelectedUsers().size()];
+            for (int i = 0; i < adapter.getSelectedUsers().size(); i++) {
+                users[i] = adapter.getSelectedUsers().get(i).id;
+            }
+            int[] teams = new int[adapter.getSelectedTeams().size()];
+            for (int i = 0; i < adapter.getSelectedTeams().size(); i++) {
+                teams[i] = adapter.getSelectedTeams().get(i).id;
+            }
+            int projectid = getIntent().getIntExtra("projectId", 0);
+            AppHandler.getInstance().projectHandler.addContributors(projectid, teams, users, this, runnable);
+            finish();
+        } else if (addUserType == AddUserType.INVITE_TO_TEAM) {
+            int[] users = new int[adapter.getSelectedUsers().size()];
+            for (int i = 0; i < adapter.getSelectedUsers().size(); i++) {
+                users[i] = adapter.getSelectedUsers().get(i).id;
+            }
+            int teamid = getIntent().getIntExtra("teamId", 0);
+            AppHandler.getInstance().teamHandler.addMembers(teamid, users, this, runnable);
+            finish();
+        } else {
+            finish();
+        }
 
     }
 

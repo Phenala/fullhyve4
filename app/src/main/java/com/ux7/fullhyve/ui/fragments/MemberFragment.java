@@ -198,13 +198,16 @@ public class MemberFragment extends Fragment {
                 if (type == MemberOf.TEAM) {
 
                     intent.putExtra("type", AddMemberView.AddUserType.INVITE_TO_TEAM);
-                    startActivityForResult(intent, 0);
+                    intent.putExtra("teamId", team.id);
 
                 } else if (type == MemberOf.PROJECT) {
 
                     intent.putExtra("type", AddMemberView.AddUserType.INVITE_TO_PROJECT);
+                    intent.putExtra("projectId", project.id);
 
                 }
+
+                startActivity(intent);
 
             }
 

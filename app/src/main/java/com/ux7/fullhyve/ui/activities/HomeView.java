@@ -211,6 +211,7 @@ public class HomeView extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getBaseContext(), NewTeam.class);
+                intent.putExtra("type", AddMemberView.AddUserType.INVITE_TO_TEAM);
                 startActivity(intent);
             }
         };

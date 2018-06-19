@@ -299,6 +299,10 @@ public class Converter {
 
         List<ListAnnouncement> uiAnnouncement = new ArrayList<>();
 
+        if (announcements == null) {
+            return uiAnnouncement;
+        }
+
         for (Announcement announcement : announcements) {
 
             ListAnnouncement nAnnouncement = portAnnouncementToListAnnouncement(announcement);
