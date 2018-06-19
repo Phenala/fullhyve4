@@ -169,13 +169,13 @@ public class U {
         switch (taskStatus) {
 
             case PENDINGEVALUATION:
-                return "Evaluate";
+                return "Approve";
 
             case WAITING:
                 return "Begin";
 
             case PENDINGREVISION:
-                return "Revise";
+                return "Approve";
 
             case INPROGRESS:
                 return "Complete";

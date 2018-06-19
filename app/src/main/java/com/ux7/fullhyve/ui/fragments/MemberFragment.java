@@ -26,8 +26,12 @@ import com.ux7.fullhyve.ui.data.ListTeam;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 
 public class MemberFragment extends Fragment {
+
+    public static boolean get = false;
 
     View view;
     Context context;
@@ -194,13 +198,13 @@ public class MemberFragment extends Fragment {
                 if (type == MemberOf.TEAM) {
 
                     intent.putExtra("type", AddMemberView.AddUserType.INVITE_TO_TEAM);
+                    startActivityForResult(intent, 0);
 
                 } else if (type == MemberOf.PROJECT) {
 
                     intent.putExtra("type", AddMemberView.AddUserType.INVITE_TO_PROJECT);
 
                 }
-                startActivity(intent);
 
             }
 
@@ -212,6 +216,31 @@ public class MemberFragment extends Fragment {
          if (seeInviteButton)
              fab.setVisibility(View.GONE);
 
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode == RESULT_OK) {
+
+            if (requestCode == 0) {
+
+                data.getSerializableExtra("users");
+
+            }
+
+        }
+
+    }
+
+
+
+
+    public void onResume() {
+        if (get) {
+            getMembers();
+            get = false;
+        }
+        super.onResume();
     }
 
 

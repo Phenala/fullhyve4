@@ -59,6 +59,14 @@ public class ResponseFormat{
         public Message data;
     }
 
+    public class IORecieveMessage extends Message {
+        public int friendId;
+
+        public IORecieveMessage(int id, String message, String timestamp, boolean seen, boolean sent) {
+            super(id, message, timestamp, seen, sent);
+        }
+    }
+
     // getMessages listener
     public class GetMessages extends Counted{
         public List<Message> messages;

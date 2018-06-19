@@ -12,6 +12,7 @@ import android.widget.TimePicker;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.ui.data.ListProject;
+import com.ux7.fullhyve.ui.fragments.TaskSetFragment;
 
 import java.util.Date;
 
@@ -77,7 +78,8 @@ public class NewTaskSetView extends AppCompatActivity {
             @Override
             public void run() {
 
-            finish();
+                TaskSetFragment.get = true;
+                finish();
 
             }
         };

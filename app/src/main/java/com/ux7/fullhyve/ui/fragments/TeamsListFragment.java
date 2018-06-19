@@ -32,9 +32,8 @@ public class TeamsListFragment extends Fragment implements HomeView.OnHomeSearch
 
     private OnHomeInteractionListener mListener;
 
-
-
-
+    public static boolean get = false;
+    
     List<ListTeam> teams = new ArrayList<>();
 
     TeamsRecyclerViewAdapter adapter;
@@ -94,14 +93,6 @@ public class TeamsListFragment extends Fragment implements HomeView.OnHomeSearch
         }
     }
 
-    public void onResume() {
-
-        super.onResume();
-        if (LoginView.changedUser)
-            getTeams();
-
-    }
-
     @Override
     public void onDetach() {
         super.onDetach();
@@ -148,5 +139,14 @@ public class TeamsListFragment extends Fragment implements HomeView.OnHomeSearch
             AppHandler.getInstance().teamHandler.searchTeams(0, 500, s, teams, activity, runnable);
         }
 
+    }
+
+
+    public void onResume() {
+        if (get) {
+            getTeams();
+            get = false;
+        }
+        super.onResume();
     }
 }

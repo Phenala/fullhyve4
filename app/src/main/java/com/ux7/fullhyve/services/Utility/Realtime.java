@@ -1,7 +1,13 @@
 package com.ux7.fullhyve.services.Utility;
 
+import android.app.Application;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.services.Handlers.LoginHandler;
 import com.ux7.fullhyve.services.Models.Contact;
@@ -12,8 +18,12 @@ import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ux7.fullhyve.ui.activities.ContactView;
+import com.ux7.fullhyve.ui.activities.HomeView;
+import com.ux7.fullhyve.ui.fragments.ContactsListFragment;
 
 import java.net.URISyntaxException;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class Realtime {
     public static Realtime realtime = new Realtime();
@@ -141,7 +151,8 @@ public class Realtime {
             @Override
             public void call(final Object... args) {
                 if(args.length>0){
-                    ResponseFormat.ReceivedMessagesR messages = gson.fromJson(args[0].toString(), ResponseFormat.ReceivedMessagesR.class);
+                    Log.e("Recvvvv", args[0].toString());
+                    ResponseFormat.IORecieveMessage messages = gson.fromJson(args[0].toString(), ResponseFormat.IORecieveMessage.class);
                     Log.e("Recieve Emission", messages.toString());
 
                     Log.e("Recieve Emission", "recieve message emit");
@@ -152,6 +163,22 @@ public class Realtime {
 //                            }
                         if (ContactView.hoistedActivity != null)
                             ContactView.hoistedActivity.runOnUiThread(ContactView.hoistedActivity.update);
+                        else if (ContactsListFragment.hoistedFragment != null)
+                            ContactsListFragment.hoistedFragment.getActivity().runOnUiThread(ContactsListFragment.hoistedFragment.update);
+                        else {
+                            NotificationCompat.Builder nb = new NotificationCompat.Builder(HomeView.hoistedActivity);
+                            String frnd = AppData.getCache().getContacts().getFriend(messages.friendId).getName();
+                            nb.setContentTitle("New Message").setContentText(frnd + ": " + messages.getMessage());
+                            NotificationManager nm = (NotificationManager) HomeView.hoistedActivity.getSystemService(NOTIFICATION_SERVICE);
+                            nb.setSmallIcon(R.mipmap.logo_foreground);
+                            nb.setAutoCancel(true);
+                            nb.setTicker(frnd + ": " + messages.getMessage());
+                            nb.setVibrate(new long[]{4, 1, 4, 1});
+                            Intent intent = new Intent(HomeView.hoistedActivity, HomeView.class);
+                            intent.putExtra("target", "contacts");
+                            nb.setContentIntent(PendingIntent.getActivity(HomeView.hoistedActivity, 15222, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+                            nm.notify(15222, nb.build());
+                        }
                     }
                 }
             }

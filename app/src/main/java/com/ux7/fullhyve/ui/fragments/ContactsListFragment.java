@@ -38,6 +38,10 @@ public class ContactsListFragment extends Fragment implements HomeView.OnHomeSea
     // TODO: Customize parameters
     private int mColumnCount = 1;
 
+    public static ContactsListFragment hoistedFragment;
+    public Runnable update;
+
+
     List<ListContact> contacts =  new ArrayList<>();
 
     Activity activity;
@@ -70,6 +74,12 @@ public class ContactsListFragment extends Fragment implements HomeView.OnHomeSea
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+        update = new Runnable() {
+            @Override
+            public void run() {
+                getContacts();
+            }
+        };
     }
 
     @Override
@@ -89,7 +99,14 @@ public class ContactsListFragment extends Fragment implements HomeView.OnHomeSea
         if (LoginView.changedUser)
             getContacts();
 
+        hoistedFragment = this;
+
         super.onResume();
+    }
+
+    public void onPause() {
+        super.onPause();
+        hoistedFragment = null;
     }
 
 

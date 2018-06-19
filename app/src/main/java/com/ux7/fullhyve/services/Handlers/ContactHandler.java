@@ -168,7 +168,7 @@ public class ContactHandler extends Handler {
             messages = contact.getMessages(offset, limit);
         }
 
-        if(messages != null && messages.size()>0 && false){
+        if(!Realtime.socket.connected()){
             Log.e("Cached messages", messages.size()  + "");
             listMessages.clear();
             listMessages.addAll(Converter.portMessageToListMessage(messages));
@@ -218,7 +218,7 @@ public class ContactHandler extends Handler {
 
         List<Contact> friends = AppData.getCache().getContacts().getFriends(offset, limit);
 
-        if(friends != null && friends.size() > 0){
+        if(!Realtime.socket.connected()){
             Log.e("Server","Not called");
             friendsR.friends = friends;
 
@@ -249,7 +249,6 @@ public class ContactHandler extends Handler {
                 }
             });
         }
-
 
     }
 

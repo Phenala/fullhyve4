@@ -243,7 +243,12 @@ public class MainActivity extends AppCompatActivity {
                 loginHandler.signup(fName, lName, email, userName, password, this, new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("Status","New account created");
+                        Log.e("Status", "New account created");
+                    }
+                }, new Runnable() {
+                    @Override
+                    public void run() {
+
                     }
                 });
 

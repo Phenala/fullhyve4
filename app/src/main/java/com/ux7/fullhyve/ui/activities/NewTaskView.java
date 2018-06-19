@@ -17,6 +17,7 @@ import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.services.Models.Task;
+import com.ux7.fullhyve.services.Models.TaskSet;
 import com.ux7.fullhyve.services.Storage.AppData;
 import com.ux7.fullhyve.ui.data.ListMember;
 import com.ux7.fullhyve.ui.data.ListProject;
@@ -141,6 +142,7 @@ public class NewTaskView extends AppCompatActivity {
             @Override
             public void run() {
 
+                TaskSetView.get = true;
                 finish();
             }
         };

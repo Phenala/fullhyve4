@@ -31,6 +31,8 @@ public class ProjectsListFragment extends Fragment implements HomeView.OnHomeSea
     LinearLayoutManager layoutManager;
     ProjectsRecyclerViewAdapter adapter;
 
+    public static boolean get = false;
+
 
     private OnHomeInteractionListener mListener;
 
@@ -104,14 +106,6 @@ public class ProjectsListFragment extends Fragment implements HomeView.OnHomeSea
         }
     }
 
-    public void onResume() {
-
-        super.onResume();
-        if (LoginView.changedUser)
-            getProjects();
-
-    }
-
     @Override
     public void onDetach() {
         super.onDetach();
@@ -142,6 +136,15 @@ public class ProjectsListFragment extends Fragment implements HomeView.OnHomeSea
 
         }
 
+    }
+
+
+    public void onResume() {
+        if (get) {
+            getProjects();
+            get = false;
+        }
+        super.onResume();
     }
 
     /**

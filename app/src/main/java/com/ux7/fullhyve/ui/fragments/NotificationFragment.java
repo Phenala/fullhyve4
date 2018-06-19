@@ -72,7 +72,7 @@ public class NotificationFragment extends Fragment implements NotificationRecycl
         recyclerView = (RecyclerView) fragmentView.findViewById(R.id.notification_list);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new NotificationRecyclerViewAdapter(notificationList, getActivity());
+        adapter = new NotificationRecyclerViewAdapter(notificationList, getActivity(), this);
         recyclerView.setAdapter(adapter);
 
         getNotifications();
@@ -104,7 +104,7 @@ public class NotificationFragment extends Fragment implements NotificationRecycl
     @Override
     public void onInteractNotification(ListNotification notification) {
 
-
+        getNotifications();
 
     }
 

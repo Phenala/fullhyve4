@@ -16,10 +16,12 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
+import com.ux7.fullhyve.services.Models.Link;
 import com.ux7.fullhyve.ui.activities.UserView;
 import com.ux7.fullhyve.ui.data.ListNotification;
 import com.ux7.fullhyve.ui.data.UserDetail;
 import com.ux7.fullhyve.ui.util.CircleTransform;
+import com.ux7.fullhyve.ui.util.U;
 
 import org.w3c.dom.Text;
 
@@ -33,11 +35,13 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
     private final List<ListNotification> mNotifications;
     public final List<String> mSelectedUsers;
     public Activity activity;
+    OnNotificationRecyclerInteractionListener mListener;
 
-    public NotificationRecyclerViewAdapter(List<ListNotification> items, Activity activity) {
+    public NotificationRecyclerViewAdapter(List<ListNotification> items, Activity activity, OnNotificationRecyclerInteractionListener listener) {
         mNotifications = items;
         mSelectedUsers = new ArrayList<>();
         this.activity = activity;
+        mListener = listener;
     }
 
     @Override
@@ -53,6 +57,18 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         holder.mNotificationMessage.setText(holder.mNotification.message);
         holder.mNotificationPositive.setText(holder.mNotification.positiiveName);
         holder.mNotificationNegative.setText(holder.mNotification.negativeName);
+
+        if (holder.mNotification.image != null)
+
+            Picasso.with(activity)
+                    .load(U.getImageUrl(holder.mNotification.image))
+                    .transform(new CircleTransform())
+                    .into(holder.mNotificationImage);
+
+        if (holder.mNotification.type == Link.LinkType.ASSIGNMENT) {
+            holder.mNotificationNegative.setVisibility(View.GONE);
+            holder.mNotificationPositive.setVisibility(View.GONE);
+        }
 
         holder.mNotificationPositive.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +96,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
             @Override
             public void run() {
 
-                update();
+                mListener.onInteractNotification(notification);
 
             }
         };

@@ -217,14 +217,18 @@ public class AddMemberView extends AppCompatActivity implements AddMemberRecycle
                         break;
                 }
 
-                List<ListMember> toRemove = new ArrayList<>();
-                for (ListMember member : users) {
-                    if (!intersection.contains(member)) {
-                        toRemove.add(member);
+                if (addUserType == AddUserType.ASSIGN_TASK_TEAM || addUserType == AddUserType.ASSIGN_TASK_USER) {
+
+                    List<ListMember> toRemove = new ArrayList<>();
+                    for (ListMember member : users) {
+                        if (!intersection.contains(member)) {
+                            toRemove.add(member);
+                        }
                     }
-                }
-                for (ListMember member : toRemove) {
-                    users.remove(member);
+                    for (ListMember member : toRemove) {
+                        users.remove(member);
+                    }
+
                 }
                 adapter.update();
 

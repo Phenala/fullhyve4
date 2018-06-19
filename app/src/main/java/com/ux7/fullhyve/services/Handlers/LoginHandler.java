@@ -107,7 +107,7 @@ public class LoginHandler extends Handler {
         });
     }
 
-    public void signup(String firstName, String lastName, String email, String userName, String password, final Activity activity, final Runnable runnable){
+    public void signup(String firstName, String lastName, String email, String userName, String password, final Activity activity, final Runnable runnable, final Runnable runnableNoUsername){
         HashMap<String, Object> args = new HashMap<>();
         args.put("firstName",firstName);
         args.put("lastName",lastName);
@@ -122,6 +122,8 @@ public class LoginHandler extends Handler {
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     activity.runOnUiThread(runnable);
+                } else if (generalHandler(args) == 400) {
+                    activity.runOnUiThread(runnableNoUsername);
                 }
             }
         });

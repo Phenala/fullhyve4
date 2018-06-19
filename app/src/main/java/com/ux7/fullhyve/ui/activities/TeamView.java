@@ -67,6 +67,10 @@ public class TeamView extends AppCompatActivity {
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
+        if (!team.member) {
+            tabLayout.setVisibility(View.GONE);
+        }
+
     }
 
     public void buildTeam() {
@@ -174,6 +178,12 @@ public class TeamView extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+            if (!team.member) {
+                TeamDetailFragment teamDetails = new TeamDetailFragment();
+                teamDetails.setTeamDetail(team.detail);
+                return teamDetails;
+            }
+
             switch (position) {
                 case 0:
                     AnnouncementsFragment teamAnnounce = new AnnouncementsFragment();
@@ -199,7 +209,7 @@ public class TeamView extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 4;
+            return team.member ? 4 : 1;
         }
 
         @Override

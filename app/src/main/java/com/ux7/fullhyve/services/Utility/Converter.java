@@ -75,6 +75,10 @@ public class Converter {
 
         List<ListContact> uiContacts = new ArrayList<>();
 
+        if (contacts == null) {
+            return new ArrayList<>();
+        }
+
         for (Contact contact: contacts) {
 
             ListContact nContact = portContactToListContact(contact);
@@ -133,6 +137,10 @@ public class Converter {
 
 
         List<ListProject> uiProjects = new ArrayList<>();
+
+        if (projects == null) {
+            return uiProjects;
+        }
 
         for (MyProject project : projects) {
 
@@ -576,8 +584,8 @@ public class Converter {
         userDetail.title = user.getTitle();
         userDetail.image = user.getImage();
         userDetail.bio = user.getDescription();
-
-
+        UserDetail.RequestStatus[] rs = new UserDetail.RequestStatus[] {UserDetail.RequestStatus.ACCEPTED, UserDetail.RequestStatus.REQUESTED, UserDetail.RequestStatus.UNDECIDED, UserDetail.RequestStatus.REJECTED};
+        userDetail.request = rs[user.request];
 
         userDetail.skills = user.getSkills();
 
@@ -638,6 +646,7 @@ public class Converter {
 
         listNotification.id = notification.id;
         listNotification.message = notification.comment;
+        listNotification.image = notification.image;
         Link.LinkType[] types = new Link.LinkType[] {Link.LinkType.FRIEND_REQUEST, Link.LinkType.TEAM_REQUEST, Link.LinkType.PROJECT_TEAM_REQUEST, Link.LinkType.PROJECT_INDIVIDUAL_REQUEST, Link.LinkType.ASSIGNMENT};
         listNotification.type = types[notification.options[0].type];
 

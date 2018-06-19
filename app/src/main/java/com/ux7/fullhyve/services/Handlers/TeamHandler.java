@@ -39,7 +39,7 @@ public class TeamHandler extends Handler {
 
         myTeams =AppData.getCache().getTeams().getMyTeams(offset,limit);
 
-        if(myTeams != null && myTeams.size()>0){
+        if(!Realtime.socket.connected()){
             Log.e("Called","Local");
             teams.clear();
             teams.addAll(Converter.portMyTeamToListTeam(myTeams));
@@ -143,7 +143,7 @@ public class TeamHandler extends Handler {
             teams = team.getMembers(offset, limit);
         }
 
-        if(teams != null && teams.size()>0){
+        if(!Realtime.socket.connected()){
             members.clear();
             members.addAll(Converter.portUsersToListMember(teams));
             activity.runOnUiThread(runnable);
@@ -191,7 +191,7 @@ public class TeamHandler extends Handler {
             projects = team.getProjects(offset, limit);
         }
 
-        if(projects != null && projects.size()>0){
+        if(!Realtime.socket.connected()){
             listProjects.clear();
             listProjects.addAll(Converter.portProjectToListProject(projects));
 
@@ -238,7 +238,7 @@ public class TeamHandler extends Handler {
             announcements = team.getAnnouncements(offset, limit);
         }
 
-        if(announcements != null && announcements.size()>0){
+        if(!Realtime.socket.connected()){
             listAnnouncements.clear();
             listAnnouncements.addAll(Converter.portAnnouncementToListAnnouncement(announcements));
 

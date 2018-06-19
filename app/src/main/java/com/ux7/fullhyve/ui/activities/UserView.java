@@ -90,12 +90,12 @@ public class UserView extends AppCompatActivity {
                     }
                 });
                 break;
-            case UNDECIDED:
+            case REQUESTED:
                 button.setText("Pending Request");
                 button.setClickable(false);
                 button.setBackgroundResource(R.color.colorBackground);
                 break;
-            case REQUESTED:
+            case UNDECIDED:
                 button.setText("Accept Request");
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override

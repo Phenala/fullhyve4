@@ -31,7 +31,7 @@ public class ProjectHandler extends Handler {
 
         myProjects = ProjectCacheManager.getMyProjects(offset, limit);
 
-        if(myProjects!=null && myProjects.size() > 0){
+        if(!Realtime.socket.connected()){
             listProjects.clear();
             listProjects.addAll(Converter.portMyProjectToListProject(myProjects));
 
@@ -364,6 +364,8 @@ public class ProjectHandler extends Handler {
         HashMap<String, Object> args = new HashMap<>();
         args.put("name",name);
         args.put("projectId",projectId);
+        args.put("deadline", deadline.getTime());
+        args.put("description", description);
 
         JSONObject req = RequestFormat.createRequestObj("newTaskset", args);
 

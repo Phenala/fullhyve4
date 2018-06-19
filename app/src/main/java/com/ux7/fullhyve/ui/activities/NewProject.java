@@ -20,6 +20,7 @@ import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.services.Handlers.Uploader;
 import com.ux7.fullhyve.services.Models.Enclosure;
+import com.ux7.fullhyve.ui.fragments.ProjectsListFragment;
 import com.ux7.fullhyve.ui.util.CircleTransform;
 import com.ux7.fullhyve.ui.util.U;
 
@@ -129,6 +130,7 @@ public class NewProject extends AppCompatActivity {
             @Override
             public void run() {
 
+                ProjectsListFragment.get = true;
                 finish();
 
             }
