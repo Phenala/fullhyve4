@@ -45,8 +45,8 @@ public class Realtime {
     private static Gson gson;
 
     //public static final String URL = "http://192.168.43.117:8000/";
-    public static final String URL="http://192.168.43.186:8000/";
-
+    //public static final String URL="http://192.168.43.186:8000/";
+    public static final String URL="http://10.0.2.2:8000/";
 
     public Realtime(){
         // initialize json parsers

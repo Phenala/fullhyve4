@@ -111,7 +111,7 @@ public class CreateNewTask {
 //
 //      }
 //    }));
-    
+
     Thread.sleep(2000);
 
     onData(is(instanceOf(TaskSetRecyclerViewAdapter.ViewHolder.class)))
