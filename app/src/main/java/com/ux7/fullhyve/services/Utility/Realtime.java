@@ -163,9 +163,10 @@ public class Realtime {
 //                            }
                         if (ContactView.hoistedActivity != null)
                             ContactView.hoistedActivity.runOnUiThread(ContactView.hoistedActivity.update);
-                        else if (ContactsListFragment.hoistedFragment != null)
+                        else if (ContactsListFragment.hoistedFragment != null) {
+                            ContactsListFragment.get = true;
                             ContactsListFragment.hoistedFragment.getActivity().runOnUiThread(ContactsListFragment.hoistedFragment.update);
-                        else {
+                        } else {
                             NotificationCompat.Builder nb = new NotificationCompat.Builder(HomeView.hoistedActivity);
                             String frnd = AppData.getCache().getContacts().getFriend(messages.friendId).getName();
                             nb.setContentTitle("New Message").setContentText(frnd + ": " + messages.getMessage());

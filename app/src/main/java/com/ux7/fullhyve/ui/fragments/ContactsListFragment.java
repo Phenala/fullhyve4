@@ -39,6 +39,7 @@ public class ContactsListFragment extends Fragment implements HomeView.OnHomeSea
     private int mColumnCount = 1;
 
     public static ContactsListFragment hoistedFragment;
+    public static boolean get = false;
     public Runnable update;
 
 
@@ -95,6 +96,11 @@ public class ContactsListFragment extends Fragment implements HomeView.OnHomeSea
 
     public void onResume() {
         adapter.update();
+
+        if (get) {
+            getContacts();
+            get = false;
+        }
 
         if (LoginView.changedUser)
             getContacts();

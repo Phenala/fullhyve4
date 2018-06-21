@@ -29,7 +29,7 @@ import java.util.List;
 import static android.app.Activity.RESULT_OK;
 
 
-public class MemberFragment extends Fragment {
+public class MemberFragment extends Fragment implements MemberRecyclerViewAdapter.OnMemberInteractionListener {
 
     public static boolean get = false;
 
@@ -43,6 +43,28 @@ public class MemberFragment extends Fragment {
     List<ListMember> members = new ArrayList<>();
     LinearLayoutManager layoutManager;
     MemberRecyclerViewAdapter adapter;
+
+    @Override
+    public void onRemoveMember(ListMember member) {
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                getMembers();
+
+            }
+        };
+
+        if (type == MemberOf.TEAM)
+            AppHandler.getInstance().teamHandler.removeMembers(team.id, new int[] {member.id}, getActivity(), runnable);
+        else if (type == MemberOf.PROJECT) {
+            int[] empty = new int[]{};
+            int[] users = new int[] {member.id};
+            AppHandler.getInstance().projectHandler.removeContributors(project.id, member.team ? users : empty, member.team ? empty : users, getActivity(), runnable);
+        }
+
+    }
 
     public enum MemberOf {
 
@@ -105,7 +127,13 @@ public class MemberFragment extends Fragment {
         recyclerView.addItemDecoration(dividerItemDecoration);
         layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new MemberRecyclerViewAdapter(members);
+        if (type == MemberOf.PROJECT && project.id == AppData.getCache().getIdentity().getId()) {
+            adapter = new MemberRecyclerViewAdapter(members, true, this);
+        } else if (type == MemberOf.TEAM && team.id == AppData.getCache().getIdentity().getId()) {
+            adapter = new MemberRecyclerViewAdapter(members, true, this);
+        } else {
+            adapter = new MemberRecyclerViewAdapter(members, false, this);
+        }
         recyclerView.setAdapter(adapter);
 
 

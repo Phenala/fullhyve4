@@ -22,6 +22,7 @@ import com.ux7.fullhyve.services.Handlers.AppHandler;
 import com.ux7.fullhyve.ui.adapters.MessagesRecyclerViewAdapter;
 import com.ux7.fullhyve.ui.data.ListContact;
 import com.ux7.fullhyve.ui.data.ListMessage;
+import com.ux7.fullhyve.ui.fragments.ContactsListFragment;
 import com.ux7.fullhyve.ui.util.ActionBarTarget;
 import com.ux7.fullhyve.ui.util.CircleTransform;
 import com.ux7.fullhyve.ui.util.Images;
@@ -33,6 +34,7 @@ import java.util.List;
 public class ContactView extends AppCompatActivity implements MessagesRecyclerViewAdapter.OnMessageRecyclerInteractionListener {
 
     public static ContactView hoistedActivity;
+    public static boolean get;
     public Runnable update;
 
     ListContact contact = new ListContact();
@@ -449,6 +451,8 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
         newMessage.message = messageToSend;
         messages.add(0, newMessage);
 
+        ContactsListFragment.get = true;
+
         adapter.update();
 
         Runnable runnable = new Runnable() {
@@ -466,6 +470,8 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
     }
 
     public void deleteMessage(final int messageId) {
+
+        ContactsListFragment.get = true;
 
         Runnable runnable = new Runnable() {
             @Override
@@ -493,6 +499,7 @@ public class ContactView extends AppCompatActivity implements MessagesRecyclerVi
     public void editMessage() {
 
         messageToSend = ((EditText)findViewById(R.id.messageToSend)).getText().toString();
+        ContactsListFragment.get = true;
 
         Runnable runnable = new Runnable() {
             @Override

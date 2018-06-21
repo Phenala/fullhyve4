@@ -2,11 +2,15 @@ package com.ux7.fullhyve.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -29,9 +33,13 @@ import java.util.List;
 public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<MemberRecyclerViewAdapter.ViewHolder> {
 
     private final List<ListMember> mMembers;
+    public OnMemberInteractionListener mListener;
+    public boolean leader;
 
-    public MemberRecyclerViewAdapter(List<ListMember> items) {
+    public MemberRecyclerViewAdapter(List<ListMember> items, boolean leader, OnMemberInteractionListener listener) {
         mMembers = items;
+        this.leader = leader;
+        mListener = listener;
     }
 
     @Override
@@ -59,6 +67,35 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<MemberRecycl
             holder.mMemberPictureView.setImageResource(Images.USER);
 
         }
+
+        ((LinearLayout)holder.mView.findViewById(R.id.member_item)).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+
+                PopupMenu popup = new PopupMenu(view.getContext(), view);
+                MenuInflater inflater = popup.getMenuInflater();
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        switch (item.getItemId()) {
+
+                            case R.id.member_remove:
+                                mListener.onRemoveMember(holder.mMember);
+                                break;
+
+                        }
+
+                        return false;
+                    }
+                });
+
+                return false;
+            }
+        });
+
 
         if (holder.mMember.leader) {
             holder.mMemberLeaderShipStatus.setVisibility(View.VISIBLE);
@@ -126,5 +163,11 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<MemberRecycl
         public String toString() {
             return super.toString() + " '" + mMemberNameView.getText() + "'";
         }
+    }
+
+    public interface OnMemberInteractionListener {
+
+        void onRemoveMember(ListMember member);
+
     }
 }
