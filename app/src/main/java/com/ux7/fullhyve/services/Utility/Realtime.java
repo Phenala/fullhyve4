@@ -34,8 +34,9 @@ public class Realtime {
     private static GsonBuilder gsonBuilder;
     private static Gson gson;
 
-    public static final String URL = "http://192.168.43.117:8000/";
-    //public static final String URL="http://192.168.43.186:8000/";
+//    public static final String URL = "http://192.168.43.117:8000/";
+//    public static final String URL="http://192.168.43.186:8000/";
+    public static final String URL="http://192.168.1.3:8000/";
 
 
     public Realtime(){
