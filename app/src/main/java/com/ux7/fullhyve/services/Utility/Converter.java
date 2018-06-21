@@ -121,6 +121,10 @@ public class Converter {
 
         List<ListProject> uiProjects = new ArrayList<>();
 
+        if (projects == null) {
+            return uiProjects;
+        }
+
         for (Project project : projects) {
 
             ListProject nProject = portProjectToListProject(project);

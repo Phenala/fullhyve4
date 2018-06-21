@@ -133,13 +133,15 @@ public class LoginHandler extends Handler {
     public void signout(final Activity activity, final Runnable runnable){
         JsonElement req = RequestFormat.createRequestObj(null, "signout");
 
+        AppData.resetCache();
+        AppData.getInstance().saveCache(activity);
+        AppData.getInstance().emptyCache(activity);
+
         Realtime.socket.emit("signout", req, new Ack() {
             @Override
             public void call(Object... args) {
                 if(generalHandler(args)==200){
                     // remove the cache
-                    AppData.resetCache();
-                    AppData.getInstance().saveCache(activity);
 
                     // replace the AppData.getCache().instance of the handler with the new one
 //                    Handler.AppData.getCache().= AppData.getCache();
