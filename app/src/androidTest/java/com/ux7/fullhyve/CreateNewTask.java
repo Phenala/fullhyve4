@@ -114,15 +114,9 @@ public class CreateNewTask {
 
     Thread.sleep(2000);
 
-    onData(is(instanceOf(TaskSetRecyclerViewAdapter.ViewHolder.class)))
-      .inAdapterView(allOf(withId(R.id.task_list), isDisplayed()))
-      .atPosition(20).perform(scrollTo()).check(matches(hasDescendant(withText(taskName))));
-
     Thread.sleep(3000);
 
-//    onView(withId(R.id.task_list))
-//      .perform(RecyclerViewActions.scrollToPosition(numberOfAdapterItems[0] - 1))
-//      .check(matches(RecylerMatcher.atPosition(numberOfAdapterItems[0] - 1,hasDescendant(withText(taskName)))));
+  onView(withId(R.id.task_list)).check(matches(hasDescendant(withText(taskName))));
 
 
 
