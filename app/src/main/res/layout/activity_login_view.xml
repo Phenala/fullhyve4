@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/ic_logo_bg_2"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/login_view">
 
         <LinearLayout
             android:layout_width="match_parent"

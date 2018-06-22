@@ -9,6 +9,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import android.support.test.espresso.idling.CountingIdlingResource;
+
 import com.ux7.fullhyve.R;
 import com.ux7.fullhyve.services.Handlers.AppHandler;
 
@@ -81,15 +84,15 @@ public class LoginView extends AppCompatActivity {
 
     }
 
+
     public void login(View view) {
 
         getCredentials();
 
         LoginRunnable runnable = new LoginRunnable();
 
-        AppHandler.getInstance().loginHandler.signin(username, password, this, runnable);
-        //handleLoginLogic
 
+        AppHandler.getInstance().loginHandler.signin(username, password, this, runnable);
     }
 
     public class LoginRunnable implements Runnable {
