@@ -272,7 +272,7 @@ public class ProjectHandler extends Handler {
         args.put("teamIds",teamIds);
         args.put("individualIds",individualIds);
 
-        JSONObject req = RequestFormat.createRequestObj("removeContributors",args);
+        JsonElement req = RequestFormat.createRequestObj(args, "removeContributors");
 
         Realtime.socket.emit("removeContributors", req, new Ack() {
             @Override

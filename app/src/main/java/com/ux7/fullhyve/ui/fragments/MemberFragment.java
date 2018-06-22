@@ -127,9 +127,9 @@ public class MemberFragment extends Fragment implements MemberRecyclerViewAdapte
         recyclerView.addItemDecoration(dividerItemDecoration);
         layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
-        if (type == MemberOf.PROJECT && project.id == AppData.getCache().getIdentity().getId()) {
+        if (type == MemberOf.PROJECT && project.detail.leaderId == AppData.getCache().getIdentity().getId()) {
             adapter = new MemberRecyclerViewAdapter(members, true, this);
-        } else if (type == MemberOf.TEAM && team.id == AppData.getCache().getIdentity().getId()) {
+        } else if (type == MemberOf.TEAM && team.detail.leaderId == AppData.getCache().getIdentity().getId()) {
             adapter = new MemberRecyclerViewAdapter(members, true, this);
         } else {
             adapter = new MemberRecyclerViewAdapter(members, false, this);

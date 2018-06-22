@@ -1,5 +1,6 @@
 package com.ux7.fullhyve.ui.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.PopupMenu;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.ux7.fullhyve.R;
@@ -68,33 +70,39 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<MemberRecycl
 
         }
 
-        ((LinearLayout)holder.mView.findViewById(R.id.member_item)).setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
+        if (leader) {
 
-                PopupMenu popup = new PopupMenu(view.getContext(), view);
-                MenuInflater inflater = popup.getMenuInflater();
+            holder.mView.findViewById(R.id.member_item).setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
 
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    PopupMenu popup = new PopupMenu(view.getContext(), view);
+                    MenuInflater inflater = popup.getMenuInflater();
 
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
-                        switch (item.getItemId()) {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
 
-                            case R.id.member_remove:
-                                mListener.onRemoveMember(holder.mMember);
-                                break;
+                            switch (item.getItemId()) {
 
+                                case R.id.member_remove:
+                                    mListener.onRemoveMember(holder.mMember);
+                                    break;
+
+                            }
+
+                            return false;
                         }
+                    });
+                    inflater.inflate(R.menu.menu_manage_users, popup.getMenu());
 
-                        return false;
-                    }
-                });
+                    popup.show();
 
-                return false;
-            }
-        });
+                    return false;
+                }
+            });
+        }
 
 
         if (holder.mMember.leader) {

@@ -538,7 +538,7 @@ public class TeamHandler extends Handler {
         args.put("teamId",teamId);
         args.put("memberIds",memberIds);
 
-        JSONObject req = RequestFormat.createRequestObj("addMembers",args);
+        JsonElement req = RequestFormat.createRequestObj(args, "removeMembers");
 
         Realtime.socket.emit("removeMembers", req, new Ack() {
             @Override
