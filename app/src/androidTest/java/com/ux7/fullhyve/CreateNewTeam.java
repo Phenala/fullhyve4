@@ -84,7 +84,7 @@ public class CreateNewTeam {
 
     onView(withId(R.id.new_team_create)).perform(click());
 
-
+    Thread.sleep(1000);
 
     final int[] numberOfAdapterItems = new int[1];
     onView(withId(R.id.list)).check(matches(new TypeSafeMatcher<View>() {
