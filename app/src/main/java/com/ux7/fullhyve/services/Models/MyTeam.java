@@ -29,6 +29,8 @@ public class MyTeam extends Team{
     }
 
     public Announcement getAnnouncement(int annId){
+        if (announcements == null)
+            return null;
         for(int i=0;i<announcements.size();i++){
             if(announcements.get(i).mainMessage.getId()==annId){
                 return announcements.remove(i);

@@ -25,7 +25,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-@RunWith(AndroidJUnit4.class)
+
 public class SeeMessages {
   @Rule
   public ActivityTestRule<HomeView> homeViewActivityTestRule=new ActivityTestRule<HomeView>(HomeView.class);
@@ -45,7 +45,7 @@ public class SeeMessages {
 
     onView(withId(R.id.messages_view)).check(matches(isDisplayed() ));
 
-
+    Thread.sleep(4000);
 
   }
 

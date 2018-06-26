@@ -74,7 +74,12 @@ public class SendReply {
     //onView(MatchMultiple.withIndex(withText("no class tomorrow"),0)).check(matches(isDisplayed()));
     onView(withId(R.id.announcements_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
     onView(withId(R.id.reply_to_send)).perform(clearText(),typeText(testReply),closeSoftKeyboard());
+
+    Thread.sleep(1000);
+
     onView(withId(R.id.reply_send_button)).perform(click());
+
+    Thread.sleep(1000);
 
     final int[] numberOfAdapterItems = new int[1];
     onView(withId(R.id.reply_list)).check(matches(new TypeSafeMatcher<View>() {

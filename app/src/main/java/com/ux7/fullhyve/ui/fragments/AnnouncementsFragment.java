@@ -140,6 +140,12 @@ public class AnnouncementsFragment extends Fragment implements AnnouncementRecyc
                 }
             };
 
+            if (team == null)
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             AppHandler.getInstance().teamHandler.getTeamAnnouncements(team.id, 0, size, announcements, activity, runnable);
 
         }

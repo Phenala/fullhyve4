@@ -41,12 +41,12 @@ public class TeamHandler extends Handler {
 
         myTeams =AppData.getCache().getTeams().getMyTeams(offset,limit);
 
-        if(!Realtime.socket.connected()){
-            Log.e("Called","Local");
-            teams.clear();
-            teams.addAll(Converter.portMyTeamToListTeam(myTeams));
-            activity.runOnUiThread(runnable);
-        }else {
+//        if(!Realtime.socket.connected()){
+//            Log.e("Called","Local");
+//            teams.clear();
+//            teams.addAll(Converter.portMyTeamToListTeam(myTeams));
+//            activity.runOnUiThread(runnable);
+//        }else {
             HashMap<String, Object> args = new HashMap<>();
             args.put("offset", offset);
             args.put("limit", limit);
@@ -74,7 +74,7 @@ public class TeamHandler extends Handler {
                 }
 
             });
-        }
+//        }
     }
 
 
@@ -145,11 +145,11 @@ public class TeamHandler extends Handler {
             teams = team.getMembers(offset, limit);
         }
 
-        if(!Realtime.socket.connected()){
-            members.clear();
-            members.addAll(Converter.portUsersToListMember(teams));
-            activity.runOnUiThread(runnable);
-        } else{
+//        if(!Realtime.socket.connected()){
+//            members.clear();
+//            members.addAll(Converter.portUsersToListMember(teams));
+//            activity.runOnUiThread(runnable);
+//        } else{
             HashMap<String, Object> args = new HashMap<>();
             args.put("teamId",teamId);
             args.put("offset",offset);
@@ -180,7 +180,7 @@ public class TeamHandler extends Handler {
                     }
                 }
             });
-        }
+//        }
 
 
     }
@@ -193,12 +193,12 @@ public class TeamHandler extends Handler {
             projects = team.getProjects(offset, limit);
         }
 
-        if(!Realtime.socket.connected()){
-            listProjects.clear();
-            listProjects.addAll(Converter.portProjectToListProject(projects));
-
-            activity.runOnUiThread(runnable);
-        } else {
+//        if(!Realtime.socket.connected()){
+//            listProjects.clear();
+//            listProjects.addAll(Converter.portProjectToListProject(projects));
+//
+//            activity.runOnUiThread(runnable);
+//        } else {
             HashMap<String, Object> args = new HashMap<>();
             args.put("teamId",teamId);
             args.put("offset",offset);
@@ -228,7 +228,7 @@ public class TeamHandler extends Handler {
                     }
                 }
             });
-        }
+//        }
     }
 
 
@@ -240,12 +240,12 @@ public class TeamHandler extends Handler {
             announcements = team.getAnnouncements(offset, limit);
         }
 
-        if(!Realtime.socket.connected()){
-            listAnnouncements.clear();
-            listAnnouncements.addAll(Converter.portAnnouncementToListAnnouncement(announcements));
-
-            activity.runOnUiThread(runnable);
-        } else {
+//        if(!Realtime.socket.connected()){
+//            listAnnouncements.clear();
+//            listAnnouncements.addAll(Converter.portAnnouncementToListAnnouncement(announcements));
+//
+//            activity.runOnUiThread(runnable);
+//        } else {
             HashMap<String, Object> args = new HashMap<>();
             args.put("teamId",teamId);
             args.put("offset",offset);
@@ -257,6 +257,7 @@ public class TeamHandler extends Handler {
                 @Override
                 public void call(Object... args) {
                     if(generalHandler(args)==200){
+                        Log.e("Out", args[0]+"");
                         final ResponseFormat.GetTeamAnnouncementR teamAnnouncementsR = gson.fromJson(args[0].toString(), ResponseFormat.GetTeamAnnouncementR.class);
 
                         if(teamAnnouncementsR!=null && teamAnnouncementsR.data.announcements!=null){
@@ -273,7 +274,7 @@ public class TeamHandler extends Handler {
                     }
                 }
             });
-        }
+//        }
     }
 
     public void announce(final int teamId, final String announcement, final Activity activity, final Runnable runnable){
